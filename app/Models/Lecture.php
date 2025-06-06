@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Lecture extends Model
+{
+    protected $table = 'lectures';
+
+    protected $primaryKey = 'lec_id';
+
+    protected $fillable = [
+        'title',
+        'slug',
+        'is_intro',
+        'type',
+        'order',
+        'sec_id',
+    ];
+
+    public function section()
+    {
+        return $this->belongsTo(Section::class, 'sec_id', 'sec_id');
+    }
+
+    public function video(){
+        return $this->hasOne(Video::class, 'lec_id', 'lec_id');
+    }
+    public function article(){
+        return $this->hasOne(Article::class, 'lec_id', 'lec_id');
+    }
+}
