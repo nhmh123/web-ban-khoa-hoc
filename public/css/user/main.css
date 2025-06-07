@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+* {
+    font-family: "Inter", sans-serif !important;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content {
+    flex: 1;
+}
+
+.footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+a {
+    text-decoration: none;
+}
+
+.navbar-toggler,
+.navbar-toggler:focus,
+.navbar-toggler:active {
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+.form-control:focus {
+    box-shadow: none;
+}
+
+.list-group-item {
+    border: none;
+}
+
+/* Submenu positioning */
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+}
+
+/* Show submenu when hovering on desktop */
+@media (hover: hover) {
+    .dropdown-submenu:hover > .dropdown-menu {
+        display: block;
+    }
+}
+
+/* Make sure submenus fit inside smaller screens */
+@media (max-width: 768px) {
+    .dropdown-submenu > .dropdown-menu {
+        position: static;
+        display: none;
+        width: 100%;
+    }
+}
+
+.marquee-container {
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    width: 100%;
+}
+
+.marquee-wrapper {
+    display: flex;
+    width: 200%;
+    animation: marquee-scroll 15s linear infinite;
+}
+
+.marquee-content {
+    flex: 1;
+    padding-right: 2rem;
+}
+
+@keyframes marquee-scroll {
+    from {
+        transform: translateX(0%);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
