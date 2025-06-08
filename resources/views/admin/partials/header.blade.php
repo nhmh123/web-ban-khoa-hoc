@@ -14,11 +14,11 @@
         <div class="btn-group">
             <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
-                PHAN CƯƠNG
+                {{ Auth::user()->name }}
             </button>
             <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="#">Tài khoản</a>
-                <a class="dropdown-item" href="#">Thoát</a>
+                <a class="dropdown-item" href="{{ route('admin.logout') }}">Thoát</a>
             </div>
         </div>
     </div>
