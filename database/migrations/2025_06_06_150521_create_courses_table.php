@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->string('thumbnale')->nullable();
+            $table->string('thumbnail')->nullable();
             $table->text('description')->nullable();
             $table->decimal('original_price', 10, 2)->default(0.00);
             $table->decimal('sale_price', 10, 2)->default(0.00);

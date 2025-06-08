@@ -9,18 +9,18 @@
             </a>
             <i class="arrow fas fa-angle-right"></i>
         </li>
-        <li class="nav-link">
-            <a href="?view=list-post">
+        <li class="nav-link {{ request()->routeIs('ccategories.*') ? 'active' : '' }}">
+            <a href="{{ route('ccategories.index') }}">
                 <div class="nav-link-icon d-inline-flex">
                     <i class="far fa-folder"></i>
                 </div>
-                Trang
+                Danh mục khóa học
             </a>
-            <i class="arrow fas fa-angle-right"></i>
+            <i class="arrow fas {{ request()->routeIs('ccategories.*') ? 'fa-angle-down' : 'fa-angle-right' }} "></i>
 
             <ul class="sub-menu">
-                <li><a href="?view=add-post">Thêm mới</a></li>
-                <li><a href="?view=list-post">Danh sách</a></li>
+                <li><a href="{{ route('ccategories.create') }}">Thêm mới</a></li>
+                <li><a href="{{ route('ccategories.index') }}">Danh sách</a></li>
             </ul>
         </li>
         <li class="nav-link">
@@ -84,7 +84,7 @@
                 </div>
                 Phân quyền
             </a>
-            <i class="arrow fas fa-angle-down"></i>
+            <i class="arrow fas fa-angle-right"></i>
             <ul class="sub-menu">
                 <li><a href="?view=permission">Quyền</a></li>
                 <li><a href="?view=add-role">Thêm vai trò</a></li>

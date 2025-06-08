@@ -30,13 +30,14 @@ class Course extends Model
     ];
     public function category()
     {
-        return $this->belongsTo(CourseCategory::class, 'category_id', 'cc_id');
+        return $this->belongsTo(CourseCategory::class, 'cat_id', 'cc_id');
     }
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-    public function language(){
+    public function language()
+    {
         return $this->belongsTo(Language::class, 'language_id', 'lang_id');
     }
     public function level()
