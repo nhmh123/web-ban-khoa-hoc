@@ -11,7 +11,7 @@ class CreateCCategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,8 +22,17 @@ class CreateCCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=> 'required|string|max:255',
-            ''
+            'cc_name'=> 'sometimes|required|string|max:255',
+            'icon_path'=>'sometimes|nullable|file|image|mimes:jpeg,png,gif|max:2048', 
+            'parent_id'=>'nullable|integer|exists:course_categories,id',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'cc_name.required' => 'Tên danh mục không được bỏ trống.',
+            'cc_name.max' => 'Tên danh mục không được vượt quá 255 ký tự.',
         ];
     }
 }
