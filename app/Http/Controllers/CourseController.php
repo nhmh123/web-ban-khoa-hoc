@@ -67,7 +67,8 @@ class CourseController extends Controller
         $languages = Language::all();
         $levels = DifficultyLevel::all();
         $categories = CourseCategory::all();
-        return view('admin.pages.courses.edit', compact('course', 'languages', 'levels', 'categories'));
+        $sections = $course->sections()->orderBy('created_at','asc')->get();
+        return view('admin.pages.courses.edit', compact('course', 'languages', 'levels', 'categories','sections'));
     }
 
     /**

@@ -4,6 +4,11 @@
 
 @section('admin.content')
     <div class="container-fluid py-4">
+        @session('success')
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endsession
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -27,7 +32,7 @@
                     </button>
                     <button class="nav-link" id="sections-tab" data-bs-toggle="tab" data-bs-target="#sections"
                         type="button" role="tab" aria-controls="sections" aria-selected="false">
-                        Danh sách Section
+                        Nội dung khóa học
                     </button>
                 </div>
             </nav>
@@ -47,6 +52,11 @@
                                         <label for="name" class="form-label fw-bold">Tên khóa học</label>
                                         <input type="text" name="name" id="name" class="form-control"
                                             value="{{ old('name', $course->name) }}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="slug" class="form-label fw-bold">Slug</label>
+                                        <input type="text" name="slug" id="slug" class="form-control"
+                                            value="{{ old('slug', $course->slug) }}" disabled>
                                     </div>
                                     <div class="mb-3">
                                         <label for="thumbnail" class="form-label fw-bold">Ảnh đại diện</label>
@@ -145,7 +155,7 @@
                                 <textarea name="description" id="description" class="form-control" rows="4">{{ old('description', $course->description) }}</textarea>
                             </div>
                             <div class="mb-3">
-                                <label for="content" class="form-label fw-bold">Nội dung khóa học</label>
+                                <label for="content" class="form-label fw-bold">Nội dung học</label>
                                 <textarea name="content" id="content" class="form-control" rows="4">{{ old('content', $course->content) }}</textarea>
                             </div>
                             <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
@@ -158,22 +168,141 @@
                     <div class="card-body">
 
                         <!-- Course Curriculum -->
-                        <section class="mt-4">
-                            <h2 class="fs-4">Course Curriculum</h2>
-                            <div class="accordion" id="courseAccordion">
-                                {{-- @foreach ($course->sections as $section)
+                        <section>
+                            <!-- Add Section Button -->
+                            <div class="mt-2">
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSectionModal">
+                                    <i class="bi bi-plus-lg"></i>
+                                    Thêm phần học
+                                </button>
+                            </div>
+                            <!-- Add Section Modal -->
+                            <div class="modal fade" id="addSectionModal" tabindex="-1"
+                                aria-labelledby="addSectionModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form action="{{ route('sections.store') }}" method="POST" class="modal-content">
+                                        @csrf
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="addSectionModalLabel">Thêm phần học</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label for="sectionName" class="form-label">Tên phần học</label>
+                                                <input type="text" name="name" id="sectionName"
+                                                    class="form-control" required>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="sectionDescription" class="form-label">Mô tả</label>
+                                                <textarea name="description" id="sectionDescription" class="form-control" rows="3"></textarea>
+                                            </div>
+
+                                            <input type="hidden" name="course_id" value="{{ $course->id }}">
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary">Lưu</button>
+                                            <button type="button" class="btn outline-0 border-0"
+                                                data-bs-dismiss="modal">Hủy</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- Course Sections Accordion -->
+                            <div class="accordion mt-4 px-5" id="courseAccordion">
+                                @foreach ($course->sections as $section)
                                     <div class="accordion-item">
                                         <h2 class="accordion-header">
-                                            <button class="accordion-button collapsed" type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#module{{ $section->id }}">
-                                                {{ $section->title }}
-                                            </button>
+                                            <div class="d-flex align-items-center justify-content-between w-100">
+                                                <!-- Accordion Toggle Button -->
+                                                <button class="accordion-button collapsed flex-grow-1 text-start"
+                                                    type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#module{{ $section->sec_id }}">
+                                                    <span class="flex-grow-1 fw-bold">
+                                                        {{ $section->name }} -
+                                                        {{ $section->lectures ? $section->lectures->count() : 0 }}
+                                                        bài giảng
+                                                    </span>
+                                                    <span class="text-end me-3">Thời lượng {{ $section->duration }}
+                                                        giờ</span>
+                                                </button>
+
+                                                <!-- Action Icons -->
+                                                <div class="ms-2 d-flex align-items-center">
+                                                    <!-- Edit icon -->
+                                                    <!-- Edit icon trigger -->
+                                                    <button type="button" class="btn btn-link text-dark p-0 m-0"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#editSectionModal{{ $section->sec_id }}">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </button>
+                                                    <!-- Edit Section Modal -->
+                                                    <div class="modal fade" id="editSectionModal{{ $section->sec_id }}"
+                                                        tabindex="-1"
+                                                        aria-labelledby="editSectionModalLabel{{ $section->sec_id }}"
+                                                        aria-hidden="true">
+                                                        <form action="{{ route('sections.update', $section->sec_id) }}"
+                                                            method="POST" class="modal-dialog">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title"
+                                                                        id="editSectionModalLabel{{ $section->sec_id }}">
+                                                                        Chỉnh sửa phần học</h5>
+                                                                    <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Đóng"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="mb-3">
+                                                                        <label for="sectionName{{ $section->sec_id }}"
+                                                                            class="form-label">Tên phần học</label>
+                                                                        <input type="text" name="name"
+                                                                            id="sectionName{{ $section->sec_id }}"
+                                                                            class="form-control"
+                                                                            value="{{ $section->name }}" required>
+                                                                    </div>
+                                                                    <div class="mb-3">
+                                                                        <label
+                                                                            for="sectionDescription{{ $section->sec_id }}"
+                                                                            class="form-label">Mô tả</label>
+                                                                        <textarea name="description" id="sectionDescription{{ $section->sec_id }}" class="form-control" rows="3">{{ $section->description }}</textarea>
+                                                                    </div>
+                                                                    <input type="hidden" name="course_id"
+                                                                        value="{{ $course->id }}">
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="submit" class="btn btn-primary">Cập
+                                                                        nhật</button>
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Hủy</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+
+                                                    <!-- Delete icon -->
+                                                    <form action="{{ route('sections.destroy', $section->sec_id) }}"
+                                                        method="POST" class="d-inline" name="delete-form">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="btn btn-link text-dark not-last:p-0 m-0">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </h2>
-                                        <div id="module{{ $section->id }}" class="accordion-collapse collapse"
-                                            data-bs-parent="#courseAccordion">
+
+                                        <div id="module{{ $section->sec_id }}" class="accordion-collapse collapse">
                                             <div class="accordion-body">
                                                 <ul class="list-unstyled m-0">
-                                                    @foreach ($section->lectures as $lecture)
+                                                    {{-- @foreach ($section->lectures as $lecture)
                                                         <li class="d-block py-2">
                                                             @if ($lecture->is_intro)
                                                                 <a
@@ -189,12 +318,16 @@
                                                                 </a>
                                                             @endif
                                                         </li>
-                                                    @endforeach
+                                                    @endforeach --}}
+                                                    <button>
+                                                        <i class="bi bi-plus-lg"></i>
+                                                        Thêm bài giảng
+                                                    </button>
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
-                                @endforeach --}}
+                                @endforeach
                             </div>
                         </section>
 
@@ -205,6 +338,25 @@
     </div>
     @push('scripts')
         <script>
+            const deleteForms = document.querySelectorAll('form[name="delete-form"]');
+            deleteForms.forEach(form => {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    Swal.fire({
+                        title: "Bạn chắc chắn muốn xóa?",
+                        text: "Thao tác không thể hoàn tác!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, delete it!"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            this.submit();
+                        }
+                    });
+                });
+            });
             document.querySelector('input[name="thumbnail"]').addEventListener('change', function() {
                 const file = this.files[0];
                 if (file) {

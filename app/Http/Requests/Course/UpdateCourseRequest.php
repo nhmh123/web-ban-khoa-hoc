@@ -52,8 +52,8 @@ class UpdateCourseRequest extends FormRequest
             'cat_id.exists' => 'Danh mục không tồn tại.',
             'language_id.required' => 'Ngôn ngữ là bắt buộc.',
             'language_id.exists' => 'Ngôn ngữ không tồn tại.',
-            'level.required' => 'Trình độ là bắt buộc.',
-            'level.exists' => 'Trình độ không tồn tại.'
+            'level_id.required' => 'Trình độ là bắt buộc.',
+            'level_id.exists' => 'Trình độ không tồn tại.'
         ];
     }
 }

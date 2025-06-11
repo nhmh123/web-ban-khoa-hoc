@@ -62,7 +62,7 @@
                                     <a href="{{ route('courses.edit', $course->id) }}"
                                         class="btn btn-success btn-sm">Sửa</a>
                                     <form action="{{ route('courses.destroy', $course->id) }}" method="POST"
-                                        class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa?');">
+                                        class="d-inline" name="delete-form">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
