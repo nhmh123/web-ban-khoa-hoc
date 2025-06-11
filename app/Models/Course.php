@@ -20,6 +20,10 @@ class Course extends Model
         'audience',
         'status',
         'rating',
+        'cat_id',
+        'language_id',
+        'level_id',
+        'user_id',
     ];
 
     protected $casts = [

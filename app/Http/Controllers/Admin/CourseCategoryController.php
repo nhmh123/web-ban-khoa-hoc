@@ -80,14 +80,7 @@ class CourseCategoryController extends Controller
         try {
             $data = $request->validated();
             $data['cc_slug'] = Str::slug($data['cc_name']);
-            // if ($request->hasFile('icon_path')) {
-            //     $file = $request->file('icon_path');
-            //     $filename = time() . '_' . $file->getClientOriginalName();
-            //     $file->move(public_path('uploads/category-icons'), $filename);
-            //     $data['icon_path'] = 'uploads/category-icons/' . $filename;
-            // } else {
-            //     unset($data['icon_path']);
-            // }
+            // Handle icon upload if exists
             $data['status'] = $request->has('status');
             $ccategory->update($data);
             return redirect()->route('ccategories.index')->with('success', 'Cập nhật danh mục thành công!');

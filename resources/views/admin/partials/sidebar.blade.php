@@ -3,7 +3,7 @@
         <li class="nav-link">
             <a href="{{ route('admin.dashboard') }}">
                 <div class="nav-link-icon d-inline-flex">
-                    <i class="far fa-folder"></i>
+                    <i class="bi bi-speedometer"></i>
                 </div>
                 Dashboard
             </a>
@@ -12,7 +12,7 @@
         <li class="nav-link {{ request()->routeIs('ccategories.*') ? 'active' : '' }}">
             <a href="{{ route('ccategories.index') }}">
                 <div class="nav-link-icon d-inline-flex">
-                    <i class="far fa-folder"></i>
+                    <i class="bi bi-tags"></i>
                 </div>
                 Danh mục khóa học
             </a>
@@ -23,50 +23,24 @@
                 <li><a href="{{ route('ccategories.index') }}">Danh sách</a></li>
             </ul>
         </li>
-        <li class="nav-link">
-            <a href="?view=list-post">
+        <li class="nav-link {{ request()->routeIs('courses.*') ? 'active' : '' }}">
+            <a href="{{ route('courses.index') }}">
                 <div class="nav-link-icon d-inline-flex">
-                    <i class="far fa-folder"></i>
+                    <i class="bi bi-book"></i>
                 </div>
-                Bài viết
+                Khóa học
             </a>
-            <i class="arrow fas fa-angle-right"></i>
+            <i class="arrow fas {{ request()->routeIs('courses.*') ? 'fa-angle-down' : 'fa-angle-right' }} "></i>
+
             <ul class="sub-menu">
-                <li><a href="?view=add-post">Thêm mới</a></li>
-                <li><a href="?view=list-post">Danh sách</a></li>
-                <li><a href="?view=cat">Danh mục</a></li>
-            </ul>
-        </li>
-        <li class="nav-link">
-            <a href="?view=list-product">
-                <div class="nav-link-icon d-inline-flex">
-                    <i class="far fa-folder"></i>
-                </div>
-                Sản phẩm
-            </a>
-            <i class="arrow fas fa-angle-right"></i>
-            <ul class="sub-menu">
-                <li><a href="?view=add-product">Thêm mới</a></li>
-                <li><a href="?view=list-product">Danh sách</a></li>
-                <li><a href="?view=cat-product">Danh mục</a></li>
-            </ul>
-        </li>
-        <li class="nav-link">
-            <a href="?view=list-order">
-                <div class="nav-link-icon d-inline-flex">
-                    <i class="far fa-folder"></i>
-                </div>
-                Bán hàng
-            </a>
-            <i class="arrow fas fa-angle-right"></i>
-            <ul class="sub-menu">
-                <li><a href="?view=list-order">Đơn hàng</a></li>
+                <li><a href="{{ route('courses.create') }}">Thêm mới</a></li>
+                <li><a href="{{ route('courses.index') }}">Danh sách</a></li>
             </ul>
         </li>
         <li class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
             <a href="{{ route('users.index') }}">
                 <div class="nav-link-icon d-inline-flex">
-                    <i class="far fa-folder"></i>
+                    <i class="bi bi-people"></i>
                 </div>
                 Users
             </a>

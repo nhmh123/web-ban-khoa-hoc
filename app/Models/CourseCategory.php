@@ -17,6 +17,7 @@ class CourseCategory extends Model
         'type',
         'user_id',
         'parent_id',
+        'status',
     ];
 
     public function user()
