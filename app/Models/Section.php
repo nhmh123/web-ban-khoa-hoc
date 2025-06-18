@@ -17,8 +17,17 @@ class Section extends Model
 
     protected $primaryKey = 'sec_id';
 
+    public function getDurationAttribute($value)
+    {
+        return \Carbon\CarbonInterval::seconds($value)->cascade()->forHumans();
+    }
+
     public function course()
     {
         return $this->belongsTo(Course::class, 'course_id', 'id');
+    }
+    public function lectures()
+    {
+        return $this->hasMany(Lecture::class, 'sec_id', 'sec_id');
     }
 }

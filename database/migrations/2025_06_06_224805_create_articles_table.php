@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id('article_id');
             $table->text('content');
-            $table->decimal('duration', 8, 2)->nullable(); 
             $table->unsignedBigInteger('lec_id')->nullable();
             $table->foreign('lec_id')->references('lec_id')->on('lectures')->onDelete('cascade');
             $table->timestamps();

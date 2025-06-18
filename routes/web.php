@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\LectureController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\Admin\DasboardController;
 use App\Http\Controllers\Admin\CourseCategoryController;
@@ -29,6 +30,7 @@ Route::middleware([IsAdmin::class])->prefix('admin')->group(function () {
     Route::resource('ccategories', CourseCategoryController::class);
     Route::resource('courses', CourseController::class);
     Route::resource('sections', SectionController::class);
+    Route::resource('lectures',LectureController::class);
 });
 
 Route::prefix('admin')->group(function () {

@@ -19,6 +19,10 @@ class Lecture extends Model
         'sec_id',
     ];
 
+    public function getDurationAttribute($value){
+        return \Carbon\CarbonInterval::seconds($value)->cascade()->forHumans();
+    }
+
     public function section()
     {
         return $this->belongsTo(Section::class, 'sec_id', 'sec_id');

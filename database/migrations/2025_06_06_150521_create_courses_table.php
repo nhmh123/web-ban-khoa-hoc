@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('short_description')->nullable();
             $table->text('content')->nullable();
             $table->text('enroll_requirements')->nullable();
-            $table->decimal('duration', 8, 2)->default(0.00);
+            $table->integer('duration')->default(0);
             $table->text('audience')->nullable();
             $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
             $table->decimal('rating', 3, 2)->default(0.00);

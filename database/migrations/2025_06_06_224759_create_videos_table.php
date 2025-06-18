@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->id('video_id');
-            $table->string('video_url')->unique();
-            $table->decimal('duration', 8, 2)->nullable(); 
+            $table->string('video_url');
             $table->unsignedBigInteger('lec_id')->nullable();
             $table->foreign('lec_id')->references('lec_id')->on('lectures')->onDelete('cascade');
             $table->timestamps();

@@ -166,7 +166,6 @@
                 <div class="tab-pane fade" id="sections" role="tabpanel" aria-labelledby="sections-tab"
                     tabindex="0">
                     <div class="card-body">
-
                         <!-- Course Curriculum -->
                         <section>
                             <!-- Add Section Button -->
@@ -212,7 +211,7 @@
                                 </div>
                             </div>
                             <!-- Course Sections Accordion -->
-                            <div class="accordion mt-4 px-5" id="courseAccordion">
+                            <div class="accordion mt-4" id="courseAccordion">
                                 @foreach ($course->sections as $section)
                                     <div class="accordion-item">
                                         <h2 class="accordion-header">
@@ -226,8 +225,8 @@
                                                         {{ $section->lectures ? $section->lectures->count() : 0 }}
                                                         bài giảng
                                                     </span>
-                                                    <span class="text-end me-3">Thời lượng {{ $section->duration }}
-                                                        giờ</span>
+                                                    <span class="text-end me-3">Thời lượng
+                                                        {{ $section->duration }}</span>
                                                 </button>
 
                                                 <!-- Action Icons -->
@@ -302,27 +301,50 @@
                                         <div id="module{{ $section->sec_id }}" class="accordion-collapse collapse">
                                             <div class="accordion-body">
                                                 <ul class="list-unstyled m-0">
-                                                    {{-- @foreach ($section->lectures as $lecture)
-                                                        <li class="d-block py-2">
+                                                    @foreach ($section->lectures as $lecture)
+                                                        <li
+                                                            class="d-flex justify-content-between py-2 border-bottom border-dark">
                                                             @if ($lecture->is_intro)
-                                                                <a
+                                                                {{-- <a
                                                                     href="{{ route('user.course-video', ['course' => $course->slug, 'lecture' => $lecture->id]) }}">
                                                                     <span>{{ $lecture->title }}</span>
                                                                     <i class="bi bi-play-circle-fill ms-2"></i>
-                                                                </a>
+                                                                </a> --}}
+                                                                <span>{{ $lecture->title }} </span>
                                                             @else
-                                                                <a href="#"
+                                                                {{-- <a href="#"
                                                                     class="text-decoration-none text-secondary opacity-75 pe-none">
                                                                     <span>{{ $lecture->title }}</span>
                                                                     <i class="bi bi-lock-fill"></i>
-                                                                </a>
+                                                                </a> --}}
+                                                                <span>{{ $lecture->title }}</span>
                                                             @endif
+
+                                                            <div class="">
+                                                                <!-- Edit lecture -->
+                                                                <a href="{{ route('lectures.edit', ['lecture' => $lecture->lec_id]) }}"
+                                                                    type="button" class="btn btn-link text-dark p-0 m-0">
+                                                                    <i class="bi bi-pencil"></i>
+                                                                </a>
+                                                                <!-- Delete lecture -->
+                                                                <form
+                                                                    action="{{ route('lectures.destroy', ['lecture' => $lecture->lec_id]) }}"
+                                                                    method="POST" class="d-inline" name="delete-form">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit"
+                                                                        class="btn btn-link text-dark not-last:p-0 m-0">
+                                                                        <i class="bi bi-x-lg"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </div>
                                                         </li>
-                                                    @endforeach --}}
-                                                    <button>
+                                                    @endforeach
+                                                    <a href="{{ route('lectures.create', ['sec_id' => $section->sec_id]) }}"
+                                                        class="btn btn-primary mt-3">
                                                         <i class="bi bi-plus-lg"></i>
                                                         Thêm bài giảng
-                                                    </button>
+                                                    </a>
                                                 </ul>
                                             </div>
                                         </div>
@@ -330,7 +352,6 @@
                                 @endforeach
                             </div>
                         </section>
-
                     </div>
                 </div>
             </div>

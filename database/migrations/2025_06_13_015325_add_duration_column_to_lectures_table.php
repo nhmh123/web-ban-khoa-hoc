@@ -11,14 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sections', function (Blueprint $table) {
-            $table->id('sec_id');
-            $table->string('name')->unique();
-            $table->string('slug')->unique();
+        Schema::table('lectures', function (Blueprint $table) {
             $table->integer('duration')->default(0);
-            $table->text('description')->nullable();
-            $table->tinyInteger('order')->default(0);
-            $table->timestamps();
         });
     }
 
@@ -27,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sections');
+        Schema::table('lectures', function (Blueprint $table) {
+            //
+        });
     }
 };

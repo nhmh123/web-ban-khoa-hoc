@@ -32,6 +32,10 @@ class Course extends Model
         'duration' => 'decimal:2',
         'rating' => 'decimal:2',
     ];
+
+    public function getDurationAttribute($value){
+        return \Carbon\CarbonInterval::seconds($value)->cascade()->forHumans();
+    }
     public function category()
     {
         return $this->belongsTo(CourseCategory::class, 'cat_id', 'cc_id');
