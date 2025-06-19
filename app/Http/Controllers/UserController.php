@@ -34,14 +34,14 @@ class UserController extends Controller
 
     public function store(CreateUserRequest $request)
     {
-        $slug = Str::slug($request->name);
+        // $slug = Str::slug($request->name);
         if ($request->has('avatar')) {
             echo $request->file('avatar')->getClientOriginalName();
         }
         $avatar = $this->defaultAvatar;
         $user = User::create([
             'name' => $request->name,
-            'slug' => $slug,
+            // 'slug' => $slug,
             'email' => $request->email,
             'avatar' => $avatar,
             'password' => bcrypt($request->password),

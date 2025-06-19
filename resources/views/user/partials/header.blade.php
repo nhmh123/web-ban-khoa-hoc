@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container d-flex justify-content-between">
-        <a class="navbar-brand" href="">
+        <a class="navbar-brand" href="{{ route('user.home') }}">
             <i class="bi bi-play-circle me-1"></i>CourseWeb</a>
         <form action="" class="d-none d-md-flex ms-3">
             <div class="input-group">
@@ -69,10 +69,26 @@
                 <li class="nav-item"><a class="nav-link" href="#notifications">
                         <i class="bi bi-bell"></i>
                     </a></li>
-                <!-- Login Button (Trigger Modal) -->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
-                    Đăng nhập
-                </button>
+                @auth
+                    <div class="dropdown justify-content-center align-item-center">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <strong class="text-center">{{ auth()->user()->name }}</strong>
+                            <img src="{{ auth()->user()->avatar }}" alt="" class="rounded-circle" width="50px"
+                                height="50px">
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Thông tin</a></li>
+                            <li><a class="dropdown-item" href="#">Khóa học</a></li>
+                            <li><a class="dropdown-item" href="{{ route('user.logout') }}">Đăng xuất</a></li>
+                        </ul>
+                    </div>
+                @endauth
+                @guest
+                    <a href="{{ route('user.login') }}" class="btn btn-primary">
+                        Đăng nhập
+                    </a>
+                @endguest
             </ul>
         </div>
 
@@ -135,10 +151,14 @@
                         </ul>
                     </li>
                 </ul>
-                <button type="button" class="btn btn-primary w-100 mt-3" data-bs-toggle="modal"
-                    data-bs-target="#loginModal">
-                    Đăng nhập
-                </button>
+                @if (auth()->check())
+                    echo auth()->user()->name;
+                @else
+                    <button type="button" class="btn btn-primary w-100 mt-3" data-bs-toggle="modal"
+                        data-bs-target="#loginModal">
+                        Đăng nhập
+                    </button>
+                @endif
             </div>
         </div>
     </div>
@@ -151,48 +171,4 @@
         🚀 Khóa học AI mới ra mắt! Tham gia ngay để trở thành chuyên gia! 🚀
         📚 Tặng Ebook miễn phí cho mỗi lượt đăng ký! Đừng bỏ lỡ! 📚
     </marquee>
-</div>
-
-<!-- Login Modal -->
-<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="loginModalLabel">Login</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Login Form -->
-                <form action="" method="POST">
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter your email">
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password"
-                            placeholder="Enter your password">
-                    </div>
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">Login</button>
-                    </div>
-                </form>
-
-                <div class="position-relative my-4">
-                    <hr>
-                    <span class="position-absolute top-50 start-50 translate-middle px-3 bg-white">OR</span>
-                </div>
-
-                <!-- Social Login -->
-                <div class="d-flex gap-2">
-                    <button class="btn btn-danger flex-fill">
-                        <i class="bi bi-google"></i> Login with Google
-                    </button>
-                    <button class="btn btn-primary flex-fill">
-                        <i class="bi bi-facebook"></i> Login with Facebook
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>

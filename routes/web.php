@@ -10,11 +10,46 @@ use App\Http\Controllers\SectionController;
 use App\Http\Controllers\Admin\DasboardController;
 use App\Http\Controllers\Admin\CourseCategoryController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
+/**
+ * User routes
+ */
 Route::get('/', function () {
     return view('user.pages.home');
+})->name('user.home');
+
+/**
+ * Auth routes
+ */
+
+// login
+Route::get('login', function () {
+    if (Auth::check() && Auth::user()->role_id != 1) {
+        return redirect()->route('user.home');
+    }
+    return view('user.pages.login');
+})->name('user.login');
+Route::post('login/submit', [AuthenticatedSessionController::class, 'store'])->name('user.login.submit')->defaults('redirectRoute', 'user.home');
+
+//register
+Route::get('register', function () {
+    if (Auth::check() && Auth::user()->role_id != 1) {
+        return redirect()->route('user.home');
+    }
+    return view('user.pages.register');
+})->name('user.register');
+Route::post('register/submit', [RegisteredUserController::class, 'store'])->name('user.register.submit')->defaults('redirectRoute', 'user.home');
+
+//logout
+Route::middleware('auth')->group(function () {
+    Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])->name('user.logout')->defaults('redirectRoute', 'user.home');
 });
 
+
+/**
+ * Admin routes
+ */
 Route::middleware([IsAdmin::class])->prefix('admin')->group(function () {
     /**
      * Auth Routes
@@ -30,7 +65,7 @@ Route::middleware([IsAdmin::class])->prefix('admin')->group(function () {
     Route::resource('ccategories', CourseCategoryController::class);
     Route::resource('courses', CourseController::class);
     Route::resource('sections', SectionController::class);
-    Route::resource('lectures',LectureController::class);
+    Route::resource('lectures', LectureController::class);
 });
 
 Route::prefix('admin')->group(function () {
@@ -43,8 +78,6 @@ Route::prefix('admin')->group(function () {
     Route::post('login/submit', [AuthenticatedSessionController::class, 'store'])
         ->name('admin.login.submit')
         ->defaults('redirectRoute', 'admin.dashboard');
-    // Route::resource('users', UserController::class);
-    // Route::resource('ccategories', CourseCategoryController::class);
 });
 
 // Auth::routes();

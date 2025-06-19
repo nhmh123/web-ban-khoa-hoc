@@ -3,9 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Str;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -20,7 +21,6 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'slug',
         'avatar',
         'password',
     ];
@@ -48,7 +48,16 @@ class User extends Authenticatable
         ];
     }
 
-    public function role(){
+    // protected static function boot()
+    // {
+    //     parent::boot();
+    //     static::creating(function ($user) {
+    //         $user->slug = Str::slug($user->name . ' ' . $user->id);
+    //     });
+    // }
+
+    public function role()
+    {
         return $this->belongsTo(Role::class, 'role_id', 'role_id');
     }
     public function courses()
@@ -58,6 +67,6 @@ class User extends Authenticatable
     public function enrollments()
     {
         return $this->belongsToMany(User::class, 'enrollments', 'user_id', 'course_id')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 }

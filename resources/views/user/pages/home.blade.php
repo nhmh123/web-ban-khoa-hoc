@@ -5,9 +5,6 @@
             {{ session('error') }}
         </div>
     @endsession
-    @php
-        echo auth()->user()?->name;
-    @endphp
     <!-- Hero Section -->
     <header class="bg-primary text-white text-center py-5">
         <h1>Học mọi thứ; mọi nơi, mọi lúc</h1>
