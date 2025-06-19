@@ -29,7 +29,7 @@ Route::get('login', function () {
         return redirect()->route('user.home');
     }
     return view('user.pages.login');
-})->name('user.login');
+})->name('login');
 Route::post('login/submit', [AuthenticatedSessionController::class, 'store'])->name('user.login.submit')->defaults('redirectRoute', 'user.home');
 
 //register
@@ -41,10 +41,15 @@ Route::get('register', function () {
 })->name('user.register');
 Route::post('register/submit', [RegisteredUserController::class, 'store'])->name('user.register.submit')->defaults('redirectRoute', 'user.home');
 
-//logout
 Route::middleware('auth')->group(function () {
+    //logout
     Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])->name('user.logout')->defaults('redirectRoute', 'user.home');
+
+    //profile
+    Route::get('profile/{user}', [UserController::class, 'edit'])->name('user.profile')->defaults('isAdmin', false);
+    Route::patch('profile/{user}/update', [UserController::class, 'update'])->name('user.profile.update')->defaults('isAdmin', false);
 });
+
 
 
 /**

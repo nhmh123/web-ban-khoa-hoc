@@ -78,14 +78,18 @@
                                 height="50px">
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Thông tin</a></li>
+                            <li><a class="dropdown-item"
+                                    href="{{ route('user.profile', [
+                                        'user' => auth()->user()->id,
+                                    ]) }}">Thông
+                                    tin</a></li>
                             <li><a class="dropdown-item" href="#">Khóa học</a></li>
                             <li><a class="dropdown-item" href="{{ route('user.logout') }}">Đăng xuất</a></li>
                         </ul>
                     </div>
                 @endauth
                 @guest
-                    <a href="{{ route('user.login') }}" class="btn btn-primary">
+                    <a href="{{ route('login') }}" class="btn btn-primary">
                         Đăng nhập
                     </a>
                 @endguest

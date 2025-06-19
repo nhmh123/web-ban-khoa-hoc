@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use GuzzleHttp\Promise\Create;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
@@ -49,14 +50,23 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'Thêm người dùng thành công.');
     }
-    public function edit(User $user)
+    public function edit(User $user, $isAdmin = true)
     {
-        return view('admin.pages.users.edit', compact('user'));
+        if ($isAdmin) {
+            return view('admin.pages.users.edit', compact('user'));
+        }
+
+        return view('user.pages.profile', compact('user'));
     }
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, User $user, $isAdmin = true)
     {
         // dd($request->all());
         try {
+            if(!$isAdmin){
+                if($user->id != Auth::id()){
+                    abort(403,'Không có quyền thực hiện thao tác này'); 
+                }
+            }
             // throw new \Exception('System error'); // Simulating an error for testing
             $user->name = $request->name;
             if ($request->password !== null) {
@@ -67,7 +77,12 @@ class UserController extends Controller
                 $user->avatar = $avatar;
             }
             $user->save();
-            return redirect()->route('users.index')->with('success', 'Cập nhật người dùng thành công.');
+
+            if ($isAdmin) {
+                return redirect()->route('users.index')->with('success', 'Cập nhật người dùng thành công.');
+            }
+
+            return redirect()->back()->with('success', 'Cập nhật người dùng thành công.');
         } catch (\Throwable $th) {
             return redirect()->back()->with('error', 'Cập nhật người dùng thất bại: ' . $th->getMessage());
         }
