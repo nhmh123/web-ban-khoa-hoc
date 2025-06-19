@@ -25,7 +25,7 @@
                         </button>
                     </div>
                 </form>
-                <li class="nav-item dropdown">
+                <li class="nav-item fw-bold mx-2 align-content-center dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="courseDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         Danh mục
@@ -62,17 +62,16 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item"><a class="nav-link" href="#wishlist">
+                <li class="nav-item fw-bold mx-2 align-content-center"><a class="nav-link" href="#wishlist">
                         <i class="bi bi-heart"></i></a></li>
-                <li class="nav-item"><a class="nav-link" href="#cart">
+                <li class="nav-item fw-bold mx-2 align-content-center"><a class="nav-link" href="#cart">
                         <i class="bi bi-cart3"></i></a></li>
-                <li class="nav-item"><a class="nav-link" href="#notifications">
+                <li class="nav-item fw-bold mx-2 align-content-center"><a class="nav-link" href="#notifications">
                         <i class="bi bi-bell"></i>
                     </a></li>
                 @auth
                     <div class="dropdown justify-content-center align-item-center">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <strong class="text-center">{{ auth()->user()->name }}</strong>
                             <img src="{{ auth()->user()->avatar }}" alt="" class="rounded-circle" width="50px"
                                 height="50px">
