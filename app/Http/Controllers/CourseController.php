@@ -56,7 +56,8 @@ class CourseController extends Controller
      */
     public function show(Course $course)
     {
-        //
+        $course->load('category', 'user', 'sections', 'sections.lectures')->first();
+        return view('user.pages.course-detail', compact('course'));
     }
 
     /**
@@ -67,8 +68,8 @@ class CourseController extends Controller
         $languages = Language::all();
         $levels = DifficultyLevel::all();
         $categories = CourseCategory::all();
-        $sections = $course->sections()->orderBy('created_at','asc')->get();
-        return view('admin.pages.courses.edit', compact('course', 'languages', 'levels', 'categories','sections'));
+        $sections = $course->sections()->orderBy('created_at', 'asc')->get();
+        return view('admin.pages.courses.edit', compact('course', 'languages', 'levels', 'categories', 'sections'));
     }
 
     /**
@@ -94,13 +95,13 @@ class CourseController extends Controller
     {
         try {
             $hasEnrolled = $course->enrollments()->exists();
-            if($hasEnrolled) {
+            if ($hasEnrolled) {
                 return back()->withErrors(['error' => 'Không thể xóa khóa học vì có người đã đăng ký.']);
             }
             $course->delete();
             return redirect()->route('courses.index')->with('success', 'Xóa khóa học thành công!');
         } catch (\Throwable $th) {
-            return back()->withErrors(['error'=> 'Có lỗi xảy ra: ' . $th->getMessage()])->withInput();
+            return back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $th->getMessage()])->withInput();
         }
     }
 }

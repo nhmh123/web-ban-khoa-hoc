@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('sections', function (Blueprint $table) {
             $table->id('sec_id');
-            $table->string('name')->unique();
-            $table->string('slug')->unique();
+            $table->string('name');
+            $table->string('slug');
             $table->integer('duration')->default(0);
             $table->text('description')->nullable();
             $table->tinyInteger('order')->default(0);

@@ -44,7 +44,7 @@
                                         alt="thumbnail" class="img-fluid" width="100">
                                 </td>
                                 <td>
-                                    <span class="text-danger fw-bold">{{ number_format($course->original_price, 0, ',', '.') }}đ</span>
+                                    <span class="text-danger fw-bold">{{ $course->original_price }}</span>
                                 </td>
                                 <td>{{ $course->category->cc_name ?? 'Không rõ' }}</td>
                                 <td class="text-center">{{ $course->enrollments()->count() }}</td>

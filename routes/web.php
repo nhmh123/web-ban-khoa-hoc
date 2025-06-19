@@ -11,13 +11,12 @@ use App\Http\Controllers\Admin\DasboardController;
 use App\Http\Controllers\Admin\CourseCategoryController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\User\HomeController;
 
 /**
  * User routes
  */
-Route::get('/', function () {
-    return view('user.pages.home');
-})->name('user.home');
+Route::get('/', [HomeController::class, 'index'])->name('user.home');
 
 /**
  * Auth routes
@@ -48,6 +47,9 @@ Route::middleware('auth')->group(function () {
     //profile
     Route::get('profile/{user}', [UserController::class, 'edit'])->name('user.profile')->defaults('isAdmin', false);
     Route::patch('profile/{user}/update', [UserController::class, 'update'])->name('user.profile.update')->defaults('isAdmin', false);
+
+    //course detail
+    Route::get('course/{course:slug}',[CourseController::class,'show'])->name('user.courses.show');
 });
 
 

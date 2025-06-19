@@ -33,6 +33,14 @@ class Course extends Model
         'rating' => 'decimal:2',
     ];
 
+    public function getOriginalPriceAttribute($value){
+        return number_format($value).'đ';
+    }
+
+    public function getSalePriceAttribute($value){
+        return number_format($value).'đ';
+    }
+
     public function getDurationAttribute($value){
         return \Carbon\CarbonInterval::seconds($value)->cascade()->forHumans();
     }

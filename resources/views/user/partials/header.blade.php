@@ -72,11 +72,12 @@
                 @auth
                     <div class="dropdown justify-content-center align-item-center">
                         <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <strong class="text-center">{{ auth()->user()->name }}</strong>
                             <img src="{{ auth()->user()->avatar }}" alt="" class="rounded-circle" width="50px"
                                 height="50px">
                         </button>
                         <ul class="dropdown-menu">
+                            <strong class="text-center px-2">{{ auth()->user()->name }}</strong>
+                            <hr>
                             <li><a class="dropdown-item"
                                     href="{{ route('user.profile', [
                                         'user' => auth()->user()->id,
