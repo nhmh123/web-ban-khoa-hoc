@@ -74,7 +74,7 @@
                                     @else
                                         <p class="mb-1 small fs-5 fw-bold">{{ $course->original_price }}</p>
                                     @endif
-                                    <a href="" class="btn btn-primary btn-sm mt-auto">Xem khóa học</a>
+                                    <a href="{{ route('user.courses.show', ['course' => $course->slug]) }}" class="btn btn-primary btn-sm mt-auto">Xem khóa học</a>
                                 </div>
                             </div>
                         </div>

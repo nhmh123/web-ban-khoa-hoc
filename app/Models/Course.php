@@ -68,4 +68,8 @@ class Course extends Model
     {
         return $this->belongsToMany(User::class, 'enrollments', 'course_id', 'user_id');
     }
+    public function wishlist()
+    {
+        return $this->belongsToMany(User::class, 'wishlists', 'course_id', 'user_id');
+    }
 }

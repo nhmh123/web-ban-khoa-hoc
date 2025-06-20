@@ -13,9 +13,6 @@
                     </div>
                     <p class="mt-3">Giảng viên: <strong>{{ $course->user->name }}</strong></p>
                 </div>
-                {{-- <div class="col-lg-4 text-lg-end">
-                    <button class="btn btn-primary btn-lg">Mua ngay - {{ $course->original_price }}</button>
-                </div> --}}
             </div>
         </div>
     </header>
@@ -127,10 +124,27 @@
                                 <i class="bi bi-cart-plus"></i>
                                 <span>Thêm vào giỏ hàng</span>
                             </button>
-                            <button class="flex-fill btn btn-outline-secondary w-100">
-                                <i class="bi bi-heart"></i>
-                                <span>Yêu thích</span>
-                            </button>
+
+                            @if ($alreadyInWishlist)
+                                <form action="{{ route('user.wishlist.remove', $course->id) }}" method="POST"
+                                    name="remove-from-wishlist">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="flex-fill btn btn-danger w-100">
+                                        <i class="bi bi-heartbreak"></i>
+                                        <span>Xóa khỏi yêu thích</span>
+                                    </button>
+                                </form>
+                            @else
+                                <form action="{{ route('user.wishlist.add', $course->id) }}" method="POST"
+                                    name="add-to-wishlist">
+                                    @csrf
+                                    <button type="submit" class="flex-fill btn btn-danger w-100">
+                                        <i class="bi bi-heart"></i>
+                                        <span>Thêm vào yêu thích</span>
+                                    </button>
+                                </form>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -166,4 +180,71 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                let addToWishlist = $('form[name="add-to-wishlist"]');
+                let removeFromWishlist = $('form[name="remove-from-wishlist"]');
+
+                addToWishlist.on('submit', function(e) {
+                    e.preventDefault();
+                    let form = $(this);
+                    let url = form.attr('action');
+
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: form.serialize(),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        success: function(response) {
+                            console.log('Success:', response);
+                            alert(response.message ||
+                                'Khóa học đã được thêm vào danh sách yêu thích.');
+                            location.reload();
+                            // form.hide();
+                            // removeFromWishlist.show();
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error, status, xhr);
+                            alert('Đã xảy ra lỗi khi thêm khóa học vào danh sách yêu thích.');
+                        }
+                    });
+                });
+
+                removeFromWishlist.on('submit', function(e) {
+                    e.preventDefault();
+                    let form = $(this);
+                    let url = form.attr('action');
+
+                    $.ajax({
+                        method: 'DELETE',
+                        url: url,
+                        data: form.serialize(),
+                        success: function(response) {
+                            console.log('Success:', response);
+                            alert(response.message ||
+                                'Khóa học đã được xóa khỏi danh sách yêu thích.');
+                            location.reload();
+                            // form.hide();
+                            // addToWishlist.show();
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error, status, xhr);
+                            alert('Đã xảy ra lỗi khi xóa khóa học khỏi danh sách yêu thích.');
+                        }
+                    })
+                });
+
+                // if ({{ $alreadyInWishlist ? 'true' : 'false' }}) {
+                //     addToWishlist.hide();
+                //     removeFromWishlist.show();
+                // } else {
+                //     addToWishlist.show();
+                //     removeFromWishlist.hide();
+                // }
+            });
+        </script>
+    @endpush
 @endsection

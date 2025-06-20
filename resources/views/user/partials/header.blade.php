@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container d-flex justify-content-between">
         <a class="navbar-brand" href="{{ route('user.home') }}">
             <i class="bi bi-play-circle me-1"></i>CourseWeb</a>
@@ -62,12 +62,13 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item fw-bold mx-2 align-content-center"><a class="nav-link" href="#wishlist">
-                        <i class="bi bi-heart"></i></a></li>
+                <li class="nav-item fw-bold mx-2 align-content-center"><a class="nav-link text-white"
+                        href="{{ route('user.wishlist') }}">
+                        <i class="bi bi-heart-fill"></i></a></li>
                 <li class="nav-item fw-bold mx-2 align-content-center"><a class="nav-link" href="#cart">
-                        <i class="bi bi-cart3"></i></a></li>
+                        <i class="bi bi-cart-fill text-white"></i></a></li>
                 <li class="nav-item fw-bold mx-2 align-content-center"><a class="nav-link" href="#notifications">
-                        <i class="bi bi-bell"></i>
+                        <i class="bi bi-bell-fill text-white"></i>
                     </a></li>
                 @auth
                     <div class="dropdown justify-content-center align-item-center">

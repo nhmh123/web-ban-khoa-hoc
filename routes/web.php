@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\CourseCategoryController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\User\HomeController;
+use App\Http\Controllers\User\WishlistController;
 
 /**
  * User routes
@@ -50,6 +51,11 @@ Route::middleware('auth')->group(function () {
 
     //course detail
     Route::get('course/{course:slug}',[CourseController::class,'show'])->name('user.courses.show');
+
+    //wishlist
+    Route::get('wishlist', [WishlistController::class, 'wishlist'])->name('user.wishlist');
+    Route::post('wishlist/add/{course}', [WishlistController::class, 'addToWishlist'])->name('user.wishlist.add');
+    Route::delete('wishlist/remove/{course}', [WishlistController::class, 'removeFromWishlist'])->name('user.wishlist.remove');
 });
 
 
