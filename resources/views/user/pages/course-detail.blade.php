@@ -118,7 +118,7 @@
                         <h3 class="card-title">{{ $course->original_price }}</h3>
                         <p class="text-muted">Limited-time offer</p>
 
-                        @if (Auth::check() && Auth::user()->enrollments()->where('course_id', $course->id)->exists())
+                        @if (Auth::check() && Auth::user()->enrolledCourses->contains($course->id))
                             <form action="" method="POST" name="access-course">
                                 @csrf
                                 <button type="submit" class="btn btn-primary w-100 mb-2">Truy cập khóa học</button>

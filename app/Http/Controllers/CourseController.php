@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Course\CreateCourseRequest;
-use App\Http\Requests\Course\UpdateCourseRequest;
 use App\Models\Course;
+use App\Models\Language;
+use App\Models\Enrollment;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Models\CourseCategory;
 use App\Models\DifficultyLevel;
-use App\Models\Language;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Course\CreateCourseRequest;
+use App\Http\Requests\Course\UpdateCourseRequest;
 
 class CourseController extends Controller
 {
@@ -110,15 +111,25 @@ class CourseController extends Controller
     {
         $user = Auth::user();
         try {
-            $user->enrollments()->attach($course->id);
+            $user->enrolledCourses()->syncWithoutDetaching([$course->id]);
 
             if ($user->cartItem()->where('course_id', $course->id)->exists()) {
                 $user->cartItem()->where('course_id', $course->id)->delete();
             }
-            
+
             return redirect()->back()->with('success', 'Đăng ký khóa học thành công!');
         } catch (\Throwable $th) {
             return back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $th->getMessage()])->withInput();
         }
+    }
+
+    public function userCourses()
+    {
+        $user = Auth::user();
+        // $courses = Enrollment::where('user_id', $user->id)->with('course')->paginate(3);
+        $courses = $user->enrolledCourses()->with('category', 'user', 'sections', 'sections.lectures')->paginate(3);
+        // dd($courses);
+        $categories = Enrollment::where('user_id', $user->id)->with('course.category')->get()->pluck('course.category')->unique('cc_id');
+        return view('user.pages.my-courses', compact('courses', 'categories'));
     }
 }

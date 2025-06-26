@@ -68,7 +68,7 @@
                 <li class="nav-item fw-bold mx-2 align-content-center">
                     <a class="nav-link position-relative" href="{{ route('user.cart') }}">
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            {{ auth()->user()?->cartItem->count()}}
+                            {{ auth()->user()?->cartItem->count() }}
                             <span class="visually-hidden">unread messages</span>
                         </span>
                         <i class="bi bi-cart-fill text-white"></i>
@@ -91,7 +91,7 @@
                                         'user' => auth()->user()->id,
                                     ]) }}">Thông
                                     tin</a></li>
-                            <li><a class="dropdown-item" href="#">Khóa học</a></li>
+                            <li><a class="dropdown-item" href="{{ route('user.my-courses') }}">Khóa học</a></li>
                             <li><a class="dropdown-item" href="{{ route('user.logout') }}">Đăng xuất</a></li>
                         </ul>
                     </div>

@@ -66,13 +66,18 @@ class User extends Authenticatable
     }
     public function enrollments()
     {
-        return $this->belongsToMany(User::class, 'enrollments', 'user_id', 'course_id');
+        return $this->has(Enrollment::class, 'user_id', 'id');
+    }
+    public function enrolledCourses()
+    {
+        return $this->belongsToMany(Course::class, 'enrollments', 'user_id', 'course_id');
     }
     public function wishlist()
     {
         return $this->belongsToMany(Course::class, 'wishlists', 'user_id', 'course_id');
     }
-    public function cartItem(){
+    public function cartItem()
+    {
         return $this->hasMany(CartItem::class, 'user_id', 'id');
     }
 }
