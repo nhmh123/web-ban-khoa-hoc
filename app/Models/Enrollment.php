@@ -11,6 +11,8 @@ class Enrollment extends Model
         'course_id',
     ];
 
+    public $timestamps = true;
+
     /**
      * Get the user that owns the enrollment.
      */

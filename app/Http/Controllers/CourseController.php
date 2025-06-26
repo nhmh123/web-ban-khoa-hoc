@@ -58,7 +58,7 @@ class CourseController extends Controller
     {
         $course->load('category', 'user', 'sections', 'sections.lectures')->first();
         $alreadyInWishlist = Auth::user()?->wishlist->contains($course->id) ?? false;
-        return view('user.pages.course-detail', compact('course','alreadyInWishlist'));
+        return view('user.pages.course-detail', compact('course', 'alreadyInWishlist'));
     }
 
     /**
@@ -101,6 +101,22 @@ class CourseController extends Controller
             }
             $course->delete();
             return redirect()->route('courses.index')->with('success', 'Xóa khóa học thành công!');
+        } catch (\Throwable $th) {
+            return back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $th->getMessage()])->withInput();
+        }
+    }
+
+    public function enroll(Course $course)
+    {
+        $user = Auth::user();
+        try {
+            $user->enrollments()->attach($course->id);
+
+            if ($user->cartItem()->where('course_id', $course->id)->exists()) {
+                $user->cartItem()->where('course_id', $course->id)->delete();
+            }
+            
+            return redirect()->back()->with('success', 'Đăng ký khóa học thành công!');
         } catch (\Throwable $th) {
             return back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $th->getMessage()])->withInput();
         }

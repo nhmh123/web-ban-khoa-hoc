@@ -118,37 +118,48 @@
                         <h3 class="card-title">{{ $course->original_price }}</h3>
                         <p class="text-muted">Limited-time offer</p>
 
-                        <a href="" class="btn btn-success w-100 mb-2">Đăng ký ngay</a>
-                        <div class="d-flex gap-2">
-                            <form action="{{ route('user.cart.add', $course->id) }}" method="POST" name="add-to-cart">
+                        @if (Auth::check() && Auth::user()->enrollments()->where('course_id', $course->id)->exists())
+                            <form action="" method="POST" name="access-course">
                                 @csrf
-                                <button type="submit" class="flex-fill btn btn-outline-primary w-100">
-                                    <i class="bi bi-cart-plus"></i>
-                                    <span>Thêm vào giỏ hàng</span>
-                                </button>
+                                <button type="submit" class="btn btn-primary w-100 mb-2">Truy cập khóa học</button>
                             </form>
+                        @else
+                            <form action="{{ route('user.course.enroll', $course->id) }}" method="POST"
+                                name="enroll-course">
+                                @csrf
+                                <button type="submit" class="btn btn-success w-100 mb-2">Đăng ký ngay</button>
+                            </form>
+                            <div class="d-flex gap-2">
+                                <form action="{{ route('user.cart.add', $course->id) }}" method="POST" name="add-to-cart">
+                                    @csrf
+                                    <button type="submit" class="flex-fill btn btn-outline-primary w-100">
+                                        <i class="bi bi-cart-plus"></i>
+                                        <span>Thêm vào giỏ hàng</span>
+                                    </button>
+                                </form>
 
-                            @if ($alreadyInWishlist)
-                                <form action="{{ route('user.wishlist.remove', $course->id) }}" method="POST"
-                                    name="remove-from-wishlist">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="flex-fill btn btn-danger w-100">
-                                        <i class="bi bi-heartbreak"></i>
-                                        <span>Xóa khỏi yêu thích</span>
-                                    </button>
-                                </form>
-                            @else
-                                <form action="{{ route('user.wishlist.add', $course->id) }}" method="POST"
-                                    name="add-to-wishlist">
-                                    @csrf
-                                    <button type="submit" class="flex-fill btn btn-danger w-100">
-                                        <i class="bi bi-heart"></i>
-                                        <span>Thêm vào yêu thích</span>
-                                    </button>
-                                </form>
-                            @endif
-                        </div>
+                                @if ($alreadyInWishlist)
+                                    <form action="{{ route('user.wishlist.remove', $course->id) }}" method="POST"
+                                        name="remove-from-wishlist">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="flex-fill btn btn-danger w-100">
+                                            <i class="bi bi-heartbreak"></i>
+                                            <span>Xóa khỏi yêu thích</span>
+                                        </button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('user.wishlist.add', $course->id) }}" method="POST"
+                                        name="add-to-wishlist">
+                                        @csrf
+                                        <button type="submit" class="flex-fill btn btn-danger w-100">
+                                            <i class="bi bi-heart"></i>
+                                            <span>Thêm vào yêu thích</span>
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        @endif
                     </div>
                 </div>
 
@@ -286,7 +297,7 @@
                             alert(message);
                         }
                     });
-                });         
+                });
             });
         </script>
     @endpush

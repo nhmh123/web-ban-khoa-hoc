@@ -78,4 +78,8 @@ class CartController extends Controller
             return redirect()->back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $th->getMessage()]);
         }
     }
+    public function checkout(Request $request){
+        dd($request->ids);
+        return view('user.pages.checkout');
+    }
 }

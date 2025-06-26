@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\DasboardController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin\CourseCategoryController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\User\CheckoutController;
 
 /**
  * User routes
@@ -65,6 +66,13 @@ Route::middleware('auth')->group(function () {
     Route::post('cart/add/{course}', [CartController::class, 'addToCart'])->name('user.cart.add');
     Route::delete('cart/remove/{course}', [CartController::class, 'removeFromCart'])->name('user.cart.remove');
     ROute::delete('cart/clear', [CartController::class, 'clearCart'])->name('user.cart.clear');
+
+    //checkout
+    Route::post('checkout', [CheckoutController::class, 'checkout'])->name('user.checkout');
+    Route::post('checkout/submit', [CheckoutController::class, 'submitCheckout'])->name('user.checkout.submit');
+
+    //enroll course
+    Route::post('course/enroll/{course}', [CourseController::class, 'enroll'])->name('user.course.enroll');
 });
 
 

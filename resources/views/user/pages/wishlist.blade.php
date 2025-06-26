@@ -34,16 +34,23 @@
                                         @endif
 
                                         <div class="mt-auto d-flex gap-2">
-                                            <!-- Add to Cart -->
-                                            <form action="{{ route('user.cart.add', $course->id) }}" method="POST"
-                                                name="add-to-cart">
-                                                @csrf
-                                                <button type="submit" class="flex-fill btn btn-outline-primary w-100">
-                                                    <i class="bi bi-cart-plus"></i>
-                                                    <span>Thêm vào giỏ hàng</span>
-                                                </button>
-                                            </form>
-
+                                            @if (Auth::check() && Auth::user()->enrollments()->where('course_id', $course->id)->exists())
+                                                <form action="" method="POST" name="access-course">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-primary w-100 mb-2">Truy cập khóa
+                                                        học</button>
+                                                </form>
+                                            @else
+                                                <!-- Add to Cart -->
+                                                <form action="{{ route('user.cart.add', $course->id) }}" method="POST"
+                                                    name="add-to-cart">
+                                                    @csrf
+                                                    <button type="submit" class="flex-fill btn btn-outline-primary w-100">
+                                                        <i class="bi bi-cart-plus"></i>
+                                                        <span>Thêm vào giỏ hàng</span>
+                                                    </button>
+                                                </form>
+                                            @endif
                                             <!-- Remove from Wishlist -->
                                             <form action="{{ route('user.wishlist.remove', $course->id) }}" method="POST"
                                                 name="remove-from-wishlist">
@@ -53,6 +60,7 @@
                                                     <i class="bi bi-heartbreak"></i>
                                                 </button>
                                             </form>
+
                                         </div>
                                     </div>
                                 </div>

@@ -25,7 +25,7 @@
                         </button>
                     </div>
                 </form>
-                <li class="nav-item fw-bold mx-2 align-content-center dropdown">
+                {{-- <li class="nav-item fw-bold mx-2 align-content-center dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="courseDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         Danh mục
@@ -61,14 +61,14 @@
                             </ul>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
                 <li class="nav-item fw-bold mx-2 align-content-center"><a class="nav-link text-white"
                         href="{{ route('user.wishlist') }}">
                         <i class="bi bi-heart-fill"></i></a></li>
                 <li class="nav-item fw-bold mx-2 align-content-center">
                     <a class="nav-link position-relative" href="{{ route('user.cart') }}">
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            {{ auth()->user()->cartItem->count()}}
+                            {{ auth()->user()?->cartItem->count()}}
                             <span class="visually-hidden">unread messages</span>
                         </span>
                         <i class="bi bi-cart-fill text-white"></i>

@@ -31,7 +31,7 @@
                         <table class="table">
                             <tr>
                                 <th>
-                                    <input type="checkbox" id="checkAll">
+                                    <input type="checkbox" id="checkAll" checked>
                                 </th>
                                 <th>Tên khóa học</th>
                                 <th>Giá</th>
@@ -41,7 +41,7 @@
                                 @foreach ($cartItems as $item)
                                     <tr>
                                         <td>
-                                            <input type="checkbox" name="ids[]" value="{{ $item->course->id }}">
+                                            <input type="checkbox" name="ids[]" value="{{ $item->course->id }}" checked>
                                         </td>
                                         <td class="d-flex align-items-between">
                                             <div class="col-md-4">
@@ -51,7 +51,8 @@
                                             <div class="col-md-8">
                                                 <div class="card-body">
                                                     <a href="" class="card-title">{{ $item->course->name }}</a>
-                                                    <p class="card-text small text-muted">{{ $item->course->user->name }}
+                                                    <p class="card-text small text-muted">
+                                                        {{ $item->course->user->name }}
                                                     </p>
                                                 </div>
                                             </div>
@@ -78,7 +79,6 @@
                             </tbody>
                         </table>
                     </form>
-
                 </div>
 
                 <!-- Checkout Summary -->
@@ -92,14 +92,13 @@
                                     <strong>{{ number_format($cartTotal) }}đ</strong>
                                 </li>
                             </ul>
-
-                            <form action="{{ route('user.cart.remove', $item->course->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-primary w-100">Tiến hành thanh toán</button>
-                            </form>
+                            {{-- Checkout button --}}
+                            <button type="submit" class="btn btn-primary w-100">Tiến hành thanh
+                                toán</button>
                         </div>
                     </div>
                 </div>
+
             </div>
         @else
             <div class="alert alert-info">
@@ -114,6 +113,12 @@
                 let checkAll = $('#checkAll');
                 checkAll.on('change', function() {
                     $('input[name="ids[]"]').prop('checked', this.checked);
+                })
+
+                let checks = $('input[name="ids[]"]');
+                console.log(checks);
+                checks.each(function() {
+                    console.log($(this).val());
                 })
 
                 // let removeFromCart = $('form[name="remove-from-cart"]');
