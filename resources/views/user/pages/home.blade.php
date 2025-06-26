@@ -11,7 +11,7 @@
         <p>Truy cập các khóa học và bắt đầu hành trình ngay bây giờ</p>
         <a href="#courses" class="btn btn-light">Xem khóa học</a>
     </header>
-
+    
     <!-- Courses Section -->
     <section id="courses" class="container my-5">
         <h3 class="text-start mb-4">Khóa học phổ biến</h3>
@@ -74,7 +74,8 @@
                                     @else
                                         <p class="mb-1 small fs-5 fw-bold">{{ $course->original_price }}</p>
                                     @endif
-                                    <a href="{{ route('user.courses.show', ['course' => $course->slug]) }}" class="btn btn-primary btn-sm mt-auto">Xem khóa học</a>
+                                    <a href="{{ route('user.courses.show', ['course' => $course->slug]) }}"
+                                        class="btn btn-primary btn-sm mt-auto">Xem khóa học</a>
                                 </div>
                             </div>
                         </div>

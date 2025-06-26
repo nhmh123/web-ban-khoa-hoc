@@ -1,4 +1,4 @@
-<div id="sidebar" class="bg-white">
+<div id="sidebar" class="bg-dark">
     <ul id="sidebar-menu">
         <li class="nav-link">
             <a href="{{ route('admin.dashboard') }}">

@@ -120,10 +120,13 @@
 
                         <a href="" class="btn btn-success w-100 mb-2">Đăng ký ngay</a>
                         <div class="d-flex gap-2">
-                            <button class="flex-fill btn btn-outline-primary w-100">
-                                <i class="bi bi-cart-plus"></i>
-                                <span>Thêm vào giỏ hàng</span>
-                            </button>
+                            <form action="{{ route('user.cart.add', $course->id) }}" method="POST" name="add-to-cart">
+                                @csrf
+                                <button type="submit" class="flex-fill btn btn-outline-primary w-100">
+                                    <i class="bi bi-cart-plus"></i>
+                                    <span>Thêm vào giỏ hàng</span>
+                                </button>
+                            </form>
 
                             @if ($alreadyInWishlist)
                                 <form action="{{ route('user.wishlist.remove', $course->id) }}" method="POST"
@@ -185,6 +188,7 @@
             $(document).ready(function() {
                 let addToWishlist = $('form[name="add-to-wishlist"]');
                 let removeFromWishlist = $('form[name="remove-from-wishlist"]');
+                let addToCart = $('form[name="add-to-cart"]');
 
                 addToWishlist.on('submit', function(e) {
                     e.preventDefault();
@@ -208,7 +212,12 @@
                         },
                         error: function(xhr, status, error) {
                             console.error('Error:', error, status, xhr);
-                            alert('Đã xảy ra lỗi khi thêm khóa học vào danh sách yêu thích.');
+                            if (xhr.status === 401) {
+                                alert('Bạn cần đăng nhập để thực hiện hành động này.');
+                                return;
+                            }
+                            alert(error.JSON.message ||
+                                'Đã xảy ra lỗi khi thêm khóa học vào danh sách yêu thích.');
                         }
                     });
                 });
@@ -244,6 +253,40 @@
                 //     addToWishlist.show();
                 //     removeFromWishlist.hide();
                 // }
+
+                addToCart.on('submit', function(e) {
+                    e.preventDefault();
+                    let form = $(this);
+                    let url = form.attr('action');
+
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: form.serialize(),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                alert(response.message ||
+                                    'Đã thêm khóa học vào giỏ hàng thành công!');
+                            } else {
+                                alert(response.message || 'Đã xảy ra lỗi!');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            let message = 'Đã xảy ra lỗi khi thêm khóa học vào giỏ hàng.';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                message = xhr.responseJSON.message;
+                            } else if (xhr.status === 401) {
+                                message = 'Bạn cần đăng nhập để thực hiện thao tác này.';
+                            } else if (xhr.status === 400) {
+                                message = 'Yêu cầu không hợp lệ.';
+                            }
+                            alert(message);
+                        }
+                    });
+                });         
             });
         </script>
     @endpush

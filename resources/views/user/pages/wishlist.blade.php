@@ -16,7 +16,8 @@
                                         style="height: 150px; object-fit: cover;" alt="Course Image">
 
                                     <div class="card-body d-flex flex-column">
-                                        <h5 class="card-title fs-6 fw-bold">{{ $course->name }}</h5>
+                                        <a href={{ route('user.courses.show', ['course' => $course->slug]) }}
+                                            class="card-title fs-6 fw-bold">{{ $course->name }}</a>
                                         <p class="card-text small text-muted mb-1">
                                             {{ Str::limit($course->sort_description, 80) }}</p>
                                         <p class="mb-1 small">{{ $course->user->name }}</p>
@@ -34,10 +35,12 @@
 
                                         <div class="mt-auto d-flex gap-2">
                                             <!-- Add to Cart -->
-                                            <form action="" method="POST">
+                                            <form action="{{ route('user.cart.add', $course->id) }}" method="POST"
+                                                name="add-to-cart">
                                                 @csrf
-                                                <button type="submit" class="btn btn-sm btn-success w-100">
-                                                    <i class="bi bi-cart-plus"></i> Thêm vào giỏ
+                                                <button type="submit" class="flex-fill btn btn-outline-primary w-100">
+                                                    <i class="bi bi-cart-plus"></i>
+                                                    <span>Thêm vào giỏ hàng</span>
                                                 </button>
                                             </form>
 
@@ -65,6 +68,8 @@
         <script>
             $(document).ready(function() {
                 let removeFromWishlist = $('form[name="remove-from-wishlist"]');
+                let addToCart = $('form[name="add-to-cart"]');
+
                 removeFromWishlist.on('submit', function(e) {
                     e.preventDefault();
                     let form = $(this);
@@ -87,6 +92,39 @@
                             alert('Đã xảy ra lỗi khi xóa khóa học khỏi danh sách yêu thích.');
                         }
                     })
+                });
+                addToCart.on('submit', function(e) {
+                    e.preventDefault();
+                    let form = $(this);
+                    let url = form.attr('action');
+
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: form.serialize(),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                alert(response.message ||
+                                    'Đã thêm khóa học vào giỏ hàng thành công!');
+                            } else {
+                                alert(response.message || 'Đã xảy ra lỗi!');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            let message = 'Đã xảy ra lỗi khi thêm khóa học vào giỏ hàng.';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                message = xhr.responseJSON.message;
+                            } else if (xhr.status === 401) {
+                                message = 'Bạn cần đăng nhập để thực hiện thao tác này.';
+                            } else if (xhr.status === 400) {
+                                message = 'Yêu cầu không hợp lệ.';
+                            }
+                            alert(message);
+                        }
+                    });
                 });
             })
         </script>

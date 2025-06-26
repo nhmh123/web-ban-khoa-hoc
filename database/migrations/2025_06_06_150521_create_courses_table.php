@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('thumbnail')->nullable();
             $table->text('description')->nullable();
             $table->decimal('original_price', 10, 2)->default(0.00);
-            $table->decimal('sale_price', 10, 2)->default(0.00);
+            $table->decimal('sale_price', 10, 2)->nullable();
             $table->text('short_description')->nullable();
             $table->text('content')->nullable();
             $table->text('enroll_requirements')->nullable();

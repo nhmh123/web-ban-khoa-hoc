@@ -7,12 +7,13 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LectureController;
 use App\Http\Controllers\SectionController;
-use App\Http\Controllers\Admin\DasboardController;
-use App\Http\Controllers\Admin\CourseCategoryController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\WishlistController;
+use App\Http\Controllers\Admin\DasboardController;
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Admin\CourseCategoryController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /**
  * User routes
@@ -41,6 +42,11 @@ Route::get('register', function () {
 })->name('user.register');
 Route::post('register/submit', [RegisteredUserController::class, 'store'])->name('user.register.submit')->defaults('redirectRoute', 'user.home');
 
+//course detail
+Route::get('course/{course:slug}', [CourseController::class, 'show'])->name('user.courses.show');
+
+Route::post('wishlist/add/{course}', [WishlistController::class, 'addToWishlist'])->name('user.wishlist.add');
+
 Route::middleware('auth')->group(function () {
     //logout
     Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])->name('user.logout')->defaults('redirectRoute', 'user.home');
@@ -49,13 +55,16 @@ Route::middleware('auth')->group(function () {
     Route::get('profile/{user}', [UserController::class, 'edit'])->name('user.profile')->defaults('isAdmin', false);
     Route::patch('profile/{user}/update', [UserController::class, 'update'])->name('user.profile.update')->defaults('isAdmin', false);
 
-    //course detail
-    Route::get('course/{course:slug}',[CourseController::class,'show'])->name('user.courses.show');
-
     //wishlist
     Route::get('wishlist', [WishlistController::class, 'wishlist'])->name('user.wishlist');
-    Route::post('wishlist/add/{course}', [WishlistController::class, 'addToWishlist'])->name('user.wishlist.add');
+
     Route::delete('wishlist/remove/{course}', [WishlistController::class, 'removeFromWishlist'])->name('user.wishlist.remove');
+
+    //cart
+    Route::get('cart', [CartController::class, 'index'])->name('user.cart');
+    Route::post('cart/add/{course}', [CartController::class, 'addToCart'])->name('user.cart.add');
+    Route::delete('cart/remove/{course}', [CartController::class, 'removeFromCart'])->name('user.cart.remove');
+    ROute::delete('cart/clear', [CartController::class, 'clearCart'])->name('user.cart.clear');
 });
 
 

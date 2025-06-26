@@ -33,15 +33,18 @@ class Course extends Model
         'rating' => 'decimal:2',
     ];
 
-    public function getOriginalPriceAttribute($value){
-        return number_format($value).'đ';
+    public function getOriginalPriceAttribute($value)
+    {
+        return number_format($value);
     }
 
-    public function getSalePriceAttribute($value){
-        return number_format($value).'đ';
+    public function getSalePriceAttribute($value)
+    {
+        return number_format($value);
     }
 
-    public function getDurationAttribute($value){
+    public function getDurationAttribute($value)
+    {
         return \Carbon\CarbonInterval::seconds($value)->cascade()->forHumans();
     }
     public function category()
@@ -71,5 +74,9 @@ class Course extends Model
     public function wishlist()
     {
         return $this->belongsToMany(User::class, 'wishlists', 'course_id', 'user_id');
+    }
+    public function cartItem()
+    {
+        return $this->hasMany(CartItem::class, 'course_id', 'id');
     }
 }
