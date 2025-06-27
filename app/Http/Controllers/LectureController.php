@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Video;
+use App\Models\Course;
 use App\Models\Article;
 use App\Models\Lecture;
 use App\Enums\LectureEnum;
-use App\Http\Requests\Lecture\CreateLectureRequest;
-use App\Http\Requests\Lecture\UpdateLectureRequest;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Container\Attributes\DB;
+use App\Http\Requests\Lecture\CreateLectureRequest;
+use App\Http\Requests\Lecture\UpdateLectureRequest;
 
 class LectureController extends Controller
 {
@@ -73,10 +75,27 @@ class LectureController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Lecture $lecture)
+    public function show(Course $course, Lecture $lecture)
     {
-        //
+        $user = Auth::user();
+
+        if (!$user) {
+            abort(403);
+        }
+
+        // ✅ Kiểm tra xem bài giảng có thuộc về khóa học này không
+        if ($lecture->section->course_id !== $course->id) {
+            abort(403, 'Bài giảng không thuộc khóa học này.');
+        }
+
+        // ✅ Kiểm tra quyền truy cập khóa học
+        if (!$user->canAccessLecture($lecture)) {
+            abort(403, 'Bạn chưa đăng ký khóa học này.');
+        }
+
+        return view('user.pages.course-video', compact('lecture', 'course'));
     }
+
 
     /**
      * Show the form for editing the specified resource.

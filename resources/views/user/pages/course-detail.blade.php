@@ -46,11 +46,24 @@
                                         <ul class="list-unstyled m-0">
                                             @foreach ($section->lectures as $lecture)
                                                 <li class="d-block py-2">
-                                                    @if ($lecture->is_intro)
-                                                        <a href="">
-                                                            <span>{{ $lecture->title }}</span>
-                                                            <i class="bi bi-play-circle-fill ms-2"></i>
-                                                        </a>
+                                                    @if ($lecture->is_intro || (Auth::check() && Auth::user()->enrolledCourses->contains($course->id)))
+                                                        @if ($lecture->type === 'video')
+                                                            <a href="{{ $lecture->video->video_url }}" data-fancybox
+                                                                data-width="640" data-height="360">
+                                                                {{ $lecture->title }}
+                                                                <i class="bi bi-play-circle"></i>
+                                                            </a>
+                                                        @else
+                                                            <a href="#" data-fancybox data-src="#dialog-content">
+                                                                {{ $lecture->title }}
+                                                                <i class="bi bi-file-earmark-text"></i>
+                                                            </a>
+
+                                                            <div id="dialog-content" style="display:none;max-width:500px;">
+                                                                <h2>{{ $lecture->title }}</h2>
+                                                                <p>{{ $lecture->article->content }}</p>
+                                                            </div>
+                                                        @endif
                                                     @else
                                                         <a href="#"
                                                             class="text-decoration-none text-secondary opacity-75 pe-none">
@@ -119,10 +132,20 @@
                         <p class="text-muted">Limited-time offer</p>
 
                         @if (Auth::check() && Auth::user()->enrolledCourses->contains($course->id))
-                            <form action="" method="POST" name="access-course">
-                                @csrf
-                                <button type="submit" class="btn btn-primary w-100 mb-2">Truy cập khóa học</button>
-                            </form>
+                            @php
+                                $firstLecture = $course->sections->first()?->lectures->first();
+                            @endphp
+
+                            @if ($firstLecture)
+                                <a href="{{ route('user.course-video.show', ['course' => $course->slug, 'lecture' => $firstLecture]) }}"
+                                    class="btn btn-primary w-100 mb-2">
+                                    Truy cập khóa học
+                                </a>
+                            @else
+                                <button class="btn btn-secondary w-100 mb-2" disabled>
+                                    Khóa học chưa có bài giảng
+                                </button>
+                            @endif
                         @else
                             <form action="{{ route('user.course.enroll', $course->id) }}" method="POST"
                                 name="enroll-course">
@@ -195,6 +218,11 @@
         </div>
     </div>
     @push('scripts')
+        <script>
+            Fancybox.bind("[data-fancybox]", {
+                // Your custom options
+            });
+        </script>
         <script>
             $(document).ready(function() {
                 let addToWishlist = $('form[name="add-to-wishlist"]');

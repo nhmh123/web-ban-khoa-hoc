@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     {{-- Video.js --}}
     <link href="https://vjs.zencdn.net/8.22.0/video-js.css" rel="stylesheet" />
+    {{-- FancyBox --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0/dist/fancybox/fancybox.css" />
     {{-- Custom --}}
     <link rel="stylesheet" href="{{ asset('css/user/main.css') }}">
 
@@ -20,7 +22,7 @@
 
 <body>
     <!-- Navbar -->
-    @if (Route::currentRouteName() != 'user.course-video')
+    @if (Route::currentRouteName() != 'user.course-video.show')
         @include('user.partials.header')
     @endif
 
@@ -29,7 +31,9 @@
     </div>
 
     <!-- Footer -->
-    @include('user.partials.footer')
+    @if (Route::currentRouteName() != 'user.course-video.show')
+        @include('user.partials.footer')
+    @endif
 
     {{-- Jquery --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -44,6 +48,10 @@
     </script>
     {{-- Video.js --}}
     <script src="https://vjs.zencdn.net/8.22.0/video.min.js"></script>
+    {{-- FancyBox --}}
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0/dist/fancybox/fancybox.umd.js"></script>
+    {{-- TinyMCE --}}
+    @include('components.head.tinymce-config')
     <script>
         $.ajaxSetup({
             headers: {

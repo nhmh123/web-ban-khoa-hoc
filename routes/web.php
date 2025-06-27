@@ -76,6 +76,7 @@ Route::middleware('auth')->group(function () {
 
     //user courses
     Route::get('my-courses', [CourseController::class, 'userCourses'])->name('user.my-courses');
+    Route::get('my-courses/{course:slug}/learn/{lecture}', [LectureController::class, 'show'])->name('user.course-video.show');
 });
 
 

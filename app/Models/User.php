@@ -80,4 +80,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(CartItem::class, 'user_id', 'id');
     }
+
+    public function canAccessLecture($lecture)
+    {
+        // Kiểm tra xem người dùng có quyền truy cập vào bài giảng hay không
+        return $this->enrolledCourses()->where('course_id', $lecture->section->course_id)->exists();
+    }
 }

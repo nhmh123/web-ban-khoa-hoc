@@ -8,7 +8,7 @@
                 </a>
 
                 <div class="ms-auto">
-                    <a href="{{ route('user.course-detail', ['course' => $course->slug]) }}" class="btn btn-danger">
+                    <a href="{{ route('user.courses.show', ['course' => $course->slug]) }}" class="btn btn-danger">
                         <i class="bi bi-box-arrow-right"></i> Exit Course
                     </a>
                 </div>
@@ -17,269 +17,133 @@
             <!-- Main Content - Video Player & Lesson Details -->
             <main class="col-lg-8 col-md-8 px-4">
                 <div class="mt-3">
-                    <!-- Video Player -->
-                    <div class="ratio ratio-16x9">
-                        <video id="course-video" class="video-js vjs-big-play-centered" controls preload="auto">
-                            <source src="{{ asset('storage/lectures/' . $course->id . '/' . $lecture->video_url) }}"
-                                type="video/mp4">
-                            <p class="vjs-no-js">
-                                To view this video please enable JavaScript, and consider upgrading to a
-                                web browser that <a href="https://videojs.com/html5-video-support/" target="_blank">supports
-                                    HTML5 video</a>
-                            </p>
-                        </video>
-                    </div>
+                    @if ($lecture->type === App\Enums\LectureEnum::VIDEO->value)
+                        <!-- Video Player -->
+                        <div class="ratio ratio-16x9">
+                            <video id="course-video" class="video-js vjs-big-play-centered" controls preload="auto">
+                                <source src="{{ $lecture->video->video_url }}" type="video/mp4">
+                                <p class="vjs-no-js">
+                                    To view this video please enable JavaScript, and consider upgrading to a
+                                    web browser that <a href="https://videojs.com/html5-video-support/"
+                                        target="_blank">supports
+                                        HTML5 video</a>
+                                </p>
+                            </video>
+                        </div>
 
-                    <script>
-                        console.log("OK")
-                        document.addEventListener('DOMContentLoaded', function() {
-                            var player = videojs('course-video', {
-                                fluid: true,
-                                controls: true,
-                                playbackRates: [0.5, 1, 1.5, 2],
-                                controlBar: {
-                                    children: [
-                                        'playToggle',
-                                        'volumePanel',
-                                        'currentTimeDisplay',
-                                        'timeDivider',
-                                        'durationDisplay',
-                                        'progressControl',
-                                        'playbackRateMenuButton',
-                                        'fullscreenToggle'
-                                    ]
-                                }
-                            });
-                        });
-                    </script>
-
-                    {{-- <script>
-                        function autoGenerateNote() {
-                            const courseId = document.querySelector('[data-course-id]').dataset.courseId;
-                            const videoFile = document.querySelector('[data-video-file]').dataset.videoFile;
-                            const noteTextarea = document.querySelector('#note-content');
-                            const generateBtn = document.querySelector('#auto-generate-btn');
-
-                            generateBtn.disabled = true;
-                            generateBtn.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Converting video...';
-
-                            fetch('/test-convert', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'Accept': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        course_id: courseId,
-                                        video_file: videoFile
-                                    })
-                                })
-                                .then(response => response.json())
-                                .then(async data => {
-                                    if (!data.success) throw new Error(data.message);
-
-                                    let fullTranscript = '';
-                                    const chunks = data.chunks;
-
-
-                                    for (let i = 0; i < chunks.length; i++) {
-                                        generateBtn.innerHTML = `<i class="bi bi-arrow-clockwise"></i> Transcribing part ${i + 1}/${chunks.length}...`;
-
-                                        const chunkPath = chunks[i].path.replace(/\\/g, '/'); 
-                                        const relativePath = chunkPath.split('app/public/')[1]; 
-
-                                        const response = await fetch('/transcribe-file', {
-                                            method: 'POST',
-                                            headers: {
-                                                'Content-Type': 'application/json',
-                                                'Accept': 'application/json'
-                                            },
-                                            body: JSON.stringify({
-                                                path: relativePath,
-                                                course_id: courseId,
-                                                chunk_index: i,
-                                                total_chunks: chunks.length
-                                            })
-                                        });
-
-                                        const chunkData = await response.json();
-                                        if (!chunkData.success) throw new Error(chunkData.message);
-
-                                        fullTranscript += chunkData.transcript + ' ';
-                                        console.log(chunkData.transcript,chunkData.confidence);
-                                        noteTextarea.value = fullTranscript.trim();
+                        <script>
+                            console.log("OK")
+                            document.addEventListener('DOMContentLoaded', function() {
+                                var player = videojs('course-video', {
+                                    fluid: true,
+                                    controls: true,
+                                    playbackRates: [0.5, 1, 1.5, 2],
+                                    controlBar: {
+                                        children: [
+                                            'playToggle',
+                                            'volumePanel',
+                                            'currentTimeDisplay',
+                                            'timeDivider',
+                                            'durationDisplay',
+                                            'progressControl',
+                                            'playbackRateMenuButton',
+                                            'fullscreenToggle'
+                                        ]
                                     }
-
-                                    generateBtn.innerHTML = '<i class="bi bi-check-circle"></i> Generated!';
-                                })
-                                .catch(error => {
-                                    console.error('Error:', error);
-                                    generateBtn.innerHTML = '<i class="bi bi-x-circle"></i> Failed - Try Again';
-                                    alert('Failed to generate transcript: ' + error.message);
-                                })
-                                .finally(() => {
-                                    setTimeout(() => {
-                                        generateBtn.disabled = false;
-                                        generateBtn.innerHTML = '<i class="bi bi-magic"></i> Auto Generate Note';
-                                    }, 3000);
                                 });
-                        }
-                    </script> --}}
+                            });
+                        </script>
+                    @elseif ($lecture->type === App\Enums\LectureEnum::ARTICLE->value)
+                        <!-- Article Content -->
+                        {{-- <div class="border p-3 rounded" style="max-height: 400px; overflow-y: auto;">
+                            {!! $lecture->article->content !!}
+                        </div> --}}
 
-                    <script>
-                        function autoGenerateNote() {
-                            const courseId = document.querySelector('[data-course-id]').dataset.courseId;
-                            const videoFile = document.querySelector('[data-video-file]').dataset.videoFile;
-                            const noteTextarea = document.querySelector('#note-content');
-                            const generateBtn = document.querySelector('#auto-generate-btn');
-
-                            generateBtn.disabled = true;
-                            generateBtn.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Converting video...';
-
-                            fetch('/change-video-format', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'Accept': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        course_id: courseId,
-                                        video_file: videoFile
-                                    })
-                                })
-                                .then(response => response.json())
-                                .then(async data => {
-                                    if (!data.success) throw new Error(data.message);
-
-                                    const audioPath = data.audio_path;
-
-                                    let fullTranscript = '';
-                                    generateBtn.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Transcribing...';
-
-                                    // const response = await fetch('/send-audio-file', {  // POST to transcription service
-                                    //     method: 'POST',
-                                    //     headers: {
-                                    //         'Content-Type': 'application/json',
-                                    //         'Accept': 'application/json'
-                                    //     },
-                                    //     body: JSON.stringify({
-                                    //         path: audioPath,
-                                    //         course_id: courseId
-                                    //     })
-                                    // });
-
-                                    // const transcriptData = await response.json();
-                                    // if (!transcriptData.success) throw new Error(transcriptData.message);
-
-                                    // fullTranscript += transcriptData.transcript + ' ';
-                                    // console.log(transcriptData.transcript, transcriptData.confidence);
-
-                                    // noteTextarea.value = fullTranscript.trim();
-
-                                    // generateBtn.innerHTML = '<i class="bi bi-check-circle"></i> Generated!';
-
-                                    const response = await fetch('/send-audio-file', { // POST to transcription service
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'Accept': 'application/json'
-                                        },
-                                        body: JSON.stringify({
-                                            path: audioPath,
-                                            course_id: courseId
-                                        })
-                                    });
-
-                                    const transcriptData = await response.json();
-                                    if (!transcriptData.success) throw new Error(transcriptData.message);
-
-                                    console.log(transcriptData);    
-                                    fullTranscript += transcriptData.transcript + ' ';
-                                    console.log(transcriptData.transcript, transcriptData.confidence);
-
-                                    noteTextarea.value = fullTranscript.trim();
-
-                                    generateBtn.innerHTML = '<i class="bi bi-check-circle"></i> Generated!';
-                                })
-                                .catch(error => {
-                                    console.error('Error:', error);
-                                    generateBtn.innerHTML = '<i class="bi bi-x-circle"></i> Failed - Try Again';
-                                    alert('Failed to generate transcript: ' + error.message);
-                                })
-                                .finally(() => {
-                                    setTimeout(() => {
-                                        generateBtn.disabled = false;
-                                        generateBtn.innerHTML = '<i class="bi bi-magic"></i> Auto Generate Note';
-                                    }, 3000);
-                                });
-                        }
-                    </script>
-
+                        <textarea name="lecture-article" class="article-content" cols="30" rows="10">
+                            {{ $lecture->article->content ?? '' }}
+                        </textarea>
+                    @else
+                        <!-- Placeholder for non-video lectures -->
+                        <div class="alert alert-info" role="alert">
+                            This lecture does not contain a video. Please check the resources or notes provided.
+                        </div>
+                    @endif
 
                     <!-- Lesson Title -->
                     <h3 class="mt-4 fw-bold">{{ $lecture->title }}</h3>
 
-                    <!-- Lesson Description -->
-                    {{-- <p>
-                        In this lesson, you will learn the fundamentals of PHP programming, including syntax, variables, and
-                        functions.
-                    </p> --}}
+                    <nav class="nav nav-tabs">
+                        <a href="#course-overview" class="nav-item nav-link" data-bs-toggle="tab">Tổng quan</a>
+                        <a href="#course-attachments" class="nav-item nav-link" data-bs-toggle="tab">Tài liệu</a>
+                        <a href="#user-course-notes" class="nav-item nav-link" data-bs-toggle="tab">Ghi chú</a>
+                        <a href="#course-faq" class="nav-item nav-link" data-bs-toggle="tab">Hỏi đáp</a>
+                        <a href="#course-ratings" class="nav-item nav-link" data-bs-toggle="tab">Đánh giá</a>
+                    </nav>
 
-                    <div class="accordion my-4" id="arrcodingAccordion">
-                        <!-- Arrcoding Header -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingArrcoding">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#arrcodingCollapse" aria-expanded="false"
-                                    aria-controls="arrcodingCollapse">
-                                    <i class="bi bi-journal-text"></i>
-                                    <span class="ms-1">Course Resources</span>
-                                </button>
-                            </h2>
-                            <!-- Arrcoding Content -->
-                            <div id="arrcodingCollapse" class="accordion-collapse collapse"
-                                aria-labelledby="headingArrcoding" data-bs-parent="#arrcodingAccordion">
-                                <div class="accordion-body">
-                                    <!-- Attachments & Documents -->
-                                    <h6>Attachments & Documents</h6>
-                                    <ul class="list-group mb-3">
-                                        <li class="list-group-item">
-                                            <i class="bi bi-file-earmark-pdf"></i>
-                                            <a href="#">Lecture Notes - Introduction.pdf</a>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <i class="bi bi-file-earmark-word"></i>
-                                            <a href="#">Course Outline.docx</a>
-                                        </li>
-                                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane show fade"></div>
+                        <div class="tab-pane show fade" id="course-attachments">
+                            <ul class="list-group mb-3">
+                                <li class="list-group-item">
+                                    <i class="bi bi-file-earmark-pdf"></i>
+                                    <a href="#">Lecture Notes - Introduction.pdf</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="bi bi-file-earmark-word"></i>
+                                    <a href="#">Course Outline.docx</a>
+                                </li>
+                            </ul>
 
-                                    <!-- Note Taking Section -->
-                                    <h6>Notes</h6>
-                                    <textarea id="note-content" class="form-control" rows="10" style="min-height: 300px;"
-                                        placeholder="Write your notes here..."></textarea>
-                                    <button id="auto-generate-btn" onclick="autoGenerateNote()" class="btn btn-dark mt-2"
-                                        data-course-id="{{ $course->id }}" data-video-file="{{ $lecture->video_url }}">
-                                        <i class="bi bi-magic"></i> Auto Generate Note
-                                    </button>
-                                    <button id="saveNote" class="btn btn-primary mt-2">
-                                        <i class="bi bi-floppy"></i> Save Note
-                                    </button>
-                                </div>
-                            </div>
                         </div>
+                        <div class="tab-pane show fade" id="user-course-notes">
+                            <!-- Select Note Scope -->
+                            <div class="mb-3">
+                                <label for="note-scope" class="form-label fw-bold">Loại ghi chú</label>
+                                <select id="note-scope" class="form-select">
+                                    <option value="lecture">Bài giảng hiện tại</option>
+                                    <option value="course">Toàn bộ khóa học</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="note-scope" class="form-label fw-bold">Thứ tự</label>
+                                <select id="note-scope" class="form-select">
+                                    <option value="lecture">Mới nhất trước</option>
+                                    <option value="course">Cũ nhất trước</option>
+                                </select>
+                            </div>
+
+                            <!-- Note Taking Section -->
+                            <form action="">
+                                <textarea id="note-content" class="form-control" rows="10" style="min-height: 300px;"
+                                    placeholder="Write your notes here..."></textarea>
+
+                                <button id="save-note" class="btn btn-primary mt-2">
+                                    <i class="bi bi-floppy"></i> Lưu
+                                </button>
+                                <button id="edit-note" class="btn border-0 outline-0 mt-2">
+                                    Chỉnh sửa
+                                </button>
+                                <button id="delete-note" class="btn border-0 outline-0 mt-2">
+                                    Xóa
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="tab-pane show fade"></div>
+                        <div class="tab-pane show fade"></div>
                     </div>
 
                     <!-- Next/Previous Buttons -->
                     <div class="d-flex justify-content-between my-4">
-                        <button class="btn border-dark">&larr; Previous Lesson</button>
-                        <button class="btn border-dark">Next Lesson &rarr;</button>
+                        <a href="" class="btn border-dark">&larr; Bài kế tiếp</a>
+                        <a href="" class="btn border-dark">Bài trước &rarr;</a>
                     </div>
                 </div>
             </main>
 
             <!-- Right Sidebar - Course Lessons -->
             <nav class="col-lg-4 col-md-4 d-none d-md-block bg-light sidebar p-3">
-                <h4 class="mb-3">Course Content</h4>
+                <h4 class="mb-3">Nội dung khóa học</h4>
 
                 <!-- Accordion for Course Content -->
                 <div class="accordion" id="courseAccordion">
@@ -288,13 +152,13 @@
                             <h2 class="accordion-header">
                                 <button
                                     class="accordion-button fw-bold {{ $section->lectures->contains($lecture) ? '' : 'collapsed' }}"
-                                    type="button" data-bs-toggle="collapse" data-bs-target="#section{{ $section->id }}"
+                                    type="button" data-bs-toggle="collapse" data-bs-target="#section{{ $section->sec_id }}"
                                     aria-expanded="{{ $section->lectures->contains($lecture) ? 'true' : 'false' }}"
-                                    aria-controls="section{{ $section->id }}">
-                                    {{ $section->title }}
+                                    aria-controls="section{{ $section->sec_id }}">
+                                    {{ $section->name }}
                                 </button>
                             </h2>
-                            <div id="section{{ $section->id }}"
+                            <div id="section{{ $section->sec_id }}"
                                 class="accordion-collapse collapse 
                                 {{ $section->lectures->contains($lecture) ? 'show' : '' }}"
                                 data-bs-parent="#courseAccordion">
@@ -302,10 +166,10 @@
                                     <ul class="list-group">
                                         @foreach ($section->lectures as $lec)
                                             <li class="list-group-item">
-                                                <a href="{{ route('user.course-video', ['course' => $course->slug, 'lecture' => $lec->id]) }}"
-                                                    class="{{ $lec->id == $lecture->id ? 'text-primary' : 'text-dark text-opacity-75' }}">
+                                                <a href="{{ route('user.course-video.show', ['course' => $course->slug, 'lecture' => $lec]) }}"
+                                                    class="{{ $lec->lec_id == $lecture->lec_id ? 'text-primary' : 'text-dark text-opacity-75' }}">
                                                     {{ $lec->title }}
-                                                    @if ($lec->id == $lecture->id)
+                                                    @if ($lec->lec_id == $lecture->lec_id)
                                                         <i class="bi bi-play-circle-fill"></i>
                                                     @endif
                                                 </a>

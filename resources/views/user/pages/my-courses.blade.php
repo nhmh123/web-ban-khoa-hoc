@@ -41,7 +41,11 @@
                                     <img src="{{ $course->thumbnail }}" class="card-img-top"
                                         style="height: 150px; object-fit: cover;" alt="Course Image">
                                     <div class="card-body d-flex flex-column">
-                                        <a href="" class="card-title fs-6 fw-bold">{{ $course->name }}</a>
+                                        @php
+                                            $firstLecture = $course->sections->first()?->lectures->first();
+                                        @endphp
+                                        <a href=""
+                                            class="card-title fs-6 fw-bold">{{ $course->name }}</a>
                                         <p class="mb-1 small">{{ $course->user->name }}</p>
                                         <div class="progress mb-3" style="height: 30px">
                                             <div class="progress-bar bg-secondary progress-bar-striped progress-bar-animated"

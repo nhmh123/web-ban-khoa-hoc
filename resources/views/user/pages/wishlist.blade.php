@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-md-12">
                 @if ($wishlistCourses->isEmpty())
-                    <p class="text-muted">Bạn chưa thêm khóa học nào vào danh sách mong muốn.</p>
+                    <p class="text-muted">Bạn chưa thêm khóa học nào vào danh sách yêu thích.</p>
                 @else
                     <div class="row mt-3">
                         @foreach ($wishlistCourses as $course)
@@ -34,7 +34,7 @@
                                         @endif
 
                                         <div class="mt-auto d-flex gap-2">
-                                            @if (Auth::check() && Auth::user()->enrollments()->where('course_id', $course->id)->exists())
+                                            @if (Auth::check() && Auth::user()->enrolledCourses()->where('course_id', $course->id)->exists())
                                                 <form action="" method="POST" name="access-course">
                                                     @csrf
                                                     <button type="submit" class="btn btn-primary w-100 mb-2">Truy cập khóa
