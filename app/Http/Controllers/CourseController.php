@@ -127,7 +127,7 @@ class CourseController extends Controller
     {
         $user = Auth::user();
         // $courses = Enrollment::where('user_id', $user->id)->with('course')->paginate(3);
-        $courses = $user->enrolledCourses()->with('category', 'user', 'sections', 'sections.lectures')->paginate(3);
+        $courses = $user->enrolledCourses()->with('category', 'user', 'sections', 'sections.lectures')->paginate(6);
         // dd($courses);
         $categories = Enrollment::where('user_id', $user->id)->with('course.category')->get()->pluck('course.category')->unique('cc_id');
         return view('user.pages.my-courses', compact('courses', 'categories'));

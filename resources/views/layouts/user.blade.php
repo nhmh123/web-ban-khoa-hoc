@@ -14,6 +14,8 @@
     <link href="https://vjs.zencdn.net/8.22.0/video-js.css" rel="stylesheet" />
     {{-- FancyBox --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0/dist/fancybox/fancybox.css" />
+    {{-- Datatable --}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.bootstrap5.css">
     {{-- Custom --}}
     <link rel="stylesheet" href="{{ asset('css/user/main.css') }}">
 
@@ -36,9 +38,12 @@
     @endif
 
     {{-- Jquery --}}
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    {{-- Custom --}}
-    <script src="{{ asset('js/user/main.js') }}"></script>
+
+    {{-- Datatable --}}
+    <script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.3.2/js/dataTables.bootstrap5.js"></script>
     {{-- Bootstrap --}}
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
@@ -52,13 +57,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0/dist/fancybox/fancybox.umd.js"></script>
     {{-- TinyMCE --}}
     @include('components.head.tinymce-config')
-    <script>
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-    </script>
+    {{-- Custom --}}
+    <script src="{{ asset('js/user/main.js') }}"></script>
+    
     @stack('scripts')
 </body>
 

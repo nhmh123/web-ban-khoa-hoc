@@ -97,6 +97,7 @@
                                     ]) }}">Thông
                                     tin</a></li>
                             <li><a class="dropdown-item" href="{{ route('user.my-courses') }}">Khóa học</a></li>
+                            <li><a class="dropdown-item" href="{{ route('user.orders.history') }}">Lịch sử mua</a></li>
                             <li><a class="dropdown-item" href="{{ route('user.logout') }}">Đăng xuất</a></li>
                         </ul>
                     </div>

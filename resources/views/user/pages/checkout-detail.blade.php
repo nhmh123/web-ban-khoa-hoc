@@ -2,43 +2,33 @@
 @section('user.content')
     <div class="container">
         <h5 class="fw-bold">Lich su mua hang</h5>
-        <table id="order-table" class="table">
+        <table id="order-detail-table" class="table">
             <thead>
                 <tr>
-                    <th>ma don hang</th>
-                    <th>so khoa hoc</th>
+                    <th>ten khoa hoc</th>
                     <th>so tien</th>
-                    <th>trang thai</th>
-                    <th>ngay tao</th>
                 </tr>
             </thead>
             <tbody>
-                @if ($userOrders->count() > 0)
-                    @foreach ($userOrders as $order)
-                        <tr>
-                            <td>
-                                <a href="{{ route('user.orders.detail', $order) }}">
-                                    {{ $order->order_id }}
-                                </a>
-                            </td>
-                            <td>{{ $order->sub_total }}</td>
-                            <td>{{ number_format($order->total_amount) }}đ</td>
-                            <td>{{ \App\Enums\OrderEnum::from($order->status)->label() }}</td>
-                            <td>{{ $order->created_at }}</td>
-                        </tr>
-                    @endforeach
-                @else
-                    <p>Khong co don hang</p>
-                @endif
+                @foreach ($orderItems as $item)
+                    <tr>
+                        <td>
+                            <a href="">
+                                {{ $item->course_title }}
+                            </a>
+                        </td>
+                        <td>{{ number_format($item->price_amount) }}đ</td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
 
     @push('scripts')
         <script>
-            const table = new DataTable('#order-table', {
+            const table = new DataTable('#order-detail-table', {
                 columnDefs: [{
-                    searchable: false,
+                    searchable: true,
                     orderable: true,
                     targets: 0
                 }],

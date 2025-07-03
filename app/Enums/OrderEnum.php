@@ -8,8 +8,8 @@ enum OrderEnum: string
     case COMPLETED = 'completed';
     case CANCELLED = 'cancelled';
 
-    public function lable(): string
+    public function label(): string
     {
-        return __('order_status' . $this->value);
+        return __('order_status.' . $this->value);
     }
 }
