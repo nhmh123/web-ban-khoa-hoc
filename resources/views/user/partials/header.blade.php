@@ -67,11 +67,16 @@
                         <i class="bi bi-heart-fill"></i></a></li>
                 <li class="nav-item fw-bold mx-2 align-content-center">
                     <a class="nav-link position-relative" href="{{ route('user.cart') }}">
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            {{ auth()->user()?->cartItem->count() }}
-                            <span class="visually-hidden">unread messages</span>
-                        </span>
-                        <i class="bi bi-cart-fill text-white"></i>
+                        @if (auth()->user()?->cartItem->count() > 0)
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ auth()->user()->cartItem->count() }}
+                                <span class="visually-hidden">unread messages</span>
+                            </span>
+                            <i class="bi bi-cart-fill text-white"></i>
+                        @else
+                            <i class="bi bi-cart-fill text-white"></i>
+                        @endif
                     </a>
                 </li>
                 <li class="nav-item fw-bold mx-2 align-content-center"><a class="nav-link" href="#notifications">
@@ -188,7 +193,7 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            // alert('header jquery loaded successfully!');
+            // console.log('header jquery loaded successfully!');
         })
     </script>
 @endpush

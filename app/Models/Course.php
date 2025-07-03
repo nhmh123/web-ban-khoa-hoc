@@ -33,14 +33,14 @@ class Course extends Model
         'rating' => 'decimal:2',
     ];
 
-    public function getOriginalPriceAttribute($value)
+    public function getOriginalPriceFormattedAttribute()
     {
-        return number_format($value);
+        return number_format($this->attributes['original_price']);
     }
 
-    public function getSalePriceAttribute($value)
+    public function getSalePriceFormattedAttribute()
     {
-        return number_format($value);
+        return number_format($this->attribute['sale_price'] ?? $this->attributes['original_price']);
     }
 
     public function getDurationAttribute($value)

@@ -5,19 +5,23 @@ namespace App\Http\Controllers\User;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $cartItems = $user->cartItem()->with('course')->get();
+        if (!$cartItems) {
+            return view('user.pages.cart', ['cartItems' => []])->with('message', 'Giỏ hàng của bạn hiện đang trống.');
+        }
         return view('user.pages.cart', compact('cartItems'));
     }
     public function addToCart(Course $course)
     {
         try {
-            $user = auth()->user();
+            $user = Auth::user();
             if (!$user) {
                 return response()->json([
                     'status' => 'error',
@@ -53,7 +57,7 @@ class CartController extends Controller
     public function removeFromCart(Course $course)
     {
         try {
-            $user = auth()->user();
+            $user = Auth::user();
             $cartItem = $user->cartItem()->where('course_id', $course->id)->first();
             $cartItem->delete();
             return redirect()->back()->with('success', 'Đã xóa khóa học khỏi giỏ hàng thành công!');
@@ -65,7 +69,7 @@ class CartController extends Controller
     public function clearCart(Request $request)
     {
         try {
-            $user = auth()->user();
+            $user = Auth::user();
             if ($request->has('ids')) {
                 $ids = array_map('intval', $request->input('ids'));
                 $user->cartItem()->whereIn('course_id', $ids)->delete();
@@ -77,9 +81,5 @@ class CartController extends Controller
         } catch (\Throwable $th) {
             return redirect()->back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $th->getMessage()]);
         }
-    }
-    public function checkout(Request $request){
-        dd($request->ids);
-        return view('user.pages.checkout');
     }
 }

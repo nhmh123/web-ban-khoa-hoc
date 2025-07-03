@@ -11,7 +11,7 @@
         <p>Truy cập các khóa học và bắt đầu hành trình ngay bây giờ</p>
         <a href="#courses" class="btn btn-light">Xem khóa học</a>
     </header>
-    
+
     <!-- Courses Section -->
     <section id="courses" class="container my-5">
         <h3 class="text-start mb-4">Khóa học phổ biến</h3>
@@ -30,13 +30,13 @@
                                 <div class="d-flex small">
                                     <p class="me-2 mb-1">
                                         <span class="text-decoration-line-through fs-5">
-                                            {{ $course->original_price }}
+                                            {{ $course->original_price_formatted }}
                                         </span>
                                     </p>
-                                    <p class="mb-1 fs-5 fw-bold">{{ $course->sale_price }}</p>
+                                    <p class="mb-1 fs-5 fw-bold">{{ $course->sale_price_formatted }}</p>
                                 </div>
                             @else
-                                <p class="mb-1 small fs-5 fw-bold">{{ $course->original_price }}</p>
+                                <p class="mb-1 small fs-5 fw-bold">{{ $course->original_price_formatted }}</p>
                             @endif
                             <a href="{{ route('user.courses.show', ['course' => $course->slug]) }}"
                                 class="btn btn-primary btn-sm mt-auto">Xem khóa học</a>
@@ -62,17 +62,17 @@
                                     <p class="card-text small mb-1">{{ Str::limit($course->sort_description, 100) }}</p>
                                     <p class="mb-1 small">{{ $course->user->name }}</p>
                                     <p class="mb-1 small">⭐⭐⭐⭐⭐ (4.8)</p>
-                                    @if ($course->sale_price)
+                                    @if (!is_null($course->sale_price))
                                         <div class="d-flex small">
                                             <p class="me-2 mb-1">
                                                 <span class="text-decoration-line-through fs-5">
-                                                    {{ $course->original_price }}
+                                                    {{ $course->original_price_formatted }}
                                                 </span>
                                             </p>
-                                            <p class="mb-1 fs-5 fw-bold">{{ $course->sale_price }}</p>
+                                            <p class="mb-1 fs-5 fw-bold">{{ $course->sale_price_formatted }}</p>
                                         </div>
                                     @else
-                                        <p class="mb-1 small fs-5 fw-bold">{{ $course->original_price }}</p>
+                                        <p class="mb-1 small fs-5 fw-bold">{{ $course->original_price_formatted }}</p>
                                     @endif
                                     <a href="{{ route('user.courses.show', ['course' => $course->slug]) }}"
                                         class="btn btn-primary btn-sm mt-auto">Xem khóa học</a>

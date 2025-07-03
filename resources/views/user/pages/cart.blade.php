@@ -17,9 +17,11 @@
         @if (count($cartItems) > 0)
             @php
                 $cartTotal = $cartItems->sum(function ($item) {
-                    return $item->course->sale_price ?? $item->course->original_price;
+                    $price = $item->course->sale_price ?? ($item->course->original_price ?? 0);
+                    return is_numeric($price) ? (float) $price : 0;
                 });
             @endphp
+
             <div class="row">
                 <!-- Cart Items -->
                 <div class="col-md-8">
@@ -60,10 +62,10 @@
                                         <td>
                                             <p
                                                 class="card-text fw-bold {{ $item->course->sale_price ? 'text-decoration-line-through' : '' }} ">
-                                                {{ $item->course->original_price }}đ
+                                                {{ $item->course->original_price_formatted }}đ
                                             </p>
                                             <p class="card-text fw-bold text-danger">
-                                                {{ $item->course->sale_price ?? $item->course->original_price }}đ
+                                                {{ $item->course->sale_price ?? $item->course->original_price_formatted }}đ
                                             </p>
                                         </td>
                                         <td>
@@ -83,6 +85,48 @@
 
                 <!-- Checkout Summary -->
                 <div class="col-md-4">
+                    {{-- Chọn phương thức thanh toán --}}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Phương thức thanh toán</label>
+                        <div class="list-group">
+                            <label class="list-group-item d-flex align-items-center">
+                                <input class="form-check-input me-2" type="radio" name="payment_method" value="vnpay"
+                                    checked>
+                                <img src="https://vinadesign.vn/uploads/images/2023/05/vnpay-logo-vinadesign-25-12-57-55.jpg"
+                                    alt="VNPAY" width="50" class="me-2">
+                                VNPAY
+                            </label>
+                            <label class="list-group-item d-flex align-items-center">
+                                <input class="form-check-input me-2" type="radio" name="payment_method" value="momo">
+                                <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-MoMo-Square.png"
+                                    alt="MOMO" width="50" class="me-2">
+                                MOMO
+                            </label>
+                            <label class="list-group-item d-flex align-items-center">
+                                <input class="form-check-input me-2" type="radio" name="payment_method" value="cod">
+                                <img src="https://cdn-icons-png.flaticon.com/512/11237/11237490.png" alt="COD"
+                                    width="50" class="me-2">
+                                Thanh toán khi nhận hàng (COD / Test)
+                            </label>
+                        </div>
+                    </div>
+
+                    {{-- Khu vực nhập mã giảm giá --}}
+                    {{-- <form method="POST" action="" class="mb-3">
+                        @csrf
+                        <label for="coupon_code" class="form-label fw-bold">Mã giảm giá</label>
+                        <div class="input-group">
+                            <input type="text" name="coupon_code" id="coupon_code" class="form-control"
+                                placeholder="Nhập mã giảm giá">
+                            <button class="btn btn-outline-secondary" type="submit">Áp dụng</button>
+                        </div>
+                        @if (session('coupon_error'))
+                            <small class="text-danger">{{ session('coupon_error') }}</small>
+                        @elseif (session('coupon_success'))
+                            <small class="text-success">{{ session('coupon_success') }}</small>
+                        @endif
+                    </form> --}}
+
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <h5 class="card-title">Thông tin thanh toán</h5>
@@ -92,13 +136,21 @@
                                     <strong>{{ number_format($cartTotal) }}đ</strong>
                                 </li>
                             </ul>
-                            {{-- Checkout button --}}
-                            <button type="submit" class="btn btn-primary w-100">Tiến hành thanh
-                                toán</button>
+                            {{-- Checkout button after online checkout integrate --}}
+                            {{-- <form action="{{ route('user.checkout') }}" method="POST" name="checkout-form">
+                                @csrf
+                                <button type="submit" class="btn btn-primary w-100">Tiến hành thanh
+                                    toán</button>
+                            </form> --}}
+
+                            <form action="{{ route('user.checkout.submit') }}" method="POST" name="checkout-form">
+                                @csrf
+                                <button type="submit" class="btn btn-primary w-100">Tiến hành thanh
+                                    toán</button>
+                            </form>
                         </div>
                     </div>
                 </div>
-
             </div>
         @else
             <div class="alert alert-info">
@@ -111,15 +163,44 @@
         <script>
             $(document).ready(function() {
                 let checkAll = $('#checkAll');
+                let checkedCheckoutCourseIds = $('input[name="ids[]"]:checked').toArray().map(input => input.value);
+                console.log(checkedCheckoutCourseIds);
                 checkAll.on('change', function() {
-                    $('input[name="ids[]"]').prop('checked', this.checked);
+                    let isChecked = this.checked;
+                    $('input[name="ids[]"]').prop('checked', isChecked).trigger('change');
+                });
+
+                $('input[name="ids[]"]').on('change', function() {
+                    let val = $(this).val();
+                    if ($(this).is(':checked')) {
+                        if (!checkedCheckoutCourseIds.includes(val)) {
+                            checkedCheckoutCourseIds.push(val);
+                        }
+                    } else {
+                        checkedCheckoutCourseIds = checkedCheckoutCourseIds.filter(id => id !== val);
+                    }
+
+                    console.log(checkedCheckoutCourseIds); // Xem kết quả mỗi lần thay đổi
+                });
+
+                let checkoutForm = $('form[name="checkout-form"]');
+                checkoutForm.on('submit', function(e) {
+                    e.preventDefault();
+                    if (checkedCheckoutCourseIds.length === 0) {
+                        alert('Vui lòng chọn ít nhất một khóa học để thanh toán.');
+                        return false;
+                    }
+
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'checkout_course',
+                        value: JSON.stringify(checkedCheckoutCourseIds)
+                    }).appendTo(checkoutForm);
+
+                    checkoutForm.off('submit').submit();
                 })
 
-                let checks = $('input[name="ids[]"]');
-                console.log(checks);
-                checks.each(function() {
-                    console.log($(this).val());
-                })
+
 
                 // let removeFromCart = $('form[name="remove-from-cart"]');
                 // removeFromCart.on('submit', function(e) {

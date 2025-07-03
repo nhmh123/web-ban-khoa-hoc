@@ -45,8 +45,8 @@ Route::post('register/submit', [RegisteredUserController::class, 'store'])->name
 
 //course detail
 Route::get('course/{course:slug}', [CourseController::class, 'show'])->name('user.courses.show');
-
 Route::post('wishlist/add/{course}', [WishlistController::class, 'addToWishlist'])->name('user.wishlist.add');
+
 
 Route::middleware('auth')->group(function () {
     //logout
@@ -68,8 +68,8 @@ Route::middleware('auth')->group(function () {
     ROute::delete('cart/clear', [CartController::class, 'clearCart'])->name('user.cart.clear');
 
     //checkout
-    Route::post('checkout', [CheckoutController::class, 'checkout'])->name('user.checkout');
-    Route::post('checkout/submit', [CheckoutController::class, 'submitCheckout'])->name('user.checkout.submit');
+    Route::get('checkout', [CheckoutController::class, 'checkout'])->name('user.checkout');
+    Route::post('checkout/submit', [CheckoutController::class, 'checkoutSubmit'])->name('user.checkout.submit');
 
     //enroll course
     Route::post('course/enroll/{course}', [CourseController::class, 'enroll'])->name('user.course.enroll');
@@ -78,7 +78,6 @@ Route::middleware('auth')->group(function () {
     Route::get('my-courses', [CourseController::class, 'userCourses'])->name('user.my-courses');
     Route::get('my-courses/{course:slug}/learn/{lecture}', [LectureController::class, 'show'])->name('user.course-video.show');
 });
-
 
 
 /**

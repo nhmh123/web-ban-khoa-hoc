@@ -120,15 +120,17 @@
                     <div class="card-body">
                         @if ($course->sale_price)
                             <div class="d-flex">
-                                <h3 class="card-title text-decoration-line-through me-3">{{ $course->original_price }}
+                                <h3 class="card-title text-decoration-line-through me-3">
+                                    {{ $course->original_price_formatted }}</h3>
                                 </h3>
                                 </p>
-                                <h3 class="card-title fw-bold">{{ $course->sale_price }}</h3>
+                                <h3 class="card-title fw-bold">{{ $course->sale_price_formatted }}</h3>
                             </div>
                         @else
-                            <h3 class="card-title">{{ $course->original_price }}</h3>
+                            <h3 class="card-title">{{ $course->original_price_formatted }}</h3>
+                            </h3>
                         @endif
-                        <h3 class="card-title">{{ $course->original_price }}</h3>
+                        </h3>
                         <p class="text-muted">Limited-time offer</p>
 
                         @if (Auth::check() && Auth::user()->enrolledCourses->contains($course->id))
@@ -302,9 +304,6 @@
                         type: 'POST',
                         url: url,
                         data: form.serialize(),
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
                         success: function(response) {
                             if (response.status === 'success') {
                                 alert(response.message ||
