@@ -16,6 +16,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0/dist/fancybox/fancybox.css" />
     {{-- Datatable --}}
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.bootstrap5.css">
+    {{-- Fontawesome --}}
+    <link rel="stylesheet" href="{{ asset('vendor/fontawesome/all.min.css') }}">
+    {{-- AOS --}}
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    {{-- Swiper --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     {{-- Custom --}}
     <link rel="stylesheet" href="{{ asset('css/user/main.css') }}">
 
@@ -40,7 +46,6 @@
     {{-- Jquery --}}
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
     {{-- Datatable --}}
     <script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.3.2/js/dataTables.bootstrap5.js"></script>
@@ -57,9 +62,15 @@
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0/dist/fancybox/fancybox.umd.js"></script>
     {{-- TinyMCE --}}
     @include('components.head.tinymce-config')
+    {{-- Fontawesome --}}
+    <script src="https://kit.fontawesome.com/10721708ca.js" crossorigin="anonymous"></script>
+    {{-- AOS --}}
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    {{-- Swiper --}}
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     {{-- Custom --}}
     <script src="{{ asset('js/user/main.js') }}"></script>
-    
+
     @stack('scripts')
 </body>
 

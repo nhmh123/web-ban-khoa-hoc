@@ -45,7 +45,7 @@ class Course extends Model
 
     public function getDurationAttribute($value)
     {
-        return \Carbon\CarbonInterval::seconds($value)->cascade()->forHumans();
+        return \Carbon\CarbonInterval::hour($value)->cascade()->forHumans();
     }
     public function category()
     {

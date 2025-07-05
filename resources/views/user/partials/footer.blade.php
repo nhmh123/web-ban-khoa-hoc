@@ -1,5 +1,5 @@
 <footer class="bg-dark text-light pt-5 pb-3">
-    <div class="container">
+    <div class="container-fluid px-5">
         <div class="row">
             <!-- Danh mục khóa học -->
             <div class="col-md-3 col-sm-6">

@@ -44,6 +44,12 @@ Route::get('register', function () {
 })->name('user.register');
 Route::post('register/submit', [RegisteredUserController::class, 'store'])->name('user.register.submit')->defaults('redirectRoute', 'user.home');
 
+// categories
+Route::get('/category/{slugPath}', [HomeController::class, 'showCourseOfCategory'])
+    ->where('slugPath', '.*')
+    ->name('user.category.show');
+
+
 //course detail
 Route::get('course/{course:slug}', [CourseController::class, 'show'])->name('user.courses.show');
 Route::post('wishlist/add/{course}', [WishlistController::class, 'addToWishlist'])->name('user.wishlist.add');

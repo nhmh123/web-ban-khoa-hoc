@@ -9,7 +9,7 @@
                     <p class="lead">{{ $course->short_description }}</p>
                     <div class="d-flex align-items-center gap-2">
                         <span class="badge text-white">{{ $course->rating }} ⭐ (1,250 Lượt đánh giá)</span>
-                        <span> • 10,000+ Học viên</span>
+                        <span> • {{ $course->enrollments()->count() }} Học viên</span>
                     </div>
                     <p class="mt-3">Giảng viên: <strong>{{ $course->user->name }}</strong></p>
                 </div>
@@ -118,7 +118,7 @@
                     <img src="{{ $course->thumbnail }}" class="card-img-top" alt="Course Thumbnail"
                         style="max-height: 250px">
                     <div class="card-body">
-                        @if ($course->sale_price)
+                        {{-- @if ($course->sale_price)
                             <div class="d-flex">
                                 <h3 class="card-title text-decoration-line-through me-3">
                                     {{ $course->original_price_formatted }}</h3>
@@ -129,9 +129,11 @@
                         @else
                             <h3 class="card-title">{{ $course->original_price_formatted }}</h3>
                             </h3>
-                        @endif
+                        @endif --}}
+                        {{-- <p class="text-muted">Limited-time offer</p> --}}
+
+                        <h3 class="card-title fw-bold">{{ $course->original_price_formatted }}đ</h3>
                         </h3>
-                        <p class="text-muted">Limited-time offer</p>
 
                         @if (Auth::check() && Auth::user()->enrolledCourses->contains($course->id))
                             @php
@@ -152,7 +154,7 @@
                             <form action="{{ route('user.course.enroll', $course->id) }}" method="POST"
                                 name="enroll-course">
                                 @csrf
-                                <button type="submit" class="btn btn-success w-100 mb-2">Đăng ký ngay</button>
+                                <button type="submit" class="btn btn-warning w-100 mb-2">Đăng ký ngay</button>
                             </form>
                             <div class="d-flex gap-2">
                                 <form action="{{ route('user.cart.add', $course->id) }}" method="POST" name="add-to-cart">

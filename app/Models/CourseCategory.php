@@ -9,6 +9,8 @@ class CourseCategory extends Model
     protected $table = 'course_categories';
     protected $primaryKey = 'cc_id';
     public $timestamps = true;
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     protected $fillable = [
         'cc_name',
@@ -19,6 +21,22 @@ class CourseCategory extends Model
         'parent_id',
         'status',
     ];
+
+    // App\Models\CourseCategory.php
+
+    public function getFullSlugPathAttribute(): string
+    {
+        $category = $this;
+        $slugs = [];
+
+        while ($category) {
+            $slugs[] = $category->cc_slug;
+            $category = $category->parent; // sẽ trả về null nếu không có parent
+        }
+
+        return implode('/', array_reverse($slugs)); // đảo ngược lại đúng thứ tự
+    }
+
 
     public function user()
     {

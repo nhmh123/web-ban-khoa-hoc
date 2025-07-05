@@ -1,7 +1,19 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container d-flex justify-content-between">
-        <a class="navbar-brand" href="{{ route('user.home') }}">
+<!-- Marquee Section for Sales Strategy -->
+<div class="marquee-container bg-warning text-dark pt-2">
+    <marquee behavior="scroll" direction="left" scrollamount="5">
+        🎉 Ưu đãi có thời hạn: Giảm giá 50% cho tất cả các khóa học! Đăng ký ngay! 🎉
+        🚀 Khóa học AI mới ra mắt! Tham gia ngay để trở thành chuyên gia! 🚀
+        📚 Tặng Ebook miễn phí cho mỗi lượt đăng ký! Đừng bỏ lỡ! 📚
+    </marquee>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <div class="container-fluid d-flex justify-content-between py-2">
+        <a class="navbar-brand fw-bold" href="{{ route('user.home') }}">
             <i class="bi bi-play-circle me-1"></i>CourseWeb</a>
+
+        @include('user.partials.main-menu')
+
         <form action="" class="d-none d-md-flex ms-3">
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="tìm kiếm khóa học">
@@ -25,46 +37,11 @@
                         </button>
                     </div>
                 </form>
-                {{-- <li class="nav-item fw-bold mx-2 align-content-center dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="courseDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Danh mục
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="courseDropdown">
-                        <!-- IT Category -->
-                        <li class="dropdown-submenu">
-                            <a class="dropdown-item dropdown-toggle" href="#">IT</a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#web-development">Phát triển web</a></li>
-                                <li><a class="dropdown-item" href="#cybersecurity">Bảo mật</a></li>
-                                <li><a class="dropdown-item" href="#data-science">Data Science</a></li>
-                            </ul>
-                        </li>
 
-                        <!-- Marketing Category -->
-                        <li class="dropdown-submenu">
-                            <a class="dropdown-item dropdown-toggle" href="#">Marketing</a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#seo">SEO</a></li>
-                                <li><a class="dropdown-item" href="#digital-marketing">Digital Marketing</a></li>
-                                <li><a class="dropdown-item" href="#branding">Branding</a></li>
-                            </ul>
-                        </li>
-
-                        <!-- Language Category -->
-                        <li class="dropdown-submenu">
-                            <a class="dropdown-item dropdown-toggle" href="#">Ngôn ngữ</a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#english">English</a></li>
-                                <li><a class="dropdown-item" href="#japanese">Japanese</a></li>
-                                <li><a class="dropdown-item" href="#chinese">Chinese</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li> --}}
-                <li class="nav-item fw-bold mx-2 align-content-center"><a class="nav-link text-white"
+                <li class="nav-item fw-bold mx-2 align-content-center"><a class="nav-link text-dark"
                         href="{{ route('user.wishlist') }}">
-                        <i class="bi bi-heart-fill"></i></a></li>
+                        <i class="bi bi-heart"></i></a></li>
+
                 <li class="nav-item fw-bold mx-2 align-content-center">
                     <a class="nav-link position-relative" href="{{ route('user.cart') }}">
                         @if (auth()->user()?->cartItem->count() > 0)
@@ -73,15 +50,17 @@
                                 {{ auth()->user()->cartItem->count() }}
                                 <span class="visually-hidden">unread messages</span>
                             </span>
-                            <i class="bi bi-cart-fill text-white"></i>
+                            <i class="bi bi-cart3 text-dark"></i>
                         @else
-                            <i class="bi bi-cart-fill text-white"></i>
+                            <i class="bi bi-cart3 text-dark"></i>
                         @endif
                     </a>
                 </li>
+
                 <li class="nav-item fw-bold mx-2 align-content-center"><a class="nav-link" href="#notifications">
-                        <i class="bi bi-bell-fill text-white"></i>
+                        <i class="bi bi-bell text-dark"></i>
                     </a></li>
+
                 @auth
                     <div class="dropdown justify-content-center align-item-center">
                         <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -102,11 +81,13 @@
                         </ul>
                     </div>
                 @endauth
+
                 @guest
                     <a href="{{ route('login') }}" class="btn btn-primary">
                         Đăng nhập
                     </a>
                 @endguest
+
             </ul>
         </div>
 
@@ -116,7 +97,7 @@
         </button>
 
         <!-- Offcanvas Sidebar (Mobile Menu) -->
-        <div class="offcanvas offcanvas-end d-md-none" tabindex="-1" id="offcanvasNavbar">
+        {{-- <div class="offcanvas offcanvas-end d-md-none" tabindex="-1" id="offcanvasNavbar">
             <div class="offcanvas-header">
                 <h5 class="offcanvas-title">Menu</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
@@ -178,23 +159,33 @@
                     </button>
                 @endif
             </div>
+        </div> --}}
+    </div>
+</nav>
+<nav class="navbar navbar-light bg-light shadow mb-3 py-0">
+    <div class="container-fluid px-3">
+        <div class="w-100 overflow-auto">
+            <ul class="navbar-nav flex-row flex-nowrap">
+                @foreach ($rootCategories as $category)
+                    <li class="nav-item me-3">
+                        <a href="{{ route('user.category.show', $category->full_slug_path) }}"
+                            class="nav-link text-nowrap text-dark fw-semibold">
+                            {{ $category->cc_name }}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
         </div>
     </div>
 </nav>
 
-<!-- Marquee Section for Sales Strategy -->
-<div class="marquee-container bg-warning text-dark pt-2">
-    <marquee behavior="scroll" direction="left" scrollamount="5">
-        🎉 Ưu đãi có thời hạn: Giảm giá 50% cho tất cả các khóa học! Đăng ký ngay! 🎉
-        🚀 Khóa học AI mới ra mắt! Tham gia ngay để trở thành chuyên gia! 🚀
-        📚 Tặng Ebook miễn phí cho mỗi lượt đăng ký! Đừng bỏ lỡ! 📚
-    </marquee>
-</div>
+
+
 
 @push('scripts')
     <script>
         $(document).ready(function() {
-            // console.log('header jquery loaded successfully!');
+
         })
     </script>
 @endpush

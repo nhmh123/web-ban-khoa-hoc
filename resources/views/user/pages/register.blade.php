@@ -52,7 +52,7 @@
             </form>
 
             <div class="text-center text-muted small">
-                Đã có tài khoản? <a href="{{ route('user.login') }}">Đăng nhập</a>
+                Đã có tài khoản? <a href="{{ route('login') }}">Đăng nhập</a>
             </div>
         </div>
     </div>

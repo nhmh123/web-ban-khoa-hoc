@@ -24,7 +24,7 @@ class CreateCCategoryRequest extends FormRequest
         return [
             'cc_name'=> 'sometimes|required|string|max:255',
             'icon_path'=>'sometimes|nullable|file|image|mimes:jpeg,png,gif|max:2048', 
-            'parent_id'=>'nullable|integer|exists:course_categories,id',
+            'parent_id'=>'nullable|integer|exists:course_categories,cc_id',
         ];
     }
 
