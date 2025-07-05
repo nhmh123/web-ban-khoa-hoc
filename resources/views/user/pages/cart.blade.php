@@ -16,8 +16,13 @@
 
         @if (count($cartItems) > 0)
             @php
+                // $cartTotal = $cartItems->sum(function ($item) {
+                //     $price = $item->course->sale_price ?? ($item->course->original_price ?? 0);
+                //     return is_numeric($price) ? (float) $price : 0;
+                // });
+
                 $cartTotal = $cartItems->sum(function ($item) {
-                    $price = $item->course->sale_price ?? ($item->course->original_price ?? 0);
+                    $price = $item->course->original_price;
                     return is_numeric($price) ? (float) $price : 0;
                 });
             @endphp
@@ -29,59 +34,71 @@
                         onsubmit="return confirm('Bạn có chắc chắn muốn xóa toàn bộ khóa học khỏi giỏ hàng?')">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Xóa</button>
-                        <table class="table">
-                            <tr>
-                                <th>
-                                    <input type="checkbox" id="checkAll" checked>
-                                </th>
-                                <th>Tên khóa học</th>
-                                <th>Giá</th>
-                                <th>Hành động</th>
-                            </tr>
-                            <tbody>
-                                @foreach ($cartItems as $item)
-                                    <tr>
-                                        <td>
-                                            <input type="checkbox" name="ids[]" value="{{ $item->course->id }}" checked>
-                                        </td>
-                                        <td class="d-flex align-items-between">
-                                            <div class="col-md-4">
-                                                <img src="{{ $item->course->thumbnail }}" class="img-fluid"
-                                                    alt="Course Thumbnail">
-                                            </div>
-                                            <div class="col-md-8">
-                                                <div class="card-body">
-                                                    <a href="" class="card-title">{{ $item->course->name }}</a>
-                                                    <p class="card-text small text-muted">
-                                                        {{ $item->course->user->name }}
+                        <div class="d-flex justify-content-between mb-3">
+                            <div>
+                                <input type="checkbox" id="checkAll" checked>
+                                <label for="checkAll">Chọn tất cả</label>
+                            </div>
+                            <button type="submit" class="btn btn-danger btn-sm">Xóa toàn bộ</button>
+                        </div>
+
+                        @foreach ($cartItems as $item)
+                            <div class="card border-0 p-0 my-2">
+                                <div class="row g-0">
+                                    <!-- Checkbox + Thumbnail -->
+                                    <div class="col-md-1 d-flex align-items-center justify-content-start">
+                                        <input type="checkbox" name="ids[]" value="{{ $item->course->id }}" checked>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <img src="{{ $item->course->thumbnail }}" class="rounded-start w-100 h-100"
+                                            style="object-fit: cover;" alt="Course Image">
+                                    </div>
+
+                                    <!-- Course Info -->
+                                    <div class="col-md-8">
+                                        <div class="card-body py-0 my-0 d-flex flex-column h-100">
+                                            <h5 class="card-title fs-6 fw-bold">{{ $item->course->name }}</h5>
+                                            <p class="card-text small mb-1">{{ $item->course->user->name }}</p>
+
+                                            <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                <div>
+                                                    {{-- @if ($item->course->sale_price)
+                                                        <p class="mb-1">
+                                                            <span class="text-decoration-line-through text-muted">
+                                                                {{ $item->course->original_price_formatted }}đ
+                                                            </span>
+                                                            <span class="text-danger fw-bold ms-2">
+                                                                {{ $item->course->sale_price }}đ
+                                                            </span>
+                                                        </p>
+                                                    @else
+                                                        <p class="mb-1 fw-bold">
+                                                            {{ $item->course->original_price_formatted }}đ
+                                                        </p>
+                                                    @endif --}}
+
+                                                    <p class="mb-0 text-end fw-bold">
+                                                        {{ $item->course->original_price_formatted }}đ
                                                     </p>
                                                 </div>
+                                                <form action="{{ route('user.cart.remove', $item->course->id) }}"
+                                                    method="POST"
+                                                    onsubmit="return confirm('Xóa khóa học này khỏi giỏ hàng?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="btn btn-sm btn-outline-danger">Xóa</button>
+                                                </form>
                                             </div>
-                                        </td>
-                                        <td>
-                                            <p
-                                                class="card-text fw-bold {{ $item->course->sale_price ? 'text-decoration-line-through' : '' }} ">
-                                                {{ $item->course->original_price_formatted }}đ
-                                            </p>
-                                            <p class="card-text fw-bold text-danger">
-                                                {{ $item->course->sale_price ?? $item->course->original_price_formatted }}đ
-                                            </p>
-                                        </td>
-                                        <td>
-                                            <form action="{{ route('user.cart.remove', $item->course->id) }}"
-                                                method="POST" name="remove-from-cart">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="my-2">
+                        @endforeach
                     </form>
                 </div>
+
 
                 <!-- Checkout Summary -->
                 <div class="col-md-4">

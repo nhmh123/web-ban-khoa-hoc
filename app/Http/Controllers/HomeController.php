@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers;
 
-use App\Enums\CourseEnum;
 use App\Models\Course;
+use App\Enums\CourseEnum;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\CourseCategory;
+use App\Http\Controllers\Controller;
+use LaravelLang\StarterKits\Plugins\React;
 
 class HomeController extends Controller
 {
@@ -74,5 +76,51 @@ class HomeController extends Controller
             'category' => $category,
             'message' => 'Không tìm thấy khóa học nào trong các danh mục này'
         ]);
+    }
+
+    public function search(Request $request)
+    {
+        $courseQuery = Course::where('status', CourseEnum::PUBLISHED->value);
+        $sortBy = 'created_at';
+        $sortOrder = 'asc';
+
+        if ($request->has('q')) {
+            $searchKey = Str::of($request->query('q'))->trim();
+            $courseQuery->whereRaw("name LIKE N'%{$searchKey}%'");
+        }
+
+        if ($request->has('sortBy')) {
+            switch ($request->sortBy) {
+                case 'lastest':
+                    $sortOrder = 'desc';
+                    break;
+                case 'price_low':
+                    $sortBy = 'original_price';
+                    break;
+                case 'price_high':
+                    $sortBy = 'original_price';
+                    $sortOrder = 'desc';
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if ($request->has('rating')) {
+            $rating = (float) $request->rating;
+            $courseQuery->where('rating', '>=', $rating);
+        }
+
+        if ($request->has('duration')) {
+            $courseQuery->where(function ($query) use ($request) {
+                foreach ($request->duration as $value) {
+                    [$min, $max] = explode('-', $value);
+                    $query->orWhereBetween('duration', [(int)$min, (int)$max]);
+                }
+            });
+        }
+
+        $courses = $courseQuery->orderBy($sortBy, $sortOrder)->paginate(6);
+        return view('user.pages.search', compact('courses'));
     }
 }

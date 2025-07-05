@@ -3,18 +3,19 @@
 use App\Http\Middleware\IsAdmin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NoteController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LectureController;
 use App\Http\Controllers\SectionController;
-use App\Http\Controllers\User\CartController;
-use App\Http\Controllers\User\HomeController;
-use App\Http\Controllers\User\CheckoutController;
-use App\Http\Controllers\User\WishlistController;
-use App\Http\Controllers\Admin\DasboardController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\DasboardController;
+use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\CourseCategoryController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\Admin\CourseCategoryController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /**
@@ -49,6 +50,7 @@ Route::get('/category/{slugPath}', [HomeController::class, 'showCourseOfCategory
     ->where('slugPath', '.*')
     ->name('user.category.show');
 
+Route::get('search', [HomeController::class, 'search'])->name('user.search');
 
 //course detail
 Route::get('course/{course:slug}', [CourseController::class, 'show'])->name('user.courses.show');
@@ -84,6 +86,10 @@ Route::middleware('auth')->group(function () {
     //user courses
     Route::get('my-courses', [CourseController::class, 'userCourses'])->name('user.my-courses');
     Route::get('my-courses/{course:slug}/learn/{lecture}', [LectureController::class, 'show'])->name('user.course-video.show');
+
+    //notes
+    Route::get('lecture/{lecture}/notes', [NoteController::class, 'getUserLectureNote'])->name('notes.lecture');
+    Route::post('notes', [NoteController::class, 'store'])->name('notes.store');
 
     //history
     Route::get('purchase-history', [OrderController::class, 'history'])->name('user.orders.history');

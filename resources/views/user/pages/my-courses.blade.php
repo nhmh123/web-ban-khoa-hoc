@@ -8,17 +8,19 @@
         <form method="GET" action="{{ route('user.my-courses') }}" class="row g-3 mb-4">
             <div class="col-md-4">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="tìm kiếm khóa học">
+                    {{-- <input type="hidden" name="q" value={{ request('q') }}> --}}
+                    <input type="text" class="form-control" placeholder="tìm kiếm khóa học" name="my_course_q"
+                        value={{ request('my_course_q') }}>
                     <button class="btn btn-primary">
                         <i class="bi bi-search"></i>
                     </button>
                 </div>
             </div>
             <div class="col-md-4">
-                <select name="category_id" class="form-select">
+                <select name="category" class="form-select">
                     <option value="">-- Tất cả danh mục --</option>
                     @foreach ($categories as $cat)
-                        <option value="{{ $cat->cc_id }}" {{ request('category_id') == $cat->cc_id ? 'selected' : '' }}>
+                        <option value="{{ $cat->cc_id }}" {{ request('category') == $cat->cc_id ? 'selected' : '' }}>
                             {{ $cat->cc_name }}
                         </option>
                     @endforeach
@@ -32,7 +34,7 @@
         <div class="row">
             <div class="col-md-12">
                 @if ($courses->isEmpty())
-                    <p class="text-muted">Chưa có khóa học nào.</p>
+                    <p class="text-muted">Không có khóa học phù hợp.</p>
                 @else
                     <div class="row mt-3">
                         @foreach ($courses as $course)
@@ -44,11 +46,22 @@
                                         @php
                                             $firstLecture = $course->sections->first()?->lectures->first();
                                         @endphp
-                                        <a href=""
-                                            class="card-title fs-6 fw-bold">{{ $course->name }}</a>
+
+                                        @if ($firstLecture)
+                                            <a href="{{ route('user.course-video.show', ['course' => $course->slug, 'lecture' => $firstLecture]) }}"
+                                                class="card-title fs-6 fw-bold">
+                                                {{ $course->name }}
+                                            </a>
+                                        @else
+                                            <span class="card-title fs-6 fw-bold text-muted">
+                                                {{ $course->name }}
+                                            </span>
+                                        @endif
+
                                         <p class="mb-1 small">{{ $course->user->name }}</p>
-                                        <div class="progress mb-3" style="height: 30px">
-                                            <div class="progress-bar bg-secondary progress-bar-striped progress-bar-animated"
+
+                                        <div class="progress mt-2" style="height: 12px">
+                                            <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated"
                                                 style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
                                                 <i>50%</i>
                                             </div>
@@ -59,7 +72,7 @@
                         @endforeach
                     </div>
                     <nav aria-label="...">
-                        {{ $courses->links('pagination::bootstrap-5') }}
+                        {{ $courses->appends(request()->query())->links('pagination::bootstrap-5') }}
                     </nav>
                 @endif
             </div>

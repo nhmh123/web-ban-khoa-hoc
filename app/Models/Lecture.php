@@ -34,4 +34,7 @@ class Lecture extends Model
     public function article(){
         return $this->hasOne(Article::class, 'lec_id', 'lec_id');
     }
+    public function notes(){
+        return $this->hasMany(Note::class,'lec_id','lec_id');
+    }
 }

@@ -1,37 +1,39 @@
 @extends('layouts.user')
 @section('user.content')
-    <div class="container">
-        <h5 class="fw-bold">Lich su mua hang</h5>
-        <table id="order-table" class="table">
-            <thead>
-                <tr>
-                    <th>ma don hang</th>
-                    <th>so khoa hoc</th>
-                    <th>so tien</th>
-                    <th>trang thai</th>
-                    <th>ngay tao</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if ($userOrders->count() > 0)
-                    @foreach ($userOrders as $order)
-                        <tr>
-                            <td>
-                                <a href="{{ route('user.orders.detail', $order) }}">
-                                    {{ $order->order_id }}
-                                </a>
-                            </td>
-                            <td>{{ $order->sub_total }}</td>
-                            <td>{{ number_format($order->total_amount) }}đ</td>
-                            <td>{{ \App\Enums\OrderEnum::from($order->status)->label() }}</td>
-                            <td>{{ $order->created_at }}</td>
-                        </tr>
-                    @endforeach
-                @else
-                    <p>Khong co don hang</p>
-                @endif
-            </tbody>
-        </table>
+    <div class="container my-5">
+        <h3 class="fw-bold">Lịch sử mua hàng</h3>
+        <div class="mt-5">
+            <table id="order-table" class="table">
+                <thead>
+                    <tr>
+                        <th>Mã đơn hàng</th>
+                        <th>Số lượng khóa học</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày tạo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if ($userOrders->count() > 0)
+                        @foreach ($userOrders as $order)
+                            <tr>
+                                <td>
+                                    <a href="{{ route('user.orders.detail', $order) }}">
+                                        {{ $order->order_id }}
+                                    </a>
+                                </td>
+                                <td>{{ $order->sub_total }}</td>
+                                <td>{{ number_format($order->total_amount) }}đ</td>
+                                <td>{{ \App\Enums\OrderEnum::from($order->status)->label() }}</td>
+                                <td>{{ $order->created_at }}</td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <p>Khong co don hang</p>
+                    @endif
+                </tbody>
+            </table>
+        </div>
     </div>
 
     @push('scripts')

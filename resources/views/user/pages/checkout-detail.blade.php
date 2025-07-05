@@ -1,27 +1,30 @@
 @extends('layouts.user')
 @section('user.content')
-    <div class="container">
-        <h5 class="fw-bold">Lich su mua hang</h5>
-        <table id="order-detail-table" class="table">
-            <thead>
-                <tr>
-                    <th>ten khoa hoc</th>
-                    <th>so tien</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($orderItems as $item)
+    <div class="container my-5">
+        <h3 class="fw-bold">Chi tiết đơn hàng</h3>
+        <span> {{ $order->order_id }}</span>
+        <div class="mt-5">
+            <table id="order-detail-table" class="table">
+                <thead>
                     <tr>
-                        <td>
-                            <a href="">
-                                {{ $item->course_title }}
-                            </a>
-                        </td>
-                        <td>{{ number_format($item->price_amount) }}đ</td>
+                        <th>Tên khóa học</th>
+                        <th>Tổng tiền</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($orderItems as $item)
+                        <tr>
+                            <td>
+                                <a href="">
+                                    {{ $item->course_title }}
+                                </a>
+                            </td>
+                            <td>{{ number_format($item->price_amount) }}đ</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 
     @push('scripts')

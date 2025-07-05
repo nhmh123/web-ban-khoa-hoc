@@ -123,12 +123,25 @@ class CourseController extends Controller
         }
     }
 
-    public function userCourses()
+    public function userCourses(Request $request)
     {
         $user = Auth::user();
         // $courses = Enrollment::where('user_id', $user->id)->with('course')->paginate(3);
-        $courses = $user->enrolledCourses()->with('category', 'user', 'sections', 'sections.lectures')->paginate(6);
-        // dd($courses);
+
+        $coursesQuery = $user->enrolledCourses()->with('category', 'user', 'sections', 'sections.lectures');
+
+        if ($request->has('my_course_q')) {
+            $searchKey = Str::of($request->query('my_course_q'))->trim();
+            $coursesQuery->whereRaw("name LIKE N'%{$searchKey}%'");
+        }
+
+        if ($request->filled('category')) {
+            $categoryId = $request->category;
+            $coursesQuery->where('cat_id', $categoryId);
+        }
+
+        $courses = $coursesQuery->paginate(8);
+
         $categories = Enrollment::where('user_id', $user->id)->with('course.category')->get()->pluck('course.category')->unique('cc_id');
         return view('user.pages.my-courses', compact('courses', 'categories'));
     }

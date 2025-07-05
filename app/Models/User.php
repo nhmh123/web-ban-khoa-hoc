@@ -80,6 +80,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(CartItem::class, 'user_id', 'id');
     }
+    public function notes()
+    {
+        return $this->hasMany(Note::class, 'user_id', 'id');
+    }
 
     public function canAccessLecture($lecture)
     {

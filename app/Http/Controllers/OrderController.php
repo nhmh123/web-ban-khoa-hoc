@@ -17,6 +17,6 @@ class OrderController extends Controller
     public function detail(Order $order)
     {
         $orderItems = $order->items;
-        return view('user.pages.checkout-detail', compact('orderItems'));
+        return view('user.pages.checkout-detail', compact('order', 'orderItems'));
     }
 }

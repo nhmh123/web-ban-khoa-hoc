@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Course;
@@ -19,11 +19,11 @@ class WishlistController extends Controller
 
     public function addToWishlist(Course $course)
     {
-        if(!Auth::check()) {
+        if (!Auth::check()) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Bạn cần đăng nhập để thêm khóa học vào danh sách yêu thích!'
-            ],401);
+            ], 401);
         }
         $user = auth()->user();
         if (!$user->wishlist()->where('course_id', $course->id)->exists()) {

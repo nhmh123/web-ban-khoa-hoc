@@ -14,10 +14,11 @@
 
         @include('user.partials.main-menu')
 
-        <form action="" class="d-none d-md-flex ms-3">
+        <form action="{{ route('user.search') }}" class="d-none d-md-flex ms-3">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="tìm kiếm khóa học">
-                <button class="btn btn-primary">
+                <input type="text" name="q" class="form-control" placeholder="tìm kiếm khóa học"
+                    value="{{ request('q') }}" required>
+                <button type="submit" class="btn btn-primary">
                     <i class="bi bi-search"></i>
                 </button>
             </div>
@@ -67,7 +68,7 @@
                             <img src="{{ auth()->user()->avatar }}" alt="" class="rounded-circle" width="50px"
                                 height="50px">
                         </button>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu dropdown-menu-end">
                             <strong class="text-center px-2">{{ auth()->user()->name }}</strong>
                             <hr>
                             <li><a class="dropdown-item"
