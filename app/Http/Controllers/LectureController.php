@@ -83,12 +83,12 @@ class LectureController extends Controller
             abort(403);
         }
 
-        // ✅ Kiểm tra xem bài giảng có thuộc về khóa học này không
+        // Kiểm tra xem bài giảng có thuộc về khóa học này không
         if ($lecture->section->course_id !== $course->id) {
             abort(403, 'Bài giảng không thuộc khóa học này.');
         }
 
-        // ✅ Kiểm tra quyền truy cập khóa học
+        // Kiểm tra quyền truy cập khóa học
         if (!$user->canAccessLecture($lecture)) {
             abort(403, 'Bạn chưa đăng ký khóa học này.');
         }
@@ -133,7 +133,6 @@ class LectureController extends Controller
             $typeModelClass = '\\App\\Models\\' . ucfirst($newType);
             $typeRelation = $newType;
             $typeModel = $lecture->$typeRelation();
-            // dd($typeModelClass, $typeRelation, $typeModel,$newTypeArray);
             if ($lecture->type != $newType) {
                 $lecture->$newType()->delete();
                 $typeModelClass::create($newTypeArray);

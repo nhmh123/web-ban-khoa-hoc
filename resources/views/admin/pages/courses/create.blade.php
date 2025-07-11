@@ -4,6 +4,12 @@
 
 @section('admin.content')
     <div class="container-fluid p-5">
+        @session('success')
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endsession
+
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -13,6 +19,7 @@
                 </ul>
             </div>
         @endif
+        
         <div class="card">
             <div class="card-header font-weight-bold">
                 Thêm Khóa Học

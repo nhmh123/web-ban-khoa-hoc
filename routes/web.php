@@ -22,6 +22,16 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
  * User routes
  */
 Route::get('/', [HomeController::class, 'index'])->name('user.home');
+// categories
+Route::get('/category/{slugPath}', [HomeController::class, 'showCourseOfCategory'])
+    ->where('slugPath', '.*')
+    ->name('user.category.show');
+
+Route::get('search', [HomeController::class, 'search'])->name('user.search');
+
+//course detail
+Route::get('course/{course:slug}', [CourseController::class, 'show'])->name('user.courses.show');
+Route::post('wishlist/add/{course}', [WishlistController::class, 'addToWishlist'])->name('user.wishlist.add');
 
 /**
  * Auth routes
@@ -44,18 +54,6 @@ Route::get('register', function () {
     return view('user.pages.register');
 })->name('user.register');
 Route::post('register/submit', [RegisteredUserController::class, 'store'])->name('user.register.submit')->defaults('redirectRoute', 'user.home');
-
-// categories
-Route::get('/category/{slugPath}', [HomeController::class, 'showCourseOfCategory'])
-    ->where('slugPath', '.*')
-    ->name('user.category.show');
-
-Route::get('search', [HomeController::class, 'search'])->name('user.search');
-
-//course detail
-Route::get('course/{course:slug}', [CourseController::class, 'show'])->name('user.courses.show');
-Route::post('wishlist/add/{course}', [WishlistController::class, 'addToWishlist'])->name('user.wishlist.add');
-
 
 Route::middleware('auth')->group(function () {
     //logout

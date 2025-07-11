@@ -1,12 +1,24 @@
 @extends('layouts.admin')
 @section('admin.content')
     <div id="content" class="container-fluid">
+        
+        @session('success')
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endsession
+
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="card">
-            @session('success')
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endsession
             <div class="card-header font-weight-bold d-flex justify-content-between align-items-center">
                 <h5 class="m-0 ">Danh sách khóa học</h5>
             </div>
@@ -44,7 +56,7 @@
                                         alt="thumbnail" class="img-fluid" width="100">
                                 </td>
                                 <td>
-                                    <span class="text-danger fw-bold">{{ $course->original_price }}</span>
+                                    <span class="text-danger fw-bold">{{ number_format($course->original_price) }}đ</span>
                                 </td>
                                 <td>{{ $course->category->cc_name ?? 'Không rõ' }}</td>
                                 <td class="text-center">{{ $course->enrollments()->count() }}</td>
@@ -58,15 +70,21 @@
                                         {{ $course->status == 'published' ? 'Công khai' : 'Ẩn' }}
                                     </span>
                                 </td>
-                                <td>
-                                    <a href="{{ route('courses.edit', $course->id) }}"
-                                        class="btn btn-success btn-sm">Sửa</a>
-                                    <form action="{{ route('courses.destroy', $course->id) }}" method="POST"
-                                        class="d-inline" name="delete-form">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
-                                    </form>
+                                <td class="text-nowrap">
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ route('courses.edit', $course->id) }}" class="btn btn-sm p-0">
+                                            <i class="bi bi-pencil-square text-dark fs-5"></i>
+                                        </a>
+                                        <form action="{{ route('courses.destroy', $course->id) }}" method="POST"
+                                            class="d-inline" name="delete-form"
+                                            onsubmit="return confirm('Xoá khóa học này?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm p-0">
+                                                <i class="bi bi-trash text-dark fs-5"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

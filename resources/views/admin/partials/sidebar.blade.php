@@ -7,7 +7,6 @@
                 </div>
                 Dashboard
             </a>
-            <i class="arrow fas fa-angle-right"></i>
         </li>
         <li class="nav-link {{ request()->routeIs('ccategories.*') ? 'active' : '' }}">
             <a href="{{ route('ccategories.index') }}">
@@ -42,7 +41,7 @@
                 <div class="nav-link-icon d-inline-flex">
                     <i class="bi bi-people"></i>
                 </div>
-                Users
+                Người dùng
             </a>
             <i class="arrow fas {{ request()->routeIs('users.*') ? 'fa-angle-down' : 'fa-angle-right' }} "></i>
 
@@ -51,7 +50,47 @@
                 <li><a href="{{ route('users.index') }}">Danh sách</a></li>
             </ul>
         </li>
+        <li class="nav-link {{ request()->routeIs('orders.*') ? 'active' : '' }}">
+            <a href="">
+                <div class="nav-link-icon d-inline-flex">
+                    <i class="bi bi-upc-scan"></i>
+                </div>
+                Đơn hàng
+            </a>
+            <i class="arrow fas {{ request()->routeIs('orders.*') ? 'fa-angle-down' : 'fa-angle-right' }} "></i>
+
+            <ul class="sub-menu">
+                <li><a href="">Danh sách</a></li>
+            </ul>
+        </li>
         <li class="nav-link">
+            <a href="">
+                <div class="nav-link-icon d-inline-flex align-item-center">
+                    <i class="bi bi-diagram-3"></i>
+                    Trang tĩnh
+                </div>
+            </a>
+            <i class="arrow fas fa-angle-right"></i>
+
+            <ul class="sub-menu">
+                <li><a href="">Thêm mới</a></li>
+                <li><a href="">Danh sách</a></li>
+            </ul>
+        </li>
+         <li class="nav-link">
+            <a href="">
+                <div class="nav-link-icon d-inline-flex">
+                    <i class="bi bi-gear"></i>
+                </div>
+                Cấu hình hệ thống
+            </a>
+            <i class="arrow fas fa-angle-right"></i>
+
+            <ul class="sub-menu">
+                <li><a href="">Slider</a></li>
+            </ul>
+        </li>
+        {{-- <li class="nav-link">
             <a href="?view=permission">
                 <div class="nav-link-icon d-inline-flex">
                     <i class="far fa-folder"></i>
@@ -64,6 +103,6 @@
                 <li><a href="?view=add-role">Thêm vai trò</a></li>
                 <li><a href="?view=list-role">Danh sách vai trò</a></li>
             </ul>
-        </li>
+        </li> --}}
     </ul>
 </div>

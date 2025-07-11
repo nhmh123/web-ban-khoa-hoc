@@ -4,14 +4,20 @@
     <div class="container my-5">
         <h2 class="mb-4">Giỏ hàng của bạn</h2>
 
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
+        @session('success')
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endsession
 
         @if ($errors->any())
-            @foreach ($errors->all() as $error)
-                <div class="alert alert-danger">{{ $error }}</div>
-            @endforeach
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
         @endif
 
         @if (count($cartItems) > 0)

@@ -38,8 +38,8 @@
                 @else
                     <div class="row mt-3">
                         @foreach ($courses as $course)
-                            <div class="col-md-3">
-                                <div class="card border-0 shadow-sm mb-4 d-flex flex-column">
+                            <div class="col-md-3 mb-4">
+                                <div class="card border-0 shadow-sm mb-4 h-100 d-flex flex-column">
                                     <img src="{{ $course->thumbnail }}" class="card-img-top"
                                         style="height: 150px; object-fit: cover;" alt="Course Image">
                                     <div class="card-body d-flex flex-column">
@@ -60,10 +60,13 @@
 
                                         <p class="mb-1 small">{{ $course->user->name }}</p>
 
-                                        <div class="progress mt-2" style="height: 12px">
-                                            <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated"
-                                                style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                                                <i>50%</i>
+                                        <div class="mt-auto">
+                                            <div class="progress" style="height: 12px">
+                                                <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated"
+                                                    style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+                                                    aria-valuemax="100">
+                                                    <i>50%</i>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

@@ -12,6 +12,7 @@
 
     <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
         <h4 class="mb-3 text-center">Admin Login</h4>
+        
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>

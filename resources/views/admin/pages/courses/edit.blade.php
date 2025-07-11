@@ -4,11 +4,13 @@
 
 @section('admin.content')
     <div class="container-fluid py-4">
+
         @session('success')
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
         @endsession
+
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -18,6 +20,7 @@
                 </ul>
             </div>
         @endif
+        
         <div class="card">
             <div class="card-header font-weight-bold">
                 Cập nhật khóa học

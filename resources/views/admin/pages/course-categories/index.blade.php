@@ -1,14 +1,25 @@
 @extends('layouts.admin')
 @section('admin.content')
     <div id="content" class="container-fluid">
+        @session('success')
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endsession
+
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="card">
-            @session('success')
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endsession
             <div class="card-header font-weight-bold d-flex justify-content-between align-items-center">
-                <h5 class="m-0 ">Danh sách Danh mục khóa học</h5>
+                <h5 class="m-0">Danh mục khóa học</h5>
             </div>
             <div class="card-body">
                 <table id="example" class="table border-none">
@@ -49,14 +60,17 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="{{ route('ccategories.edit', ['ccategory' => $cat->cc_id]) }}"
-                                        class="btn btn-success">Sửa</a>
+                                    <a href="{{ route('ccategories.edit', ['ccategory' => $cat->cc_id]) }}" class="btn">
+                                        <i class="bi bi-pencil-square text-dark fs-5"></i>
+                                    </a>
                                     <form name="delete-form"
                                         action="{{ route('ccategories.destroy', ['ccategory' => $cat->cc_id]) }}"
                                         method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">Xóa</button>
+                                        <button type="submit" class="btn">
+                                            <i class="bi bi-trash text-dark fs-5"></i>
+                                        </button>
                                     </form>
                                 </td>
                             </tr>

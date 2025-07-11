@@ -1,13 +1,13 @@
 <!-- Marquee Section for Sales Strategy -->
-<div class="marquee-container bg-warning text-dark pt-2">
+<div class="marquee-container bg-primary text-light pt-2">
     <marquee behavior="scroll" direction="left" scrollamount="5">
-        🎉 Ưu đãi có thời hạn: Giảm giá 50% cho tất cả các khóa học! Đăng ký ngay! 🎉
+        🎉 Ưu đãi có thời hạn: Giảm giá <mark>50%</mark> cho tất cả các khóa học! Đăng ký ngay! 🎉
         🚀 Khóa học AI mới ra mắt! Tham gia ngay để trở thành chuyên gia! 🚀
-        📚 Tặng Ebook miễn phí cho mỗi lượt đăng ký! Đừng bỏ lỡ! 📚
+        📚 Tặng Ebook <mark>miễn phí</mark> cho mỗi lượt đăng ký! Đừng bỏ lỡ! 📚
     </marquee>
 </div>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-dark">
     <div class="container-fluid d-flex justify-content-between py-2">
         <a class="navbar-brand fw-bold" href="{{ route('user.home') }}">
             <i class="bi bi-play-circle me-1"></i>CourseWeb</a>
@@ -41,7 +41,8 @@
 
                 <li class="nav-item fw-bold mx-2 align-content-center"><a class="nav-link text-dark"
                         href="{{ route('user.wishlist') }}">
-                        <i class="bi bi-heart"></i></a></li>
+                        <i class="bi bi-heart fs-5"></i>
+                    </a></li>
 
                 <li class="nav-item fw-bold mx-2 align-content-center">
                     <a class="nav-link position-relative" href="{{ route('user.cart') }}">
@@ -51,15 +52,15 @@
                                 {{ auth()->user()->cartItem->count() }}
                                 <span class="visually-hidden">unread messages</span>
                             </span>
-                            <i class="bi bi-cart3 text-dark"></i>
+                            <i class="bi bi-cart3 fs-5 text-dark"></i>
                         @else
-                            <i class="bi bi-cart3 text-dark"></i>
+                            <i class="bi bi-cart3 fs-5 text-dark"></i>
                         @endif
                     </a>
                 </li>
 
                 <li class="nav-item fw-bold mx-2 align-content-center"><a class="nav-link" href="#notifications">
-                        <i class="bi bi-bell text-dark"></i>
+                        <i class="bi bi-bell text-dark fs-5"></i>
                     </a></li>
 
                 @auth
@@ -84,7 +85,7 @@
                 @endauth
 
                 @guest
-                    <a href="{{ route('login') }}" class="btn btn-primary">
+                    <a href="{{ route('login') }}" class="btn btn-primary align-content-center">
                         Đăng nhập
                     </a>
                 @endguest
@@ -163,7 +164,7 @@
         </div> --}}
     </div>
 </nav>
-<nav class="navbar navbar-light bg-light shadow mb-3 py-0">
+<nav class="navbar navbar-light bg-light shadow mb-3 py-1">
     <div class="container-fluid px-3">
         <div class="w-100 overflow-auto">
             <ul class="navbar-nav flex-row flex-nowrap">
@@ -179,9 +180,6 @@
         </div>
     </div>
 </nav>
-
-
-
 
 @push('scripts')
     <script>
