@@ -12,4 +12,12 @@ enum OrderEnum: string
     {
         return __('order_status.' . $this->value);
     }
+
+    public function color(): string{
+        return match($this){
+            self::PENDING => 'badge-warning',
+            self::COMPLETED => 'badge-success',
+            self::CANCELLED => 'badge-dark',
+        };
+    }
 }

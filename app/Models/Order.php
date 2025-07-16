@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OrderEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
@@ -20,6 +21,14 @@ class Order extends Model
         'total_amount',
         'sub_total',
     ];
+
+    public function getStatusAttribute(){
+        return OrderEnum::from($this->attributes['status'])->label();
+    }
+
+    public function getStatusColorAttribute(){
+        return OrderEnum::from($this->attributes['status'])->color();
+    }
 
     public function items()
     {

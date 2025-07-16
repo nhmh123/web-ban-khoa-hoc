@@ -24,7 +24,10 @@
                                 </td>
                                 <td>{{ $order->sub_total }}</td>
                                 <td>{{ number_format($order->total_amount) }}đ</td>
-                                <td>{{ \App\Enums\OrderEnum::from($order->status)->label() }}</td>
+                                <td>
+                                    <span class="badge {{ $order->status_color}}">
+                                        {{ $order->status }}
+                                    </span>
                                 <td>{{ $order->created_at }}</td>
                             </tr>
                         @endforeach

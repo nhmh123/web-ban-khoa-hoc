@@ -114,6 +114,7 @@ Route::middleware([IsAdmin::class])->prefix('admin')->group(function () {
     Route::resource('courses', CourseController::class);
     Route::resource('sections', SectionController::class);
     Route::resource('lectures', LectureController::class);
+    Route::resource('orders', OrderController::class);
 });
 
 Route::prefix('admin')->group(function () {

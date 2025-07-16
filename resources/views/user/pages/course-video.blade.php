@@ -75,7 +75,6 @@
                         </div>
                     @endif
 
-                    <!-- Lesson Title -->
                     <h3 class="mt-4 fw-bold">{{ $lecture->title }}</h3>
 
                     <nav class="nav nav-tabs">
@@ -102,7 +101,6 @@
 
                         </div>
                         <div class="tab-pane show fade" id="user-course-notes">
-                            <!-- Select Note Scope -->
                             <div class="d-flex flex-row mt-3">
                                 <div class="me-3">
                                     <label for="note-scope" class="form-label fw-bold">Loại ghi chú</label>
@@ -122,7 +120,6 @@
 
                             <hr>
 
-                            <!-- Note Taking Section -->
                             <label for="note-content" class="form-label fw-bold">Tạo ghi chú</label>
                             <form id="note-form" method="POST">
                                 @csrf
@@ -135,10 +132,8 @@
                                 </button>
                             </form>
 
-                            <!-- Hiển thị lỗi -->
                             <div id="note-error" class="mt-2 text-danger fw-bold"></div>
 
-                            <!-- Hiển thị thành công -->
                             <div id="note-success" class="mt-2 text-success fw-bold"></div>
 
 
@@ -196,7 +191,6 @@
             <nav class="col-lg-4 col-md-4 d-none d-md-block bg-light sidebar p-3">
                 <h4 class="mb-3">Nội dung khóa học</h4>
 
-                <!-- Accordion for Course Content -->
                 <div class="accordion" id="courseAccordion">
                     @foreach ($course->sections as $section)
                         <div class="accordion-item">
@@ -246,7 +240,6 @@
                 const url = '{{ route('notes.store') }}';
                 const data = form.serialize();
 
-                // Reset thông báo
                 $('#note-error').html('');
                 $('#note-success').html('');
 

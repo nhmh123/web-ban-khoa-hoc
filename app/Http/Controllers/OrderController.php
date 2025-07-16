@@ -8,6 +8,14 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
+    public function index(){
+        $orders = Order::all();
+        return view('admin.pages.orders.index',compact('orders'));
+    }
+    public function show(Order $order){
+        $orderItems = $order->items;
+        return view('admin.pages.orders.detail',compact('order','orderItems'));
+    }
     public function history()
     {
         $user = Auth::user();

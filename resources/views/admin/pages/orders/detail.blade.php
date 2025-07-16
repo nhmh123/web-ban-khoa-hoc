@@ -20,63 +20,31 @@
 
         <div class="card">
             <div class="card-header font-weight-bold d-flex justify-content-between align-items-center">
-                <h5 class="m-0">Danh mục khóa học</h5>
+                <h5 class="m-0">Chi tiết đơn hàng</h5>
+                <span>{{$order->order_id}}</span>
             </div>
             <div class="card-body">
                 <table id="example" class="table border-none">
                     <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên khóa học</th>
+                        <th>Tổng tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($orderItems as $item)
                         <tr>
-                            <th>
-                                <input type="checkbox" id="checkAll">
-                            </th>
-                            <th>#</th>
-                            <th>Tên danh mục</th>
-                            <th>Icon</th>
-                            <th>Danh mục cha</th>
-                            <th>Số lượng khóa học</th>
-                            <th>Ngày tạo</th>
-                            <th>Lần cuối cập nhật</th>
-                            <th>Trạng thái</th>
-                            <th>Tác vụ</th>
+                            <td>{{$loop->iteration}}</td>
+                            <td>
+                                <a href="">
+                                    {{ $item->course_title }}
+                                </a>
+                            </td>
+                            <td>{{ number_format($item->price_amount) }}đ</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($categories as $cat)
-                            <tr>
-                                <td>
-                                    <input type="checkbox" name="ids[]" value="{{ $cat->cc_id }}">
-                                </td>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $cat->cc_name }}</td>
-                                <td>
-                                    <img src="{{ asset($cat->icon_path) }}" alt="" class="img-fluid" width="50">
-                                </td>
-                                <td>{{ $cat->parent?->cc_name }}</td>
-                                <td class="text-center">{{ $cat->courses()->count() }}</td>
-                                <td>{{ $cat->created_at->format('d-m-Y H:m:s') }}</td>
-                                <td>{{ $cat->updated_at?->format('d-m-Y H:m:s') }}</td>
-                                <td>
-                                    <span class="badge {{ $cat->status ? 'badge-success' : 'badge-dark' }}">
-                                        {{ $cat->status ? 'Hiển thị' : 'Ẩn' }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <a href="{{ route('ccategories.edit', ['ccategory' => $cat->cc_id]) }}" class="btn">
-                                        <i class="bi bi-pencil-square text-dark fs-5"></i>
-                                    </a>
-                                    <form name="delete-form"
-                                        action="{{ route('ccategories.destroy', ['ccategory' => $cat->cc_id]) }}"
-                                        method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn">
-                                            <i class="bi bi-trash text-dark fs-5"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
+                    @endforeach
+                </tbody>
                 </table>
             </div>
         </div>

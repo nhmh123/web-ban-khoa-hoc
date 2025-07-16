@@ -51,7 +51,7 @@
             </ul>
         </li>
         <li class="nav-link {{ request()->routeIs('orders.*') ? 'active' : '' }}">
-            <a href="">
+            <a href="{{ route('orders.index') }}">
                 <div class="nav-link-icon d-inline-flex">
                     <i class="bi bi-upc-scan"></i>
                 </div>
@@ -60,7 +60,7 @@
             <i class="arrow fas {{ request()->routeIs('orders.*') ? 'fa-angle-down' : 'fa-angle-right' }} "></i>
 
             <ul class="sub-menu">
-                <li><a href="">Danh sách</a></li>
+                <li><a href="{{ route('orders.index') }}">Danh sách</a></li>
             </ul>
         </li>
         <li class="nav-link">
@@ -77,7 +77,7 @@
                 <li><a href="">Danh sách</a></li>
             </ul>
         </li>
-         <li class="nav-link">
+        <li class="nav-link">
             <a href="">
                 <div class="nav-link-icon d-inline-flex">
                     <i class="bi bi-gear"></i>
@@ -90,19 +90,5 @@
                 <li><a href="">Slider</a></li>
             </ul>
         </li>
-        {{-- <li class="nav-link">
-            <a href="?view=permission">
-                <div class="nav-link-icon d-inline-flex">
-                    <i class="far fa-folder"></i>
-                </div>
-                Phân quyền
-            </a>
-            <i class="arrow fas fa-angle-right"></i>
-            <ul class="sub-menu">
-                <li><a href="?view=permission">Quyền</a></li>
-                <li><a href="?view=add-role">Thêm vai trò</a></li>
-                <li><a href="?view=list-role">Danh sách vai trò</a></li>
-            </ul>
-        </li> --}}
     </ul>
 </div>

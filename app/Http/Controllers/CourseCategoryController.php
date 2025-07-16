@@ -105,7 +105,7 @@ class CourseCategoryController extends Controller
             }
 
             $ccategory->delete();
-            return redirect()->route('ccategories.index')->with('success', 'Xóa danh mục thành công!');
+            return redirect()->back()->with('success', 'Xóa danh mục thành công!');
         } catch (\Throwable $th) {
             return back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $th->getMessage()]);
         }
