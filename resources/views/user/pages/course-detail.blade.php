@@ -82,7 +82,7 @@
                 </section>
 
                 <!-- Instructor Section -->
-                <section class="mt-4">
+                {{-- <section class="mt-4">
                     <h2 class="fs-5 fw-bold">Người hướng dẫn</h2>
                     <div class="d-flex align-items-center">
                         <img src="{{ $course->user->avatar }}" class="rounded-circle me-3" alt="Instructor" width="70"
@@ -94,7 +94,7 @@
                             <p>Senior Laravel Developer with 10+ years of experience.</p>
                         </div>
                     </div>
-                </section>
+                </section> --}}
 
                 <!-- Reviews -->
                 <section class="mt-4">
@@ -118,20 +118,6 @@
                     <img src="{{ $course->thumbnail }}" class="card-img-top" alt="Course Thumbnail"
                         style="max-height: 250px">
                     <div class="card-body">
-                        {{-- @if ($course->sale_price)
-                            <div class="d-flex">
-                                <h3 class="card-title text-decoration-line-through me-3">
-                                    {{ $course->original_price_formatted }}</h3>
-                                </h3>
-                                </p>
-                                <h3 class="card-title fw-bold">{{ $course->sale_price_formatted }}</h3>
-                            </div>
-                        @else
-                            <h3 class="card-title">{{ $course->original_price_formatted }}</h3>
-                            </h3>
-                        @endif --}}
-                        {{-- <p class="text-muted">Limited-time offer</p> --}}
-
                         <h3 class="card-title fw-bold">{{ $course->original_price_formatted }}đ</h3>
                         </h3>
 
@@ -154,16 +140,24 @@
                             <form action="{{ route('user.course.enroll', $course->id) }}" method="POST"
                                 name="enroll-course">
                                 @csrf
-                                <button type="submit" class="btn btn-warning w-100 mb-2">Đăng ký ngay</button>
+                                <button type="submit" class="btn btn-primary w-100 mb-2">Mua ngay</button>
                             </form>
-                            <div class="d-flex gap-2">
-                                <form action="{{ route('user.cart.add', $course->id) }}" method="POST" name="add-to-cart">
-                                    @csrf
-                                    <button type="submit" class="flex-fill btn btn-outline-primary w-100">
-                                        <i class="bi bi-cart-plus"></i>
-                                        <span>Thêm vào giỏ hàng</span>
-                                    </button>
-                                </form>
+                            <div class="d-flex justify-content-between gap-2">
+                                <div id="cart-action-wrapper" class="d-flex justify-content-between gap-2">
+                                    @if ($alreadyInCart)
+                                        <a href="{{ route('user.cart') }}" class="btn btn-success w-100">
+                                            <i class="bi bi-cart-check-fill me-1"></i> Đi tới giỏ hàng
+                                        </a>
+                                    @else
+                                        <form action="{{ route('user.cart.add', $course->id) }}" method="POST"
+                                            name="add-to-cart">
+                                            @csrf
+                                            <button type="submit" class="flex-fill btn btn-outline-primary w-100">
+                                                <span>Thêm vào giỏ hàng</span>
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
 
                                 @if ($alreadyInWishlist)
                                     <form action="{{ route('user.wishlist.remove', $course->id) }}" method="POST"
@@ -232,6 +226,9 @@
                 let addToWishlist = $('form[name="add-to-wishlist"]');
                 let removeFromWishlist = $('form[name="remove-from-wishlist"]');
                 let addToCart = $('form[name="add-to-cart"]');
+                let cartElement = $('#user-cart-total');
+
+                console.log({{ $alreadyInCart }});
 
                 addToWishlist.on('submit', function(e) {
                     e.preventDefault();
@@ -289,14 +286,6 @@
                     })
                 });
 
-                // if ({{ $alreadyInWishlist ? 'true' : 'false' }}) {
-                //     addToWishlist.hide();
-                //     removeFromWishlist.show();
-                // } else {
-                //     addToWishlist.show();
-                //     removeFromWishlist.hide();
-                // }
-
                 addToCart.on('submit', function(e) {
                     e.preventDefault();
                     let form = $(this);
@@ -308,22 +297,39 @@
                         data: form.serialize(),
                         success: function(response) {
                             if (response.status === 'success') {
-                                alert(response.message ||
-                                    'Đã thêm khóa học vào giỏ hàng thành công!');
+                                displaySuccessToast(response.message);
+                                $('#cart-action-wrapper').html(`
+                                    <a href="{{ route('user.cart') }}" class="btn btn-success w-100">
+                                        <i class="bi bi-cart-check-fill me-1"></i> Đi tới giỏ hàng
+                                    </a>
+                                `);
+                                updateCartTotal(
+                                    '{{ route('user.cart.get-total') }}');
                             } else {
                                 alert(response.message || 'Đã xảy ra lỗi!');
                             }
                         },
                         error: function(xhr, status, error) {
-                            let message = 'Đã xảy ra lỗi khi thêm khóa học vào giỏ hàng.';
-                            if (xhr.responseJSON && xhr.responseJSON.message) {
-                                message = xhr.responseJSON.message;
+                            let res = xhr.responseJSON;
+                            let title = 'Lỗi';
+                            let detail = 'Đã xảy ra lỗi khi thêm khóa học vào giỏ hàng.';
+                            let redirect = "";
+
+                            if (res) {
+                                if (res.detail) {
+                                    detail = res.detail;
+                                } else if (res.title) {
+                                    title = res.title;
+                                }
                             } else if (xhr.status === 401) {
-                                message = 'Bạn cần đăng nhập để thực hiện thao tác này.';
+                                title = 'Chưa đăng nhập';
+                                detail = 'Bạn cần đăng nhập để thực hiện thao tác này.';
+                                redirect = '<a href="{{ route('login') }}">Đăng nhập</a>';
                             } else if (xhr.status === 400) {
-                                message = 'Yêu cầu không hợp lệ.';
+                                detail = 'Yêu cầu không hợp lệ.';
                             }
-                            alert(message);
+
+                            displayErrorAlert(title, detail, redirect);
                         }
                     });
                 });

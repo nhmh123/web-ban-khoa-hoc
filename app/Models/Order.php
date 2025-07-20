@@ -29,7 +29,9 @@ class Order extends Model
     public function getStatusColorAttribute(){
         return OrderEnum::from($this->attributes['status'])->color();
     }
-
+    public function getUserIdAttribute(){
+        return User::find($this->attributes['user_id'])?->name;
+    }
     public function items()
     {
         return $this->hasMany(OrderItem::class, 'order_id', 'order_id');

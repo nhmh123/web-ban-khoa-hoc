@@ -35,74 +35,57 @@
 
             <div class="row">
                 <!-- Cart Items -->
+                <button name="reload-btn">reload</button>
                 <div class="col-md-8">
-                    <form action="{{ route('user.cart.clear') }}" method="POST"
-                        onsubmit="return confirm('Bạn có chắc chắn muốn xóa toàn bộ khóa học khỏi giỏ hàng?')">
-                        @csrf
-                        @method('DELETE')
-                        <div class="d-flex justify-content-between mb-3">
-                            <div>
-                                <input type="checkbox" id="checkAll" checked>
-                                <label for="checkAll">Chọn tất cả</label>
+                    <div id="cart-container">
+                        <form name="clear-cart-form" action="{{ route('user.cart.clear') }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <div class="d-flex justify-content-between mb-3">
+                                <div>
+                                    <input type="checkbox" id="checkAll" checked>
+                                    <label for="checkAll">Chọn tất cả</label>
+                                </div>
+                                <button type="submit" class="btn btn-danger btn-sm">Xóa toàn bộ</button>
                             </div>
-                            <button type="submit" class="btn btn-danger btn-sm">Xóa toàn bộ</button>
-                        </div>
+                            @foreach ($cartItems as $item)
+                                <div class="card border-0 p-0 my-2">
+                                    <div class="row g-0">
+                                        <div class="col-md-1 d-flex align-items-center justify-content-start">
+                                            <input type="checkbox" name="ids[]" value="{{ $item->course->id }}" checked>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <img src="{{ $item->course->thumbnail }}" class="rounded-start w-100 h-100"
+                                                style="object-fit: cover;" alt="Course Image">
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body py-0 my-0 d-flex flex-column h-100">
+                                                <h5 class="card-title fs-6 fw-bold">{{ $item->course->name }}</h5>
+                                                <p class="card-text small mb-1">{{ $item->course->user->name }}</p>
 
-                        @foreach ($cartItems as $item)
-                            <div class="card border-0 p-0 my-2">
-                                <div class="row g-0">
-                                    <!-- Checkbox + Thumbnail -->
-                                    <div class="col-md-1 d-flex align-items-center justify-content-start">
-                                        <input type="checkbox" name="ids[]" value="{{ $item->course->id }}" checked>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <img src="{{ $item->course->thumbnail }}" class="rounded-start w-100 h-100"
-                                            style="object-fit: cover;" alt="Course Image">
-                                    </div>
-
-                                    <!-- Course Info -->
-                                    <div class="col-md-8">
-                                        <div class="card-body py-0 my-0 d-flex flex-column h-100">
-                                            <h5 class="card-title fs-6 fw-bold">{{ $item->course->name }}</h5>
-                                            <p class="card-text small mb-1">{{ $item->course->user->name }}</p>
-
-                                            <div class="d-flex justify-content-between align-items-center mt-auto">
-                                                <div>
-                                                    {{-- @if ($item->course->sale_price)
-                                                        <p class="mb-1">
-                                                            <span class="text-decoration-line-through text-muted">
-                                                                {{ $item->course->original_price_formatted }}đ
-                                                            </span>
-                                                            <span class="text-danger fw-bold ms-2">
-                                                                {{ $item->course->sale_price }}đ
-                                                            </span>
-                                                        </p>
-                                                    @else
-                                                        <p class="mb-1 fw-bold">
+                                                <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                    <div>
+                                                        <p class="mb-0 text-end fw-bold">
                                                             {{ $item->course->original_price_formatted }}đ
                                                         </p>
-                                                    @endif --}}
-
-                                                    <p class="mb-0 text-end fw-bold">
-                                                        {{ $item->course->original_price_formatted }}đ
-                                                    </p>
+                                                    </div>
+                                                    <form action="{{ route('user.cart.remove', $item->course->id) }}"
+                                                        method="POST"
+                                                        onsubmit="return confirm('Xóa khóa học này khỏi giỏ hàng?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="btn btn-sm btn-outline-danger">Xóa</button>
+                                                    </form>
                                                 </div>
-                                                <form action="{{ route('user.cart.remove', $item->course->id) }}"
-                                                    method="POST"
-                                                    onsubmit="return confirm('Xóa khóa học này khỏi giỏ hàng?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="btn btn-sm btn-outline-danger">Xóa</button>
-                                                </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <hr class="my-2">
-                        @endforeach
-                    </form>
+                                <hr class="my-2">
+                            @endforeach
+                        </form>
+                    </div>
                 </div>
 
 
@@ -134,22 +117,6 @@
                         </div>
                     </div>
 
-                    {{-- Khu vực nhập mã giảm giá --}}
-                    {{-- <form method="POST" action="" class="mb-3">
-                        @csrf
-                        <label for="coupon_code" class="form-label fw-bold">Mã giảm giá</label>
-                        <div class="input-group">
-                            <input type="text" name="coupon_code" id="coupon_code" class="form-control"
-                                placeholder="Nhập mã giảm giá">
-                            <button class="btn btn-outline-secondary" type="submit">Áp dụng</button>
-                        </div>
-                        @if (session('coupon_error'))
-                            <small class="text-danger">{{ session('coupon_error') }}</small>
-                        @elseif (session('coupon_success'))
-                            <small class="text-success">{{ session('coupon_success') }}</small>
-                        @endif
-                    </form> --}}
-
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <h5 class="card-title">Thông tin thanh toán</h5>
@@ -159,12 +126,6 @@
                                     <strong>{{ number_format($cartTotal) }}đ</strong>
                                 </li>
                             </ul>
-                            {{-- Checkout button after online checkout integrate --}}
-                            {{-- <form action="{{ route('user.checkout') }}" method="POST" name="checkout-form">
-                                @csrf
-                                <button type="submit" class="btn btn-primary w-100">Tiến hành thanh
-                                    toán</button>
-                            </form> --}}
 
                             <form action="{{ route('user.checkout.submit') }}" method="POST" name="checkout-form">
                                 @csrf
@@ -187,7 +148,7 @@
             $(document).ready(function() {
                 let checkAll = $('#checkAll');
                 let checkedCheckoutCourseIds = $('input[name="ids[]"]:checked').toArray().map(input => input.value);
-                console.log(checkedCheckoutCourseIds);
+
                 checkAll.on('change', function() {
                     let isChecked = this.checked;
                     $('input[name="ids[]"]').prop('checked', isChecked).trigger('change');
@@ -223,28 +184,25 @@
                     checkoutForm.off('submit').submit();
                 })
 
+                let clearCartForm = $('form[name="clear-cart-form"]');
+                clearCartForm.on('submit', function(e) {
+                    e.preventDefault();
+                    showConfirmDeleteAlert(
+                        'Xác nhận xóa',
+                        'Bạn có chắc chắn muốn xóa khóa học này khỏi giỏ hàng?',
+                        'Xóa',
+                        'Hủy',
+                        'Đã xóa!',
+                        'Khóa học đã được xóa khỏi giỏ hàng.',
+                        () => clearCart("{{ route('user.cart.clear') }}")
+                    );
 
+                    getUserCart("{{ route('user.cart') }}");
+                })
 
-                // let removeFromCart = $('form[name="remove-from-cart"]');
-                // removeFromCart.on('submit', function(e) {
-                //     e.preventDefault();
-                //     if (confirm('Bạn có chắc chắn muốn xóa khóa học này khỏi giỏ hàng?')) {
-                //         let form = $(this);
-                //         let url = form.attr('action');
-
-                //         $.ajax({
-                //             url: url,
-                //             type: 'POST',
-                //             data: $(this).serialize(),
-                //             success: function(response) {
-                //                 location.reload();
-                //             },
-                //             error: function(xhr, status, error) {
-                //                 alert('Có lỗi xảy ra khi xóa khóa học khỏi giỏ hàng.');
-                //             }
-                //         });
-                //     }
-                // });
+                $('button[name="reload-btn"]').on('click', function() {
+                    getUserCart("{{ route('user.cart') }}");
+                })
             })
         </script>
     @endpush

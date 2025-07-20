@@ -17,7 +17,12 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CourseCategoryController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\PageController;
 
+
+Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
+    \UniSharp\LaravelFilemanager\Lfm::routes();
+});
 /**
  * User routes
  */
@@ -70,6 +75,7 @@ Route::middleware('auth')->group(function () {
 
     //cart
     Route::get('cart', [CartController::class, 'index'])->name('user.cart');
+    Route::get('/cart/total', [CartController::class, 'getCartTotal'])->name('user.cart.get-total');
     Route::post('cart/add/{course}', [CartController::class, 'addToCart'])->name('user.cart.add');
     Route::delete('cart/remove/{course}', [CartController::class, 'removeFromCart'])->name('user.cart.remove');
     ROute::delete('cart/clear', [CartController::class, 'clearCart'])->name('user.cart.clear');
@@ -115,6 +121,7 @@ Route::middleware([IsAdmin::class])->prefix('admin')->group(function () {
     Route::resource('sections', SectionController::class);
     Route::resource('lectures', LectureController::class);
     Route::resource('orders', OrderController::class);
+    Route::resource('pages', PageController::class);
 });
 
 Route::prefix('admin')->group(function () {
@@ -128,5 +135,6 @@ Route::prefix('admin')->group(function () {
         ->name('admin.login.submit')
         ->defaults('redirectRoute', 'admin.dashboard');
 });
+
 
 // Auth::routes();

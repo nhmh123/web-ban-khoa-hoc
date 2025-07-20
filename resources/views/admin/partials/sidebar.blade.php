@@ -63,18 +63,18 @@
                 <li><a href="{{ route('orders.index') }}">Danh sách</a></li>
             </ul>
         </li>
-        <li class="nav-link">
-            <a href="">
+        <li class="nav-link {{ request()->routeIs(patterns: 'pages.*') ? 'active' : '' }}">
+            <a href="{{route('pages.index')}}">
                 <div class="nav-link-icon d-inline-flex align-item-center">
                     <i class="bi bi-diagram-3"></i>
                     Trang tĩnh
                 </div>
             </a>
-            <i class="arrow fas fa-angle-right"></i>
+            <i class="arrow fas {{ request()->routeIs('pages.*') ? 'fa-angle-down' : 'fa-angle-right' }}"></i>
 
             <ul class="sub-menu">
-                <li><a href="">Thêm mới</a></li>
-                <li><a href="">Danh sách</a></li>
+                <li><a href="{{route('pages.create')}}">Thêm mới</a></li>
+                <li><a href="{{route('pages.index')}}">Danh sách</a></li>
             </ul>
         </li>
         <li class="nav-link">

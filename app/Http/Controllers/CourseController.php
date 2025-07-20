@@ -59,7 +59,8 @@ class CourseController extends Controller
     {
         $course->load('category', 'user', 'sections', 'sections.lectures');
         $alreadyInWishlist = Auth::user()?->wishlist->contains($course->id) ?? false;
-        return view('user.pages.course-detail', compact('course', 'alreadyInWishlist'));
+        $alreadyInCart = Auth::user()?->cartItem()->where('course_id', $course->id)->exists() ?? false;
+        return view('user.pages.course-detail', compact('course', 'alreadyInWishlist', 'alreadyInCart'));
     }
 
     /**

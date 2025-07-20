@@ -110,27 +110,38 @@
                         type: 'POST',
                         url: url,
                         data: form.serialize(),
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
                         success: function(response) {
                             if (response.status === 'success') {
-                                alert(response.message ||
-                                    'Đã thêm khóa học vào giỏ hàng thành công!');
+                                displaySuccessToast(response.message);
+                                $('#cart-action-wrapper').html(`
+                                    <a href="{{ route('user.cart') }}" class="btn btn-success w-100">
+                                        <i class="bi bi-cart-check-fill me-1"></i> Đi tới giỏ hàng
+                                    </a>
+                                `);
+                                updateCartTotal(
+                                    '{{ route('user.cart.get-total') }}');
                             } else {
                                 alert(response.message || 'Đã xảy ra lỗi!');
                             }
                         },
                         error: function(xhr, status, error) {
+                            let res = xhr.responseJSON;
                             let message = 'Đã xảy ra lỗi khi thêm khóa học vào giỏ hàng.';
-                            if (xhr.responseJSON && xhr.responseJSON.message) {
-                                message = xhr.responseJSON.message;
+
+                            if (res) {
+                                if (res.detail) {
+                                    message = res.detail; // mô tả cụ thể
+                                } else if (res.title) {
+                                    message = res.title; // tiêu đề lỗi
+                                }
                             } else if (xhr.status === 401) {
                                 message = 'Bạn cần đăng nhập để thực hiện thao tác này.';
                             } else if (xhr.status === 400) {
                                 message = 'Yêu cầu không hợp lệ.';
                             }
+
                             alert(message);
+                            console.log(message)
                         }
                     });
                 });

@@ -22,6 +22,10 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     {{-- Swiper --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    {{-- ToastJS --}}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    {{-- SweetAlert2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     {{-- Custom --}}
     <link rel="stylesheet" href="{{ asset('css/user/main.css') }}">
 
@@ -68,6 +72,8 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     {{-- Swiper --}}
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    {{-- ToastJS --}}
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     {{-- Custom --}}
     <script src="{{ asset('js/user/main.js') }}"></script>
 

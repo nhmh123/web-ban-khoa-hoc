@@ -40,7 +40,6 @@
                     <tbody>
                         @foreach ($orders as $order)
                             <tr>
-                                
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
                                     <a href="{{ route('orders.show', $order) }}">

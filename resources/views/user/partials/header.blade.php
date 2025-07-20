@@ -46,18 +46,15 @@
 
                 <li class="nav-item fw-bold mx-2 align-content-center">
                     <a class="nav-link position-relative" href="{{ route('user.cart') }}">
-                        @if (auth()->user()?->cartItem->count() > 0)
-                            <span
-                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ auth()->user()->cartItem->count() }}
-                                <span class="visually-hidden">unread messages</span>
-                            </span>
-                            <i class="bi bi-cart3 fs-5 text-dark"></i>
-                        @else
-                            <i class="bi bi-cart3 fs-5 text-dark"></i>
-                        @endif
+                        <span id="user-cart-total"
+                            class="position-absolute top-2 start-100 translate-middle badge rounded-pill bg-danger
+                {{ auth()->user()?->cartItem->count() > 0 ? '' : 'd-none' }}">
+                            {{ auth()->user()?->cartItem->count() }}
+                        </span>
+                        <i class="bi bi-cart3 fs-5 text-dark"></i>
                     </a>
                 </li>
+
 
                 <li class="nav-item fw-bold mx-2 align-content-center"><a class="nav-link" href="#notifications">
                         <i class="bi bi-bell text-dark fs-5"></i>
