@@ -12,14 +12,14 @@
         });
 
         tinymce.init({
-            selector: 'textarea#note-content', // Phù hợp với class hoặc id textarea bạn dùng
+            selector: 'textarea#note-content',
             plugins: 'code table lists',
-            toolbar: true, // Ẩn toàn bộ toolbar
-            menubar: true, // Ẩn menu
-            statusbar: true, // Ẩn status bar
-            readonly: 0, // 1 = readonly
-            content_css: true, // Dùng CSS mặc định của TinyMCE
-            branding: false // Ẩn "Powered by TinyMCE"
+            toolbar: true,
+            menubar: true,
+            statusbar: true,
+            readonly: 0,
+            content_css: true,
+            branding: false
         });
 
         var editor_config = {
@@ -27,7 +27,7 @@
             selector: 'textarea#page-create',
             relative_urls: false,
             plugins: ['advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'emoticons'],
-            toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table | image | emoticons | language | paste',
+            toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table | image | emoticons | language | paste',
             language: 'vi',
             file_picker_callback: function(callback, value, meta) {
                 var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName(

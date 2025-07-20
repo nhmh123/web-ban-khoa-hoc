@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('slug');
             $table->mediumText('content');
             $table->enum('type',['company','legal'])->default('company');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

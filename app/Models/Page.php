@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Page extends Model
 {
     protected $fillable = [
-        'page_title',
+        'title',
         'slug',
         'content',
-        'type'
+        'type',
+        'is_active'
     ];
 }
