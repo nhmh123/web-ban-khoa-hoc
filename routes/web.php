@@ -18,7 +18,7 @@ use App\Http\Controllers\CourseCategoryController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\PageController;
-
+use App\Http\Controllers\SettingController;
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
     \UniSharp\LaravelFilemanager\Lfm::routes();
@@ -122,6 +122,10 @@ Route::middleware([IsAdmin::class])->prefix('admin')->group(function () {
     Route::resource('lectures', LectureController::class);
     Route::resource('orders', OrderController::class);
     Route::resource('pages', PageController::class);
+    Route::get('/settings/meta-data', [SettingController::class, 'edit'])->name('settings.meta.edit');
+    Route::post('/settings/meta-data', [SettingController::class, 'update'])->name('settings.meta.update');
+    Route::get('/settings/email', [SettingController::class, 'emailSettingEdit'])->name('settings.email.edit');
+    Route::post('/settings/email', [SettingController::class, 'emailSettingUpdate'])->name('settings.email.update');
 });
 
 Route::prefix('admin')->group(function () {

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Setting;
 use App\Models\CourseCategory;
 use Illuminate\Support\ServiceProvider;
 
@@ -37,6 +38,11 @@ class ViewServiceProvider extends ServiceProvider
                 ->whereNull('parent_id')
                 ->get();
             return $view->with('rootCategories', $rootCategories);
+        });
+
+        view()->composer('*',function($view){
+            $settings = Setting::pluck('value','key')->toArray();
+            $view->with('settings',$settings);
         });
     }
 }

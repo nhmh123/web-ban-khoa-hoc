@@ -38,9 +38,9 @@
                                 </td>
                                 <td>
                                     @if ($page->is_active)
-                                        <span class="badge bg-success">Hiển thị</span>
+                                        <span class="badge badge-success">Hiển thị</span>
                                     @else
-                                        <span class="badge bg-dark">Ẩn</span>
+                                        <span class="badge badge-dark">Ẩn</span>
                                     @endif
                                 </td>
                                 <td>{{ $page->created_at }}</td>

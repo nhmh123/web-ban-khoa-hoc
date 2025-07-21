@@ -63,8 +63,22 @@
                 <li><a href="{{ route('orders.index') }}">Danh sách</a></li>
             </ul>
         </li>
+        <li class="nav-link">
+            <a href="">
+                <div class="nav-link-icon d-inline-flex">
+                    <i class="bi bi-chat-dots"></i>
+                </div>
+                Bình luận & đánh giá
+            </a>
+            <i class="arrow fas {{ request()->routeIs('orders.*') ? 'fa-angle-down' : 'fa-angle-right' }} "></i>
+
+            <ul class="sub-menu">
+                <li><a href="">Danh sách</a></li>
+            </ul>
+        </li>
+
         <li class="nav-link {{ request()->routeIs(patterns: 'pages.*') ? 'active' : '' }}">
-            <a href="{{route('pages.index')}}">
+            <a href="{{ route('pages.index') }}">
                 <div class="nav-link-icon d-inline-flex align-item-center">
                     <i class="bi bi-diagram-3"></i>
                     Trang tĩnh
@@ -73,21 +87,36 @@
             <i class="arrow fas {{ request()->routeIs('pages.*') ? 'fa-angle-down' : 'fa-angle-right' }}"></i>
 
             <ul class="sub-menu">
-                <li><a href="{{route('pages.create')}}">Thêm mới</a></li>
-                <li><a href="{{route('pages.index')}}">Danh sách</a></li>
+                <li><a href="{{ route('pages.create') }}">Thêm mới</a></li>
+                <li><a href="{{ route('pages.index') }}">Danh sách</a></li>
             </ul>
         </li>
-        <li class="nav-link">
-            <a href="">
+        <li class="nav-link {{ request()->routeIs(patterns: 'settings.*') ? 'active' : '' }}">
+            <a href="{{ route('settings.meta.edit') }}">
                 <div class="nav-link-icon d-inline-flex">
                     <i class="bi bi-gear"></i>
                 </div>
                 Cấu hình hệ thống
             </a>
-            <i class="arrow fas fa-angle-right"></i>
+            <i class="arrow fas {{ request()->routeIs('settings.*') ? 'fa-angle-down' : 'fa-angle-right' }}"></i>
 
             <ul class="sub-menu">
+                <li><a href="{{ route('settings.meta.edit') }}">Meta data</a></li>
+            </ul>
+            <ul class="sub-menu">
+                <li><a href="{{ route('settings.email.edit') }}">Email</a></li>
+            </ul>
+            <ul class="sub-menu">
                 <li><a href="">Slider</a></li>
+            </ul>
+            <ul class="sub-menu">
+                <li><a href="">Thanh toán</a></li>
+            </ul>
+            <ul class="sub-menu">
+                <li><a href="">Media</a></li>
+            </ul>
+            <ul class="sub-menu">
+                <li><a href="">Thông tin liên hệ</a></li>
             </ul>
         </li>
     </ul>
