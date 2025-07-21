@@ -81,6 +81,7 @@ Route::middleware('auth')->group(function () {
     //cart
     Route::get('cart', [CartController::class, 'index'])->name('user.cart');
     Route::get('/cart/total', [CartController::class, 'getCartTotal'])->name('user.cart.get-total');
+    Route::post('cart/buy-now/{course}',[CartController::class,'buyNow'])->name('user.cart.buy-now');
     Route::post('cart/add/{course}', [CartController::class, 'addToCart'])->name('user.cart.add')->withoutMiddleware('auth');
     Route::delete('cart/remove/{course}', [CartController::class, 'removeFromCart'])->name('user.cart.remove');
     ROute::delete('cart/clear', [CartController::class, 'clearCart'])->name('user.cart.clear');

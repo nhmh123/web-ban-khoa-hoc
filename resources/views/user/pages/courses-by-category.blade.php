@@ -147,9 +147,9 @@
                                             </p>
 
                                             <p>Lần cuối cập nhật: <strong>{{ $course->updated_at }}</strong></p>
-                                            <p class="fw-bold">{{ $course->duration }}</p>
+                                            {{-- <p class="fw-bold">{{ $course->duration }}</p> --}}
 
-                                            <div class="d-flex justify-content-end">
+                                            <div class="mt-auto d-flex justify-content-end">
                                                 <p class="mb-1 small fs-5 fw-bold">
                                                     {{ number_format($course->original_price) }}đ</p>
                                             </div>

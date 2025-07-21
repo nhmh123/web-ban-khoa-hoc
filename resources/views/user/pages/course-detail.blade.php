@@ -8,7 +8,7 @@
                     <h1 class="fw-bold">{{ $course->name }}</h1>
                     <p class="lead">{{ $course->short_description }}</p>
                     <div class="d-flex align-items-center gap-2">
-                        <span class="badge text-white">{{ $course->rating }} ⭐ (1,250 Lượt đánh giá)</span>
+                        <span class="badge text-white">{{ $course->rating }} ⭐ (... Lượt đánh giá)</span>
                         <span> • {{ $course->enrollments()->count() }} Học viên</span>
                     </div>
                 </div>
@@ -136,11 +136,19 @@
                                 </button>
                             @endif
                         @else
-                            <form action="{{ route('user.course.enroll', $course->id) }}" method="POST"
-                                name="enroll-course">
-                                @csrf
-                                <button type="submit" class="btn btn-primary w-100 mb-2">Mua ngay</button>
-                            </form>
+                            @if ($course->original_price > 0)
+                                <form action="{{route('user.cart.buy-now',$course)}}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary w-100 mb-2">Mua ngay</button>
+                                </form>
+                            @else
+                                <form action="{{ route('user.course.enroll', $course->id) }}" method="POST"
+                                    name="enroll-course">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary w-100 mb-2">Đăng ký ngay</button>
+                                </form>
+                            @endif
+
                             <div class="d-flex justify-content-between gap-2">
                                 <div id="cart-action-wrapper" class="d-flex justify-content-between gap-2">
                                     @if ($alreadyInCart)
@@ -187,7 +195,7 @@
                     <div class="card-body">
                         <h3 class="card-title fs-5 fw-bold">Chi tiết khóa học</h3>
                         <ul class="list-unstyled">
-                            <li><strong>Thời lượng:</strong> {{ $course->duration }}</li>
+                            {{-- <li><strong>Thời lượng:</strong> {{ $course->duration }}</li> --}}
                             <li><strong>Cấp độ:</strong> {{ $course->level->name }}</li>
                             <li><strong>Ngôn ngữ:</strong> English</li>
                         </ul>

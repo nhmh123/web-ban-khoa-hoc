@@ -149,19 +149,30 @@
                     $(this).text(Number(price).toLocaleString('vi-VN'));
                 });
 
-                $('input[name="ids[]"]').on('change', function() {
-                    let amountText = $(this).closest('.card').find('.course-price').text();
-                    amountText = amountText.split('.').join('');
-                    let amount = parseInt(amountText);
+                // $('input[name="ids[]"]').on('change', function() {
+                //     let amountText = $(this).closest('.card').find('.course-price').text();
+                //     amountText = amountText.split('.').join('');
+                //     let amount = parseInt(amountText);
 
-                    if ($(this).is(':checked')) {
-                        totalCartRaw += amount;
-                        $('.amount').text(Number(totalCartRaw).toLocaleString('vi-VN'));
-                    } else {
-                        totalCartRaw -= amount;
-                        $('.amount').text(Number(totalCartRaw).toLocaleString('vi-VN'));
-                    }
+                //     if ($(this).is(':checked')) {
+                //         totalCartRaw += amount;
+                //         $('.amount').text(Number(totalCartRaw).toLocaleString('vi-VN'));
+                //     } else {
+                //         totalCartRaw -= amount;
+                //         $('.amount').text(Number(totalCartRaw).toLocaleString('vi-VN'));
+                //     }
+                // });
+
+                $('input[name="ids[]"]').on('change', function() {
+                    totalCartRaw = 0;
+                    $('input[name="ids[]"]:checked').each(function() {
+                        let price = $(this).closest('.card').find('.course-price').text().split('.')
+                            .join('');
+                        totalCartRaw += parseInt(price);
+                    });
+                    $('.amount').text(Number(totalCartRaw).toLocaleString('vi-VN'));
                 });
+
 
                 let checkoutForm = $('form[name="checkout-form"]');
                 checkoutForm.on('submit', function(e) {
@@ -195,13 +206,15 @@
                         },
                         success: function(response) {
                             console.log(response);
-                            let removedCoursePriceText = form.closest('.card').find('.course-price')
-                                .text();
-                            let removedCoursePrice = parseInt(removedCoursePriceText.split('.')
-                                .join(''), 10);
-                            totalCartRaw -= removedCoursePrice;
-                            $('.amount').text(Number(totalCartRaw).toLocaleString('vi-VN'));
+                            // let removedCoursePriceText = form.closest('.card').find('.course-price')
+                            //     .text();
+                            // let removedCoursePrice = parseInt(removedCoursePriceText.split('.')
+                            //     .join(''), 10);
+                            // totalCartRaw -= removedCoursePrice;
+                            // $('.amount').text(Number(totalCartRaw).toLocaleString('vi-VN'));
+                            
                             form.closest('.card').remove();
+                            $('input[name="ids[]"]').trigger('change');
 
                             if ($('form[name="remove-cart-item-form"]').length === 0) {
                                 $('.cart-wrapper').html(
@@ -210,7 +223,7 @@
                             }
 
                             updateCartTotal(
-                                    '{{ route('user.cart.get-total') }}');
+                                '{{ route('user.cart.get-total') }}');
                         },
                         error: function(xhr, status, error) {
                             console.log(xhr);
@@ -269,9 +282,21 @@
                             });
                         }
                     });
+                });
 
-
-                })
+                let buyNowCourseId = '{{ $buyNowCourseId ?? '' }}';
+                if (buyNowCourseId) {
+                    totalCartRaw = 0;
+                    $('input[name="ids[]"]').each(function() {
+                        if ($(this).val() == buyNowCourseId) {
+                            $(this).prop('checked', true);
+                        } else {
+                            $(this).prop('checked', false);
+                        }
+                    });
+                    $('input[name="ids[]"]').trigger('change');
+                }
+                console.log(buyNowCourseId);
             })
         </script>
     @endpush
