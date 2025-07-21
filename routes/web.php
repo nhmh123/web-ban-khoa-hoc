@@ -122,10 +122,17 @@ Route::middleware([IsAdmin::class])->prefix('admin')->group(function () {
     Route::resource('lectures', LectureController::class);
     Route::resource('orders', OrderController::class);
     Route::resource('pages', PageController::class);
-    Route::get('/settings/meta-data', [SettingController::class, 'edit'])->name('settings.meta.edit');
-    Route::post('/settings/meta-data', [SettingController::class, 'update'])->name('settings.meta.update');
-    Route::get('/settings/email', [SettingController::class, 'emailSettingEdit'])->name('settings.email.edit');
-    Route::post('/settings/email', [SettingController::class, 'emailSettingUpdate'])->name('settings.email.update');
+
+    Route::prefix('settings')->group(function () {
+        Route::get('meta-data', [SettingController::class, 'edit'])->name('settings.meta.edit');
+        Route::post('meta-data', [SettingController::class, 'update'])->name('settings.meta.update');
+        Route::get('email', [SettingController::class, 'emailSettingEdit'])->name('settings.email.edit');
+        Route::post('email', [SettingController::class, 'emailSettingUpdate'])->name('settings.email.update');
+        Route::get('contact', [SettingController::class, 'contactSettingEdit'])->name('settings.contact.edit');
+        Route::post('contact', [SettingController::class, 'contactSettingUpdate'])->name('settings.contact.update');
+        Route::get('social', [SettingController::class, 'socialSettingEdit'])->name('settings.social.edit');
+        Route::post('social', [SettingController::class, 'socialSettingUpdate'])->name('settings.social.update');
+    });
 });
 
 Route::prefix('admin')->group(function () {

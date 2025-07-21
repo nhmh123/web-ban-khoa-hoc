@@ -113,10 +113,10 @@
                 <li><a href="">Thanh toán</a></li>
             </ul>
             <ul class="sub-menu">
-                <li><a href="">Media</a></li>
+                <li><a href="{{route('settings.social.edit')}}">Media</a></li>
             </ul>
             <ul class="sub-menu">
-                <li><a href="">Thông tin liên hệ</a></li>
+                <li><a href="{{route('settings.contact.edit')}}">Thông tin liên hệ</a></li>
             </ul>
         </li>
     </ul>

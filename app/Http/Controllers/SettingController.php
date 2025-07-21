@@ -84,4 +84,65 @@ class SettingController extends Controller
 
         return redirect()->back()->with('success', 'Cấu hình email đã được cập nhật thành công.');
     }
+
+    public function contactSettingEdit()
+    {
+        $settings = Setting::pluck('value', 'key')->toArray();
+        return view('admin.pages.settings.contact-edit', compact('settings'));
+    }
+    public function contactSettingUpdate(Request $request)
+    {
+        $request->validate([
+            'contact_email' => 'required|email|max:255',
+            'contact_phone' => 'nullable|string|max:20',
+            'contact_address' => 'nullable|string|max:255',
+        ]);
+
+        $settings = [
+            'contact.email' => $request->input('contact_email'),
+            'contact.phone' => $request->input('contact_phone'),
+            'contact.address' => $request->input('contact_address'),
+        ];
+
+        foreach ($settings as $key => $value) {
+            Setting::updateOrCreate(
+                ['key' => $key],
+                ['value' => $value]
+            );
+        }
+
+        return redirect()->back()->with('success', 'Cấu hình liên hệ đã được cập nhật thành công.');
+    }
+
+    public function socialSettingEdit()
+    {
+        $settings = Setting::pluck('value', 'key')->toArray();
+        return view('admin.pages.settings.social-edit');
+    }
+
+    public function socialSettingUpdate(Request $request)
+    {
+        $request->validate([
+            'facebook' => 'nullable|url|max:255',
+            'x' => 'nullable|url|max:255',
+            'linkedin' => 'nullable|url|max:255',
+            'instargram' => 'nullable|url|max:255',
+        ]);
+
+        $settings = [
+            'social.facebook' => $request->input('facebook'),
+            'social.x' => $request->input('x'),
+            'social.linkedin' => $request->input('linkedin'),
+            'social.instagram' => $request->input('instagram'),
+        ];
+
+        foreach ($settings as $key => $value) {
+            Setting::updateOrCreate(
+                ['key' => $key],
+                ['value' => $value]
+            );
+        }
+
+        return redirect()->back()->with('success', 'Cấu hình mạng xã hội đã được cập nhật thành công.');
+    }
 }
