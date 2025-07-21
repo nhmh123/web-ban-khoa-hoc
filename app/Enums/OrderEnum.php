@@ -15,9 +15,9 @@ enum OrderEnum: string
 
     public function color(): string{
         return match($this){
-            self::PENDING => 'badge-warning',
-            self::COMPLETED => 'badge-success',
-            self::CANCELLED => 'badge-dark',
+            self::PENDING => 'bg-warning',
+            self::COMPLETED => 'bg-success',
+            self::CANCELLED => 'bg-dark',
         };
     }
 }

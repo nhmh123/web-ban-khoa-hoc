@@ -3,7 +3,7 @@
     <div class="container my-5">
         <h3 class="fw-bold">Lịch sử mua hàng</h3>
         <div class="mt-5">
-            <table id="order-table" class="table">
+            <table id="order-table" class="table border-none">
                 <thead>
                     <tr>
                         <th>Mã đơn hàng</th>
@@ -25,9 +25,10 @@
                                 <td>{{ $order->sub_total }}</td>
                                 <td>{{ number_format($order->total_amount) }}đ</td>
                                 <td>
-                                    <span class="badge {{ $order->status_color}}">
+                                    <span class="badge {{ $order->status_color }}">
                                         {{ $order->status }}
                                     </span>
+                                </td>
                                 <td>{{ $order->created_at }}</td>
                             </tr>
                         @endforeach
