@@ -61,13 +61,13 @@
                         </script>
                     @elseif ($lecture->type === App\Enums\LectureEnum::ARTICLE->value)
                         <!-- Article Content -->
-                        {{-- <div class="border p-3 rounded" style="max-height: 400px; overflow-y: auto;">
+                        <div class="border p-3 rounded" style="max-height: 400px; overflow-y: auto;">
                             {!! $lecture->article->content !!}
-                        </div> --}}
+                        </div>
 
-                        <textarea name="lecture-article" class="article-content" cols="30" rows="10">
-                            {{ $lecture->article->content ?? '' }}
-                        </textarea>
+                        {{-- <textarea name="lecture-article" class="article-content" cols="30" rows="10">
+                            {!! $lecture->article->content ?? '' !!}
+                        </textarea> --}}
                     @else
                         <!-- Placeholder for non-video lectures -->
                         <div class="alert alert-info" role="alert">
@@ -78,10 +78,8 @@
                     <h3 class="mt-4 fw-bold">{{ $lecture->title }}</h3>
 
                     <nav class="nav nav-tabs">
-                        <a href="#course-overview" class="nav-item nav-link" data-bs-toggle="tab">Tổng quan</a>
                         <a href="#course-attachments" class="nav-item nav-link" data-bs-toggle="tab">Tài liệu</a>
                         <a href="#user-course-notes" class="nav-item nav-link" data-bs-toggle="tab">Ghi chú</a>
-                        <a href="#course-faq" class="nav-item nav-link" data-bs-toggle="tab">Hỏi đáp</a>
                         <a href="#course-ratings" class="nav-item nav-link" data-bs-toggle="tab">Đánh giá</a>
                     </nav>
 
@@ -101,6 +99,23 @@
 
                         </div>
                         <div class="tab-pane show fade" id="user-course-notes">
+                            <div class="note-errors alert alert-danger d-none">
+                                <ul></ul>
+                            </div>
+
+                            <label for="note-content" class="form-label fw-bold mt-2">Tạo ghi chú</label>
+                            <form id="note-form" method="POST">
+                                @csrf
+                                <input type="hidden" name="lecture" value="{{ $lecture->lec_id }}">
+                                <textarea class="form-control" name="content" rows="5" style="min-height: 100px;"
+                                    placeholder="Write your notes here..."></textarea>
+
+                                <button id="save-note" class="btn btn-primary mt-2" type="submit">
+                                    <i class="bi bi-floppy"></i> Lưu
+                                </button>
+                            </form>
+                            <hr>
+
                             <div class="d-flex flex-row mt-3">
                                 <div class="me-3">
                                     <label for="note-scope" class="form-label fw-bold">Loại ghi chú</label>
@@ -117,63 +132,46 @@
                                     </select>
                                 </div>
                             </div>
-
-                            <hr>
-
-                            <label for="note-content" class="form-label fw-bold">Tạo ghi chú</label>
-                            <form id="note-form" method="POST">
-                                @csrf
-                                <input type="hidden" name="lecture" value="{{ $lecture->lec_id }}">
-                                <textarea id="note-content" class="form-control" name="content" rows="10" style="min-height: 200px;"
-                                    placeholder="Write your notes here..."></textarea>
-
-                                <button id="save-note" class="btn btn-primary mt-2" type="submit">
-                                    <i class="bi bi-floppy"></i> Lưu
-                                </button>
-                            </form>
-
-                            <div id="note-error" class="mt-2 text-danger fw-bold"></div>
-
-                            <div id="note-success" class="mt-2 text-success fw-bold"></div>
-
-
                             <hr>
 
                             <!-- Ghi chú đã tạo -->
                             <h5 class="mt-4 mb-3 fw-bold">Ghi chú của bạn</h5>
                             <div id="note-list" class="mt-3">
                                 <!-- Ghi chú sẽ được chèn vào đây bằng JavaScript -->
-                            </div>
-                            {{-- @foreach ($notes as $note)
-                                <div class="border rounded p-3 mb-3">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <strong>{{ $note->lecture->title ?? 'Toàn khóa học' }}</strong>
-                                        <span class="text-muted small">{{ $note->created_at->format('d/m/Y H:i') }}</span>
-                                    </div>
 
-                                    <textarea class="form-control mb-2" rows="4" readonly>{{ $note->content }}</textarea>
-
-                                    <div class="d-flex gap-2">
-                                        <!-- Nút sửa -->
-                                        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
-                                            data-bs-target="#editNoteModal" data-id="{{ $note->id }}"
-                                            data-content="{{ $note->content }}">
-                                            <i class="bi bi-pencil"></i> Sửa
-                                        </button>
-
-                                        <!-- Nút xóa -->
-                                        <form action="{{ route('user.notes.destroy', $note->id) }}" method="POST"
-                                            onsubmit="return confirm('Xóa ghi chú này?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-outline-danger btn-sm">
-                                                <i class="bi bi-trash"></i> Xóa
+                                {{-- <div class="card">
+                                    <div class="card-header d-flex justify-content-between">
+                                        <strong class="fs-5">lecture</strong>
+                                        <div class="action-button">
+                                            <button class="btn border-none outline-none">
+                                                <i class="bi bi-pencil"></i>
                                             </button>
-                                        </form>
+                                            <button class="btn border-none outline-none">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            @endforeach --}}
+                                    <div class="card-body p-0">
+                                        <textarea name="note-edit" class="form-control" rows="4" readonly>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                                            incididunt ut labore et dolore magna aliqua.
+                                        </textarea>
+                                    </div>
+                                    <div class="card-footer d-flex jutify-content-between">
+                                        <span class="text-muted small flex-fill">Cập nhật lần cuối: <strong
+                                                class="note-updated-at"></strong></span>
 
+                                        <div class="edit-action-button d-none">
+                                            <button class="save-edit btn btn-primary" type="submit">
+                                                <i class="bi bi-floppy"></i> Lưu
+                                            </button>
+                                            <button class="cancel-edit btn btn-danger" type="submit">
+                                                <i class="bi bi-x-square"></i> Hủy
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div> --}}
+                            </div>
                         </div>
                         <div class="tab-pane show fade"></div>
                         <div class="tab-pane show fade"></div>
@@ -233,102 +231,189 @@
 
     @push('scripts')
         <script>
-            $('#note-form').on('submit', function(e) {
-                e.preventDefault();
+            $(document).ready(function() {
+                fetchUserNote();
 
-                const form = $(this);
-                const url = '{{ route('notes.store') }}';
-                const data = form.serialize();
+                let noteForm = $('#note-form');
+                noteForm.on('submit', function(e) {
+                    e.preventDefault();
 
-                $('#note-error').html('');
-                $('#note-success').html('');
+                    let createNoteUrl = "{{ route('notes.store') }}";
+                    let csrf = $('meta[name="csrf-token"]').attr('content');
+                    let lecId = noteForm.find('input[name="lecture"]').val();
+                    let content = noteForm.find('textarea[name="content"]').val();
 
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    data: data,
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        $('#note-success').text('Ghi chú đã được lưu thành công.');
-                        $('#note-content').val('');
-                        // fetchLectureNotes({{ $lecture->lec_id }});
-                    },
-                    error: function(xhr) {
-                        if (xhr.status === 422) {
-                            const errors = xhr.responseJSON.errors;
-                            for (let field in errors) {
-                                $('#note-error').append(errors[field][0] + '<br>');
-                            }
-                        } else {
-                            $('#note-error').text('Đã có lỗi xảy ra. Vui lòng thử lại.');
+                    $.ajax({
+                        type: "POST",
+                        url: createNoteUrl,
+                        headers: {
+                            'X-CSRF-TOKEN': csrf
+                        },
+                        data: {
+                            lecture: lecId,
+                            content: content
+                        },
+                        success: function(response) {
+                            noteForm.find('textarea[name="content"]').val('');
+                            fetchUserNote();
+                            console.log(response);
+                        },
+                        error: function(xhr, status, error) {
+                            error = xhr.responseJSON.errors;
+                            let errorList = $('.note-errors ul');
+                            errorList.empty();
+                            errorList.removeClass('d-none');
+                            $.each(error, function(key, value) {
+                                errorList.append('<li>' + value + '</li>');
+                            });
+                            console.error("Error saving note:", xhr);
                         }
-                    }
-                });
-            });
-
-            // fetchLectureNotes({{ $lecture->lec_id }});
-
-            function fetchLectureNotes(lectureId) {
-                $.ajax({
-                    url: `/lecture/${lectureId}/notes`,
-                    method: 'GET',
-                    success: function(response) {
-                        console.log(response.notes); // hoặc hiển thị ra DOM
-                        displayNotes(response.notes);
-                    },
-                    error: function(xhr, status, error) {
-                        console.log(xhr, status, error);
-                        alert('Không thể tải ghi chú.');
-                    }
-                });
-            }
-
-            function displayNotes(notes) {
-                let html = '';
-                notes.forEach(note => {
-                    html += `
-            <div class="mb-3">
-                <strong class="mb-2">${note.lecture.title} - ${formatDate(note.created_at)}</strong>
-                ${note.content}
-                <div class="d-flex gap-2">
-                    <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
-                        data-bs-target="#editNoteModal" data-id="${note.id}"
-                        data-content="${note.content}">
-                        <i class="bi bi-pencil"></i> Sửa
-                    </button>
-                    <form action="" method="POST" onsubmit="return confirm('Xóa ghi chú này?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-outline-danger btn-sm">
-                            <i class="bi bi-trash"></i> Xóa
-                        </button>
-                    </form>
-                </div>
-            </div>
-        `;
+                    });
                 });
 
-                $('#note-list').html(html);
+                //update note
+                $('#note-list').on('click', '.edit-note-button', function() {
+                    let noteId = $(this).data('note-edit');
+                    console.log("Click edit", noteId);
 
-                // ✅ Re-initialize TinyMCE on newly inserted elements
-                tinymce.init({
-                    selector: 'textarea.article-content',
-                    plugins: 'code table lists',
-                    toolbar: false,
-                    menubar: false,
-                    statusbar: false,
-                    readonly: 1,
-                    content_css: false,
-                    branding: false
+                    let noteCard = $(this).closest('.card');
+                    let noteContent = noteCard.find('textarea[name="note-edit"]');
+                    noteCard.find('.edit-note-button').addClass('d-none');
+                    noteContent.prop('readonly', false);
+                    let editConfirmButtons = noteCard.find('.edit-confirm-button');
+                    editConfirmButtons.removeClass('d-none');
+
+                    editConfirmButtons.find('.cancel-edit').on('click', function() {
+                        noteContent.prop('readonly', true);
+                        noteCard.find('.edit-note-button').removeClass('d-none');
+                        editConfirmButtons.addClass('d-none');
+                    })
+
+                    editConfirmButtons.find('.save-edit').on('click', function() {
+                        let csrf = $('meta[name="csrf-token"]').attr('content');
+                        let content = noteContent.val();
+
+                        $.ajax({
+                            type: "PUT",
+                            url: `/notes/${noteId}`,
+                            headers: {
+                                'X-CSRF-TOKEN': csrf
+                            },
+                            data: {
+                                content: content,
+                            },
+                            success: function(response) {
+                                console.log(response);
+                                fetchUserNote();
+                                noteContent.prop('readonly', true);
+                                noteCard.find('.edit-note-button').removeClass('d-none');
+                                editConfirmButtons.addClass('d-none');
+                            },
+                            error: function(xhr, status, error) {
+                                console.error(xhr);
+                            }
+                        });
+                    })
                 });
-            }
 
-            function formatDate(dateStr) {
-                const date = new Date(dateStr);
-                return date.toLocaleDateString('vi-VN') + ' ' + date.toLocaleTimeString('vi-VN');
-            }
+                //delete note
+                $('#note-list').on('click', '.delete-note-button', function() {
+                    let csrf = $('meta[name="csrf-token"]').attr('content');
+                    let lecId = "{{ $lecture->lec_id }}";
+                    let noteId = $(this).data('note-delete');
+                    console.log("Click delete", noteId);
+
+                    $.ajax({
+                        type: "DELETE",
+                        url: `/notes/${noteId}`,
+                        headers: {
+                            'X-CSRF-TOKEN': csrf
+                        },
+                        data: {
+                            lec_id: lecId
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            fetchUserNote();
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error deleting note:", xhr);
+                        }
+                    });
+                });
+
+                function fetchUserNote() {
+                    let fetchUrl = "{{ route('notes.index', ['lecture' => $lecture->lec_id]) }}";
+                    let csrf = $('meta[name="csrf-token"]').attr('content');
+                    let lecId = "{{ $lecture->lec_id }}";
+
+                    $.ajax({
+                        type: "GET",
+                        url: fetchUrl,
+                        data: {
+                            lec_id: lecId
+                        },
+                        success: function(response) {
+                            // console.log(response);
+                            renderNotes(response.data);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error fetching notes:", xhr);
+                        }
+                    });
+                }
+
+                function renderNotes(notes) {
+                    let noteList = $('#note-list');
+                    let noteHtml = " ";
+
+                    if (notes && notes.length > 0) {
+                        notes.forEach(note => {
+                            noteHtml += `
+                            <div class="card mb-3">
+                                <div class="card-header d-flex justify-content-between">
+                                    <strong class="fs-5">${note.lecture.title}</strong>
+                                    <div class="action-button">
+                                        <button class="edit-note-button btn border-none outline-none" data-note-edit="${note.id}">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button class="delete-note-button btn border-none outline-none" data-note-delete="${note.id}">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0">
+                                    <textarea name="note-edit" class="form-control" rows="4" readonly>
+                                        ${note.content}
+                                    </textarea>
+                                </div>
+                                <div class="card-footer d-flex jutify-content-between">
+                                    <span class="text-muted small flex-fill">Cập nhật lần cuối: <strong
+                                            class="note-updated-at">${formatDate(note.updated_at)}
+                                            </strong></span>
+
+                                    <div class="edit-confirm-button d-none">
+                                        <button class="save-edit btn btn-primary" type="submit">
+                                            <i class="bi bi-floppy"></i> Lưu
+                                        </button>
+                                        <button class="cancel-edit btn btn-danger" type="submit">
+                                            <i class="bi bi-x-square"></i> Hủy
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `
+                        });
+                    };
+
+                    noteList.html(noteHtml);
+                }
+
+                function formatDate(dateStr) {
+                    const date = new Date(dateStr);
+                    return date.toLocaleDateString('vi-VN') + ' ' + date.toLocaleTimeString('vi-VN');
+                }
+            })
         </script>
     @endpush
 

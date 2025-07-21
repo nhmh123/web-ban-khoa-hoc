@@ -97,8 +97,10 @@ Route::middleware('auth')->group(function () {
     Route::get('my-courses/{course:slug}/learn/{lecture}', [LectureController::class, 'show'])->name('user.course-video.show');
 
     //notes
-    Route::get('lecture/{lecture}/notes', [NoteController::class, 'getUserLectureNote'])->name('notes.lecture');
+    Route::get('notes', [NoteController::class, 'getUserLectureNote'])->name('notes.index');
     Route::post('notes', [NoteController::class, 'store'])->name('notes.store');
+    Route::put('notes/{note}',[NoteController::class,'update'])->name('notes.update');
+    Route::delete('notes/{note}',[NoteController::class,'destroy'])->name('notes.destroy');
 
     //history
     Route::get('purchase-history', [OrderController::class, 'history'])->name('user.orders.history');
