@@ -90,4 +90,8 @@ class User extends Authenticatable
         // Kiểm tra xem người dùng có quyền truy cập vào bài giảng hay không
         return $this->enrolledCourses()->where('course_id', $lecture->section->course_id)->exists();
     }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'user_id', 'id');
+    }
 }

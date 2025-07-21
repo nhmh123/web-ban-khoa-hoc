@@ -58,9 +58,9 @@
                                             </span>
                                         @endif
 
-                                        <p class="mb-1 small">{{ $course->user->name }}</p>
+                                        {{-- <p class="mb-1 small">{{ $course->user->name }}</p> --}}
 
-                                        <div class="mt-auto">
+                                        {{-- <div class="mt-auto">
                                             <div class="progress" style="height: 12px">
                                                 <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated"
                                                     style="width: 50%" aria-valuenow="50" aria-valuemin="0"
@@ -68,7 +68,7 @@
                                                     <i>50%</i>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>

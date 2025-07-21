@@ -26,6 +26,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     {{-- ToastJS --}}
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    {{-- star-rating.js --}}
+    <link rel="stylesheet" href="{{ asset('vendor/pryley-star-rating/star-rating.css') }}">
+
     {{-- SweetAlert2 --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     {{-- Custom --}}
@@ -77,6 +80,8 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     {{-- ToastJS --}}
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    {{-- star-rating.js --}}
+    <script src="{{ asset('vendor/pryley-star-rating/star-rating.min.js') }}"></script>
     {{-- Custom --}}
     <script src="{{ asset('js/user/main.js') }}"></script>
 

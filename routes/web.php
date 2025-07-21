@@ -20,6 +20,7 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CourseCategoryController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ReviewController;
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
     \UniSharp\LaravelFilemanager\Lfm::routes();
@@ -81,7 +82,7 @@ Route::middleware('auth')->group(function () {
     //cart
     Route::get('cart', [CartController::class, 'index'])->name('user.cart');
     Route::get('/cart/total', [CartController::class, 'getCartTotal'])->name('user.cart.get-total');
-    Route::post('cart/buy-now/{course}',[CartController::class,'buyNow'])->name('user.cart.buy-now');
+    Route::post('cart/buy-now/{course}', [CartController::class, 'buyNow'])->name('user.cart.buy-now');
     Route::post('cart/add/{course}', [CartController::class, 'addToCart'])->name('user.cart.add')->withoutMiddleware('auth');
     Route::delete('cart/remove/{course}', [CartController::class, 'removeFromCart'])->name('user.cart.remove');
     ROute::delete('cart/clear', [CartController::class, 'clearCart'])->name('user.cart.clear');
@@ -89,8 +90,8 @@ Route::middleware('auth')->group(function () {
     //checkout
     Route::get('checkout', [CheckoutController::class, 'checkout'])->name('user.checkout');
     Route::post('checkout/submit', [CheckoutController::class, 'checkoutSubmit'])->name('user.checkout.submit');
-    Route::post('checkout/momo',[CheckoutController::class,'momoPayment'])->name('user.checkout.momo');
-    Route::get('checkout/momo/return',[CheckoutController::class,'momoReturn'])->name('user.checkout.momo.return');
+    Route::post('checkout/momo', [CheckoutController::class, 'momoPayment'])->name('user.checkout.momo');
+    Route::get('checkout/momo/return', [CheckoutController::class, 'momoReturn'])->name('user.checkout.momo.return');
 
     //enroll course
     Route::post('course/enroll/{course}', [CourseController::class, 'enroll'])->name('user.course.enroll');
@@ -102,12 +103,16 @@ Route::middleware('auth')->group(function () {
     //notes
     Route::get('notes', [NoteController::class, 'getUserLectureNote'])->name('notes.index');
     Route::post('notes', [NoteController::class, 'store'])->name('notes.store');
-    Route::put('notes/{note}',[NoteController::class,'update'])->name('notes.update');
-    Route::delete('notes/{note}',[NoteController::class,'destroy'])->name('notes.destroy');
+    Route::put('notes/{note}', [NoteController::class, 'update'])->name('notes.update');
+    Route::delete('notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
 
     //history
     Route::get('purchase-history', [OrderController::class, 'history'])->name('user.orders.history');
     Route::get('purchase-history/{order}', [OrderController::class, 'detail'])->name('user.orders.detail');
+
+    //reviews
+    Route::get('reviews',[ReviewController::class,'index'])->name('reviews.index');
+    Route::post('reviews', [ReviewController::class, 'store'])->name('reviews.store');
 });
 
 

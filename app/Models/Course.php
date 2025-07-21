@@ -84,4 +84,8 @@ class Course extends Model
     {
         return $this->hasMany(CartItem::class, 'course_id', 'id');
     }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'course_id', 'id');
+    }
 }

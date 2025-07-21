@@ -38,7 +38,6 @@
                         </div>
 
                         <script>
-                            console.log("OK")
                             document.addEventListener('DOMContentLoaded', function() {
                                 var player = videojs('course-video', {
                                     fluid: true,
@@ -84,7 +83,6 @@
                     </nav>
 
                     <div class="tab-content">
-                        <div class="tab-pane show fade"></div>
                         <div class="tab-pane show fade" id="course-attachments">
                             <ul class="list-group mb-3">
                                 <li class="list-group-item">
@@ -137,44 +135,47 @@
                             <!-- Ghi chú đã tạo -->
                             <h5 class="mt-4 mb-3 fw-bold">Ghi chú của bạn</h5>
                             <div id="note-list" class="mt-3">
-                                <!-- Ghi chú sẽ được chèn vào đây bằng JavaScript -->
 
-                                {{-- <div class="card">
-                                    <div class="card-header d-flex justify-content-between">
-                                        <strong class="fs-5">lecture</strong>
-                                        <div class="action-button">
-                                            <button class="btn border-none outline-none">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="btn border-none outline-none">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="card-body p-0">
-                                        <textarea name="note-edit" class="form-control" rows="4" readonly>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                                            incididunt ut labore et dolore magna aliqua.
-                                        </textarea>
-                                    </div>
-                                    <div class="card-footer d-flex jutify-content-between">
-                                        <span class="text-muted small flex-fill">Cập nhật lần cuối: <strong
-                                                class="note-updated-at"></strong></span>
-
-                                        <div class="edit-action-button d-none">
-                                            <button class="save-edit btn btn-primary" type="submit">
-                                                <i class="bi bi-floppy"></i> Lưu
-                                            </button>
-                                            <button class="cancel-edit btn btn-danger" type="submit">
-                                                <i class="bi bi-x-square"></i> Hủy
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div> --}}
                             </div>
                         </div>
-                        <div class="tab-pane show fade"></div>
-                        <div class="tab-pane show fade"></div>
+                        <div class="tab-pane show fade" id="course-ratings">
+                            <form id="review-form" method="POST" action="{{ route('reviews.store') }}"
+                                class="border p-4 rounded shadow-sm">
+                                @csrf
+                                <div class="mb-3 d-flex align-item-center">
+                                    <label class="form-label align-content-center m-0 fw-bold">Đánh giá của bạn:</label>
+                                    <select class="star-rating" name="rating" required>
+                                        <option value="5"></option>
+                                        <option value="4"></option>
+                                        <option value="3"></option>
+                                        <option value="2"></option>
+                                        <option value="1"></option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="comment" class="form-label fw-bold">Nhận xét của bạn:</label>
+                                    <textarea name="comment" class="form-control" rows="3" placeholder="Hãy chia sẻ cảm nhận..." required></textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100">Gửi đánh giá</button>
+                            </form>
+
+                            <section name="course-reviews" class="mt-4">
+                                <h2 class="fs-5 fw-bold">Đánh giá của học viên</h2>
+                                <div class="border p-3 rounded mb-3">
+                                    <h6 class="fw-bold">Jane Smith</h6>
+                                    <p>⭐ ⭐ ⭐ ⭐ ⭐</p>
+                                    <p>"This course is amazing! The instructor explains everything clearly."</p>
+                                </div>
+                                <div class="border p-3 rounded mb-3">
+                                    <h6 class="fw-bold">Michael Brown</h6>
+                                    <p>⭐ ⭐ ⭐ ⭐ ⭐</p>
+                                    <p>"Highly recommended for anyone wanting to master Laravel!"</p>
+                                </div>
+                            </section>
+                        </div>
+
                     </div>
 
                     <!-- Next/Previous Buttons -->
@@ -232,7 +233,21 @@
     @push('scripts')
         <script>
             $(document).ready(function() {
+                var stars = new StarRating('.star-rating', {
+                    classNames: {
+                        active: 'gl-active',
+                        base: 'gl-star-rating',
+                        selected: 'gl-selected',
+                    },
+                    clearable: true, // Cho phép bỏ chọn nếu click lại
+                    maxStars: 5,
+                    prebuilt: false,
+                    stars: null,
+                    tooltip: false,
+                });
+
                 fetchUserNote();
+                fetchCourseReview();
 
                 let noteForm = $('#note-form');
                 noteForm.on('submit', function(e) {
@@ -342,6 +357,48 @@
                     });
                 });
 
+                //store review
+                let reviewForm = $('#review-form');
+                reviewForm.on('submit', function(e) {
+                    e.preventDefault();
+                    let storeReviewUrl = "{{ route('reviews.store') }}";
+                    let csrf = $('meta[name="csrf-token"]').attr('content');
+                    let courseId = {{ $course->id }};
+                    let rating = reviewForm.find('select[name="rating"]').val();
+                    let comment = reviewForm.find('textarea[name="comment"]').val();
+
+                    console.log(storeReviewUrl, courseId, rating, comment);
+
+                    $.ajax({
+                        type: "POST",
+                        url: storeReviewUrl,
+                        headers: {
+                            'X-CSRF-TOKEN': csrf
+                        },
+                        data: {
+                            course_id: courseId,
+                            rating: rating,
+                            comment: comment
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            Swal.fire(
+                                'Thành công!',
+                                'Đánh giá của bạn đã được gửi.',
+                                'success'
+                            ).then(() => {
+                                reviewForm[0].reset();
+                                fetchCourseReview();
+                            });
+                        },
+                        error: function(xhr) {
+                            displayErrorAlert(xhr.responseJSON.title, xhr.responseJSON.detail);
+                            reviewForm[0].reset();
+                            // console.error(xhr.responseText);
+                        }
+                    });
+                })
+
                 function fetchUserNote() {
                     let fetchUrl = "{{ route('notes.index', ['lecture' => $lecture->lec_id]) }}";
                     let csrf = $('meta[name="csrf-token"]').attr('content');
@@ -409,10 +466,49 @@
                     noteList.html(noteHtml);
                 }
 
+                function fetchCourseReview() {
+                    let fetchUrl = "{{ route('reviews.index', ['course_id' => $course->id]) }}";
+                    $.ajax({
+                        type: "GET",
+                        url: fetchUrl,
+                        success: function(response) {
+                            console.log(response);
+                            renderReviews(response.data);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr);
+                        }
+                    });
+                }
+
+                function renderReviews(reviews) {
+                    const reviewSection = $('section[name="course-reviews"]');
+                    let html = `<h2 class="fs-5 fw-bold">Đánh giá của học viên</h2>`;
+
+                    if (reviews && reviews.length > 0) {
+                        reviews.forEach(review => {
+                            html += `
+                                <div class="border p-3 rounded mb-3">
+                                    <h6 class="fw-bold">${review.user.name}</h6>
+                                    <p>${'⭐ '.repeat(parseInt(review.rating))}</p>
+                                    <p>${review.comment || ''}</p>
+                                    <p class="text-muted small">Đánh giá vào: <strong>${formatDate(review.updated_at)}</strong></p>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        html += `<p class="text-muted">Chưa có đánh giá nào cho khoá học này.</p>`;
+                    }
+
+                    reviewSection.html(html);
+                }
+
+
                 function formatDate(dateStr) {
                     const date = new Date(dateStr);
                     return date.toLocaleDateString('vi-VN') + ' ' + date.toLocaleTimeString('vi-VN');
                 }
+
             })
         </script>
     @endpush
