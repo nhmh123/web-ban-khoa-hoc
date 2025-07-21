@@ -35,7 +35,6 @@
                                         <a href="{{ route('user.courses.show', ['course' => $course->slug]) }}"
                                             class="card-title fs-5 fw-bold">{{ $course->name }}</a>
                                         <p class="card-text small mb-1">{{ Str::limit($course->sort_description, 100) }}</p>
-                                        <p class="mb-1 small">{{ $course->user->name }}</p>
                                         <p class="mb-1 small">⭐⭐⭐⭐⭐ ({{ $course->rating }})</p>
 
                                         <div class="mt-auto">

@@ -14,7 +14,8 @@ class WishlistController extends Controller
     {
         $user = auth()->user();
         $wishlistCourses = $user->wishlist()->paginate(10);
-        return view('user.pages.wishlist', compact('user', 'wishlistCourses'));
+        $cartCourseIds = $user->cartItem()->pluck('course_id')->toArray();
+        return view('user.pages.wishlist', compact('user', 'wishlistCourses', 'cartCourseIds'));
     }
 
     public function addToWishlist(Course $course)

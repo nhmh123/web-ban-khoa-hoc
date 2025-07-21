@@ -20,18 +20,9 @@
                                             class="card-title fs-6 fw-bold">{{ $course->name }}</a>
                                         <p class="card-text small text-muted mb-1">
                                             {{ Str::limit($course->sort_description, 80) }}</p>
-                                        <p class="mb-1 small">{{ $course->user->name }}</p>
                                         <p class="mb-1 small">⭐⭐⭐⭐⭐ (4.8)</p>
 
-                                        @if ($course->sale_price)
-                                            <div class="d-flex align-items-center mb-2">
-                                                <span
-                                                    class="text-decoration-line-through text-muted me-2">{{ $course->original_price }}</span>
-                                                <span class="fw-bold text-danger">{{ $course->sale_price }}</span>
-                                            </div>
-                                        @else
-                                            <p class="fw-bold text-primary mb-2">{{ $course->original_price }}</p>
-                                        @endif
+                                        <p class="fw-bold text-end">{{ $course->original_price_formatted }}đ</p>
 
                                         <div class="mt-auto d-flex gap-2">
                                             @if (Auth::check() && Auth::user()->enrolledCourses()->where('course_id', $course->id)->exists())
@@ -41,7 +32,24 @@
                                                         học</button>
                                                 </form>
                                             @else
-                                                <!-- Add to Cart -->
+                                                <div class="wishlist-cart-action-wrapper"
+                                                    class="d-flex justify-content-between gap-2">
+                                                    @if (in_array($course->id, $cartCourseIds))
+                                                        <a href="{{ route('user.cart') }}" class="btn btn-success w-100">
+                                                            <i class="bi bi-cart-check-fill me-1"></i> Đi tới giỏ hàng
+                                                        </a>
+                                                    @else
+                                                        <form action="{{ route('user.cart.add', $course->id) }}"
+                                                            method="POST" name="add-to-cart">
+                                                            @csrf
+                                                            <button type="submit"
+                                                                class="flex-fill btn btn-outline-primary w-100">
+                                                                <span>Thêm vào giỏ hàng</span>
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                </div>
+                                                {{-- <!-- Add to Cart -->
                                                 <form action="{{ route('user.cart.add', $course->id) }}" method="POST"
                                                     name="add-to-cart">
                                                     @csrf
@@ -49,7 +57,7 @@
                                                         <i class="bi bi-cart-plus"></i>
                                                         <span>Thêm vào giỏ hàng</span>
                                                     </button>
-                                                </form>
+                                                </form> --}}
                                             @endif
                                             <!-- Remove from Wishlist -->
                                             <form action="{{ route('user.wishlist.remove', $course->id) }}" method="POST"
@@ -113,11 +121,13 @@
                         success: function(response) {
                             if (response.status === 'success') {
                                 displaySuccessToast(response.message);
-                                $('#cart-action-wrapper').html(`
-                                    <a href="{{ route('user.cart') }}" class="btn btn-success w-100">
+                                
+                                form.closest('.wishlist-cart-action-wrapper').html(`
+                                     <a href="{{ route('user.cart') }}" class="btn btn-success w-100">
                                         <i class="bi bi-cart-check-fill me-1"></i> Đi tới giỏ hàng
                                     </a>
                                 `);
+
                                 updateCartTotal(
                                     '{{ route('user.cart.get-total') }}');
                             } else {

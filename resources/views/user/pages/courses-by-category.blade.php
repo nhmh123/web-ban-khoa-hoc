@@ -22,17 +22,6 @@
                             </select>
                         </div>
 
-                        <!-- Level Filter -->
-                        {{-- <div class="mb-3">
-                            <label class="form-label">Cấp độ</label>
-                            <select class="form-select" name="level">
-                                <option value="all">Tất cả</option>
-                                <option value="beginner">Beginner</option>
-                                <option value="intermediate">Intermediate</option>
-                                <option value="advanced">Advanced</option>
-                            </select>
-                        </div> --}}
-
                         <!-- Rating Filter -->
                         <div class="mb-3">
                             <label class="form-label fw-bold">Đánh giá:</label>
@@ -148,39 +137,19 @@
                                     <!-- Course Info (Right) -->
                                     <div class="col-md-8">
                                         <div class="card-body py-0 my-0 d-flex flex-column h-100">
-                                            <h5 class="card-title fs-5 fw-bold">{{ $course->name }}</h5>
+                                            <a href="{{ route('user.courses.show',$course->slug) }}"
+                                                class="card-title fs-5 fw-bold">{{ $course->name }}</a>
                                             <p class="card-text small mb-1">
                                                 {{ Str::limit($course->sort_description, 100) }}
-                                            </p>
-                                            <p class="mb-1 small"><strong>Giảng viên:</strong> {{ $course->user->name }}
                                             </p>
                                             <p class="mb-1 small"><strong>Đánh giá:</strong> ⭐⭐⭐⭐⭐
                                                 ({{ $course->rating ?? '4.8' }})
                                             </p>
 
-                                            {{-- @if ($course->sale_price)
-                                                <div class="d-flex small">
-                                                    <p class="me-2 mb-1">
-                                                        <span class="text-decoration-line-through fs-5 fw-bold">
-                                                            {{ number_format($course->original_price) }}đ
-                                                        </span>
-                                                    </p>
-                                                    <p class="mb-1 fs-5 fw-bold text-danger">
-                                                        {{ number_format($course->sale_price) }}đ
-                                                    </p>
-                                                </div>
-                                            @else
-                                                <p class="mb-1 small fs-5 fw-bold">
-                                                    {{ number_format($course->original_price) }}đ</p>
-                                            @endif --}}
-
                                             <p>Lần cuối cập nhật: <strong>{{ $course->updated_at }}</strong></p>
                                             <p class="fw-bold">{{ $course->duration }}</p>
 
-                                            <div class="d-flex justify-content-between">
-                                                <a href="{{ route('user.courses.show', $course->slug) }}">
-                                                    Xem khóa học
-                                                </a>
+                                            <div class="d-flex justify-content-end">
                                                 <p class="mb-1 small fs-5 fw-bold">
                                                     {{ number_format($course->original_price) }}đ</p>
                                             </div>
