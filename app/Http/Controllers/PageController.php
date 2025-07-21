@@ -40,7 +40,9 @@ class PageController extends Controller
         return redirect()->route('pages.index')->with('success', 'Trang đã được tạo thành công.');
     }
 
-    public function show(Page $page) {}
+    public function show(Page $page) {
+        return view('user.pages.static-page', compact('page'));
+    }
 
     public function edit(Page $page)
     {

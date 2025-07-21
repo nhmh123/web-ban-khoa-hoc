@@ -60,6 +60,10 @@ Route::get('register', function () {
 })->name('user.register');
 Route::post('register/submit', [RegisteredUserController::class, 'store'])->name('user.register.submit')->defaults('redirectRoute', 'user.home');
 
+//static pages
+Route::get('/pages/{page:slug}', [PageController::class, 'show'])->name('pages.show');
+
+
 Route::middleware('auth')->group(function () {
     //logout
     Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])->name('user.logout')->defaults('redirectRoute', 'user.home');
@@ -121,7 +125,7 @@ Route::middleware([IsAdmin::class])->prefix('admin')->group(function () {
     Route::resource('sections', SectionController::class);
     Route::resource('lectures', LectureController::class);
     Route::resource('orders', OrderController::class);
-    Route::resource('pages', PageController::class);
+    Route::resource('pages', PageController::class)->except(['show']);
 
     Route::prefix('settings')->group(function () {
         Route::get('meta-data', [SettingController::class, 'edit'])->name('settings.meta.edit');

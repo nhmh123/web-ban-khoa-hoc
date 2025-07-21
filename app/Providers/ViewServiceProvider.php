@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Page;
 use App\Models\Setting;
 use App\Models\CourseCategory;
 use Illuminate\Support\ServiceProvider;
@@ -40,9 +41,23 @@ class ViewServiceProvider extends ServiceProvider
             return $view->with('rootCategories', $rootCategories);
         });
 
-        view()->composer('*',function($view){
-            $settings = Setting::pluck('value','key')->toArray();
-            $view->with('settings',$settings);
+        view()->composer('user.partials.footer', function ($view) {
+            $settings = Setting::pluck('value', 'key')->toArray();
+
+            $companyPages = Page::where('type', 'company')->get();
+            $legalPages = Page::where('type', 'legal')->get();
+
+            $view->with([
+                'settings' => $settings,
+                'companyPages' => $companyPages,
+                'legalPages' => $legalPages
+            ]);
+        });
+
+
+        view()->composer('*', function ($view) {
+            $settings = Setting::pluck('value', 'key')->toArray();
+            $view->with('settings', $settings);
         });
     }
 }
