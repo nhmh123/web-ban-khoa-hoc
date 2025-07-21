@@ -87,15 +87,15 @@
                             <label class="form-label fw-bold">Phương thức thanh toán</label>
                             <div class="list-group">
                                 <label class="list-group-item d-flex align-items-center">
-                                    <input class="form-check-input me-2" type="radio" name="payment_method" value="vnpay"
-                                        checked>
+                                    <input class="form-check-input me-2" type="radio" name="payment_method"
+                                        value="vnpay">
                                     <img src="https://vinadesign.vn/uploads/images/2023/05/vnpay-logo-vinadesign-25-12-57-55.jpg"
                                         alt="VNPAY" width="50" class="me-2">
                                     VNPAY
                                 </label>
                                 <label class="list-group-item d-flex align-items-center">
-                                    <input class="form-check-input me-2" type="radio" name="payment_method"
-                                        value="momo">
+                                    <input class="form-check-input me-2" type="radio" name="payment_method" value="momo"
+                                        checked>
                                     <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-MoMo-Square.png"
                                         alt="MOMO" width="50" class="me-2">
                                     MOMO
@@ -116,8 +116,9 @@
                                     </li>
                                 </ul>
 
-                                <form action="{{ route('user.checkout.submit') }}" method="POST" name="checkout-form">
+                                <form action="{{ route('user.checkout.momo') }}" method="POST" name="checkout-form">
                                     @csrf
+                                    <input type="hidden" name="total_amount" value="{{ $cartTotal }}">
                                     <button type="submit" class="btn btn-primary w-100">Tiến hành thanh
                                         toán</button>
                                 </form>
@@ -171,24 +172,38 @@
                         totalCartRaw += parseInt(price);
                     });
                     $('.amount').text(Number(totalCartRaw).toLocaleString('vi-VN'));
+                    $('form[name="checkout-form"]').find('input[type="hidden"][name="total_amount"]').val(
+                        totalCartRaw);
                 });
-
 
                 let checkoutForm = $('form[name="checkout-form"]');
                 checkoutForm.on('submit', function(e) {
                     e.preventDefault();
-                    if (checkedCheckoutCourseIds.length === 0) {
-                        alert('Vui lòng chọn ít nhất một khóa học để thanh toán.');
-                        return false;
+
+                    let checkedCheckoutCourseElement = $('input[name="ids[]"]:checked')
+                    let checkedIds = [];
+                    checkedCheckoutCourseElement.each(function() {
+                        checkedIds.push(parseInt($(this).val()));
+                    })
+
+                    console.log(checkedIds);
+                    if (checkedIds.length === 0) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Lỗi!",
+                            text: "Vui lòng chọn ít nhất một khóa học để thanh toán",
+                        });
+                        return;
                     }
 
                     $('<input>').attr({
                         type: 'hidden',
                         name: 'checkout_course',
-                        value: JSON.stringify(checkedCheckoutCourseIds)
+                        value: JSON.stringify(checkedIds)
                     }).appendTo(checkoutForm);
 
-                    checkoutForm.off('submit').submit();
+                    console.log(checkoutForm)
+                    this.submit();
                 })
 
                 $('form[name="remove-cart-item-form"]').on('submit', function(e) {
@@ -212,7 +227,7 @@
                             //     .join(''), 10);
                             // totalCartRaw -= removedCoursePrice;
                             // $('.amount').text(Number(totalCartRaw).toLocaleString('vi-VN'));
-                            
+
                             form.closest('.card').remove();
                             $('input[name="ids[]"]').trigger('change');
 

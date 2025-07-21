@@ -89,6 +89,8 @@ Route::middleware('auth')->group(function () {
     //checkout
     Route::get('checkout', [CheckoutController::class, 'checkout'])->name('user.checkout');
     Route::post('checkout/submit', [CheckoutController::class, 'checkoutSubmit'])->name('user.checkout.submit');
+    Route::post('checkout/momo',[CheckoutController::class,'momoPayment'])->name('user.checkout.momo');
+    Route::get('checkout/momo/return',[CheckoutController::class,'momoReturn'])->name('user.checkout.momo.return');
 
     //enroll course
     Route::post('course/enroll/{course}', [CourseController::class, 'enroll'])->name('user.course.enroll');

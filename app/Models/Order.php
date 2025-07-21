@@ -22,18 +22,25 @@ class Order extends Model
         'sub_total',
     ];
 
-    public function getStatusAttribute(){
+    public function getStatusAttribute()
+    {
         return OrderEnum::from($this->attributes['status'])->label();
     }
 
-    public function getStatusColorAttribute(){
+    public function getStatusColorAttribute()
+    {
         return OrderEnum::from($this->attributes['status'])->color();
     }
-    public function getUserIdAttribute(){
+    public function getUserIdAttribute()
+    {
         return User::find($this->attributes['user_id'])?->name;
     }
     public function items()
     {
         return $this->hasMany(OrderItem::class, 'order_id', 'order_id');
+    }
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'order_id', 'order_id');
     }
 }
