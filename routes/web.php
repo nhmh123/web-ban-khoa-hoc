@@ -6,19 +6,20 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\SliderController;
 use App\Http\Controllers\LectureController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DasboardController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CourseCategoryController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\SettingController;
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
     \UniSharp\LaravelFilemanager\Lfm::routes();
@@ -136,6 +137,7 @@ Route::middleware([IsAdmin::class])->prefix('admin')->group(function () {
         Route::post('contact', [SettingController::class, 'contactSettingUpdate'])->name('settings.contact.update');
         Route::get('social', [SettingController::class, 'socialSettingEdit'])->name('settings.social.edit');
         Route::post('social', [SettingController::class, 'socialSettingUpdate'])->name('settings.social.update');
+        Route::resource('sliders', SliderController::class);
     });
 });
 

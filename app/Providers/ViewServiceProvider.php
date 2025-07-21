@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Models\Page;
+use App\Models\Slider;
 use App\Models\Setting;
 use App\Models\CourseCategory;
+use App\Enums\StaticPageTypeEnum;
 use Illuminate\Support\ServiceProvider;
 
 class ViewServiceProvider extends ServiceProvider
@@ -44,8 +46,13 @@ class ViewServiceProvider extends ServiceProvider
         view()->composer('user.partials.footer', function ($view) {
             $settings = Setting::pluck('value', 'key')->toArray();
 
-            $companyPages = Page::where('type', 'company')->get();
-            $legalPages = Page::where('type', 'legal')->get();
+            $companyPages = Page::where('type', 'company')
+                ->where('is_active', true)
+                ->get();
+
+            $legalPages = Page::where('type', 'legal')
+                ->where('is_active', true)
+                ->get();
 
             $view->with([
                 'settings' => $settings,
@@ -54,6 +61,11 @@ class ViewServiceProvider extends ServiceProvider
             ]);
         });
 
+        view()->composer('user.partials.slider',function($view){
+            $sliders = Slider::orderBy('order', 'asc')->get();
+            $maxOrder = Slider::max('order') ?? 0;
+            return $view->with(compact('sliders', 'maxOrder'));
+        });
 
         view()->composer('*', function ($view) {
             $settings = Setting::pluck('value', 'key')->toArray();

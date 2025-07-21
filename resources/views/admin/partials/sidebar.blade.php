@@ -107,16 +107,16 @@
                 <li><a href="{{ route('settings.email.edit') }}">Email</a></li>
             </ul>
             <ul class="sub-menu">
-                <li><a href="">Slider</a></li>
+                <li><a href="{{ route('sliders.index') }}">Slider</a></li>
             </ul>
             <ul class="sub-menu">
                 <li><a href="">Thanh toán</a></li>
             </ul>
             <ul class="sub-menu">
-                <li><a href="{{route('settings.social.edit')}}">Media</a></li>
+                <li><a href="{{ route('settings.social.edit') }}">Media</a></li>
             </ul>
             <ul class="sub-menu">
-                <li><a href="{{route('settings.contact.edit')}}">Thông tin liên hệ</a></li>
+                <li><a href="{{ route('settings.contact.edit') }}">Thông tin liên hệ</a></li>
             </ul>
         </li>
     </ul>

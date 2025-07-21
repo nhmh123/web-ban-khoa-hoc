@@ -19,44 +19,6 @@
         Học mọi thứ, mọi nơi, mọi lúc. Truy cập các khóa học và bắt đầu hành trình ngay bây giờ!
     </div>
 
-    <!-- Courses Section -->
-    {{-- <section id="courses" class="container my-5">
-        <h3 class="text-start mb-4">Khóa học phổ biến</h3>
-        <div class="row">
-            @foreach ($popularCourses as $course)
-                <div class="col-md-3">
-                    <div class="card border-0 mb-4">
-                        <img src="{{ $course->thumbnail }}" class="card-img-top" alt="Course Image"
-                            style="height: 150px; object-fit: fill;">
-                        <div class="card-body py-3 px-0">
-                            <h5 class="card-title fs-5 fw-bold">{{ $course->name }}</h5>
-                            <p class="card-text small mb-1">{{ Str::limit($course->sort_description, 100) }}</p>
-                            <p class="mb-1 small">{{ $course->user->name }}</p>
-                            <p class="mb-1 small">⭐⭐⭐⭐⭐ ({{ $course->rating }})</p> --}}
-
-    {{-- @if ($course->sale_price)
-                                <div class="d-flex small">
-                                    <p class="me-2 mb-1">
-                                        <span class="text-decoration-line-through fs-5">
-                                            {{ $course->original_price_formatted }}
-                                        </span>
-                                    </p>
-                                    <p class="mb-1 fs-5 fw-bold">{{ $course->sale_price_formatted }}</p>
-                                </div>
-                            @else
-                                <p class="mb-1 small fs-5 fw-bold">{{ $course->original_price_formatted }}</p>
-                            @endif --}}
-
-    {{-- <p class="mb-1 small fs-5 fw-bold">{{ $course->original_price_formatted }}</p>
-
-                            <a href="{{ route('user.courses.show', ['course' => $course->slug]) }}"
-                                class="btn btn-primary btn-sm mt-auto">Xem khóa học</a>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </section> --}}
     <div class="container my-5">
         <h4 class="text-start fw-bold mb-4">Tất cả khoá học</h4>
         <div data-aos="fade-up">
