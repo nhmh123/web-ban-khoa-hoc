@@ -11,7 +11,6 @@
                         <span class="badge text-white">{{ $course->rating }} ⭐ (1,250 Lượt đánh giá)</span>
                         <span> • {{ $course->enrollments()->count() }} Học viên</span>
                     </div>
-                    <p class="mt-3">Giảng viên: <strong>{{ $course->user->name }}</strong></p>
                 </div>
             </div>
         </div>
@@ -311,23 +310,22 @@
                         },
                         error: function(xhr, status, error) {
                             let res = xhr.responseJSON;
-                            let title = 'Lỗi';
-                            let detail = 'Đã xảy ra lỗi khi thêm khóa học vào giỏ hàng.';
+                            let title = res.title;
+                            let detail = res.detail;
                             let redirect = "";
-
-                            if (res) {
-                                if (res.detail) {
-                                    detail = res.detail;
-                                } else if (res.title) {
-                                    title = res.title;
-                                }
-                            } else if (xhr.status === 401) {
-                                title = 'Chưa đăng nhập';
-                                detail = 'Bạn cần đăng nhập để thực hiện thao tác này.';
-                                redirect = '<a href="{{ route('login') }}">Đăng nhập</a>';
-                            } else if (xhr.status === 400) {
-                                detail = 'Yêu cầu không hợp lệ.';
-                            }
+                            // if (res) {
+                            //     if (res.detail) {
+                            //         detail = res.detail;
+                            //     } else if (res.title) {
+                            //         title = res.title;
+                            //     }
+                            // } else if (xhr.status === 401) {
+                            //     title = 'Chưa đăng nhập';
+                            //     detail = 'Bạn cần đăng nhập để thực hiện thao tác này.';
+                            //     redirect = '<a href="{{ route('login') }}">Đăng nhập</a>';
+                            // } else if (xhr.status === 400) {
+                            //     detail = 'Yêu cầu không hợp lệ.';
+                            // }
 
                             displayErrorAlert(title, detail, redirect);
                         }

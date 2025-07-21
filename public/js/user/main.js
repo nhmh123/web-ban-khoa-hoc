@@ -84,17 +84,15 @@ function displaySuccessToast(message) {
         onClick: function () {}, // Callback after click
     }).showToast();
 }
+
 function displayErrorAlert(title, detail, redirect = "") {
     Swal.fire({
         icon: "error",
         title: title,
         text: detail,
-        footer:
-            redirect !== ""
-                ? redirect
-                : '<a href="#">Why do I have this issue?</a>',
     });
 }
+
 function showConfirmDeleteAlert(
     title,
     text,
@@ -136,7 +134,7 @@ function showConfirmDeleteAlert(
 
 //==============CART==============//
 
-function getUserCart(url) {
+function getUserCart(url, deleteUrl) {
     $.ajax({
         type: "GET",
         url: url,
@@ -178,11 +176,12 @@ function getUserCart(url) {
                                                 )}đ
                                             </p>
                                         </div>
-                                        <form onsubmit="return handleDeleteItem(event, ${
-                                            course.id
-                                        })">
-                                            <button type="submit"
-                                                class="btn btn-sm btn-outline-danger">Xóa</button>
+                                        <form action="{{ route('user.cart.remove', ${course.id}) }}"
+                                            method="POST" name="remove-cart-item-form"
+                                            data-course-id="${course.id}">
+                                            <button type="submit" class="btn btn-sm p-0 outline-none border-none">
+                                                <i class="bi bi-trash text-dark fs-5"></i>
+                                            </button>
                                         </form>
                                     </div>
                                 </div>

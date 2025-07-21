@@ -27,4 +27,13 @@ class ApiHelper
             'code' => $code,
         ], $status);
     }
+
+    public static function success($status, $data = null, $message = '')
+    {
+        return response()->json([
+            'status' => 'success',
+            'data' => $data,
+            'message' => $message
+        ], $status);
+    }
 }

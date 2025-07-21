@@ -40,7 +40,7 @@ class CartController extends Controller
             $user = Auth::user();
             if (!$user) {
                 return ApiHelper::error(
-                    title: 'Chưa xác thực',
+                    title: 'Chưa đăng nhập',
                     status: 401,
                     detail: 'Bạn cần đăng nhập để thêm khóa học vào giỏ hàng.',
                     code: 'ERR_UNAUTHENTICATED'
@@ -76,14 +76,31 @@ class CartController extends Controller
             );
         }
     }
-    public function removeFromCart(Course $course)
+    public function removeFromCart(Request $request, Course $course)
     {
         try {
             $user = Auth::user();
             $cartItem = $user->cartItem()->where('course_id', $course->id)->first();
             $cartItem->delete();
+
+            if (request()->ajax()) {
+                return ApiHelper::success(
+                    status: 200,
+                    data: null,
+                    message: 'Đã xóa khóa học khỏi giỏ hàng.'
+                );
+            }
             return redirect()->back()->with('success', 'Đã xóa khóa học khỏi giỏ hàng thành công!');
         } catch (\Throwable $th) {
+            if ($request->ajax()) {
+                return ApiHelper::error(
+                    title: 'Lỗi hệ thống',
+                    status: 500,
+                    detail: $th->getMessage(),
+                    code: 'SERVER_ERROR'
+                );
+            }
+
             return redirect()->back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $th->getMessage()]);
         }
     }
@@ -92,28 +109,21 @@ class CartController extends Controller
     {
         try {
             $user = Auth::user();
-            // if ($request->has('ids')) {
-            //     $ids = array_map('intval', $request->input('ids'));
-            //     $user->cartItem()->whereIn('course_id', $ids)->delete();
-            //     return redirect()->back()->with('success', 'Đã xóa các khóa học khỏi giỏ hàng thành công!');
-            // }
 
             $user->cartItem()->delete();
 
             if ($request->ajax()) {
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Đã xóa tất cả khóa học khỏi giỏ hàng.',
-                ]);
+                return ApiHelper::success(200, null, 'Đã xóa tất cả khóa học khỏi giỏ hàng.');
             }
+            
             return redirect()->back()->with('success', 'Đã xóa tất cả khóa học khỏi giỏ hàng thành công!');
         } catch (\Throwable $th) {
             if ($request->ajax()) {
-                ApiHelper::error(
+                return ApiHelper::error(
                     title: 'Lỗi hệ thống',
                     status: 500,
                     detail: $th->getMessage(),
-                    code: 'server_error'
+                    code: 'SERVER_ERRROR'
                 );
             }
             return redirect()->back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $th->getMessage()]);
