@@ -65,6 +65,9 @@ Route::post('register/submit', [RegisteredUserController::class, 'store'])->name
 //static pages
 Route::get('/pages/{page:slug}', [PageController::class, 'show'])->name('pages.show');
 
+//reviews
+Route::get('reviews', [ReviewController::class, 'index'])->name('reviews.index');
+
 
 Route::middleware('auth')->group(function () {
     //logout
@@ -111,7 +114,6 @@ Route::middleware('auth')->group(function () {
     Route::get('purchase-history/{order}', [OrderController::class, 'detail'])->name('user.orders.detail');
 
     //reviews
-    Route::get('reviews',[ReviewController::class,'index'])->name('reviews.index');
     Route::post('reviews', [ReviewController::class, 'store'])->name('reviews.store');
 });
 
@@ -137,6 +139,7 @@ Route::middleware([IsAdmin::class])->prefix('admin')->group(function () {
     Route::resource('lectures', LectureController::class);
     Route::resource('orders', OrderController::class);
     Route::resource('pages', PageController::class)->except(['show']);
+    Route::get('reviews', [ReviewController::class, 'index'])->name('admin.reviews.index');
 
     Route::prefix('settings')->group(function () {
         Route::get('meta-data', [SettingController::class, 'edit'])->name('settings.meta.edit');

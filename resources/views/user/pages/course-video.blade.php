@@ -25,7 +25,7 @@
                 <div class="mt-3">
                     @if ($lecture->type === App\Enums\LectureEnum::VIDEO->value)
                         <!-- Video Player -->
-                        <div class="ratio ratio-16x9">
+                        {{-- <div class="ratio ratio-16x9">
                             <video id="course-video" class="video-js vjs-big-play-centered" controls preload="auto">
                                 <source src="{{ $lecture->video->video_url }}" type="video/mp4">
                                 <p class="vjs-no-js">
@@ -57,7 +57,15 @@
                                     }
                                 });
                             });
-                        </script>
+                        </script> --}}
+
+                        {{-- <div class="ratio ratio-16x9">
+                            <iframe width="560" height="315"
+                                src="https://www.youtube.com/embed/{{ $embedUrl ?? ' ' }}" title="YouTube video player"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div> --}}
                     @elseif ($lecture->type === App\Enums\LectureEnum::ARTICLE->value)
                         <!-- Article Content -->
                         <div class="border p-3 rounded" style="max-height: 400px; overflow-y: auto;">
@@ -162,17 +170,7 @@
                             </form>
 
                             <section name="course-reviews" class="mt-4">
-                                <h2 class="fs-5 fw-bold">Đánh giá của học viên</h2>
-                                <div class="border p-3 rounded mb-3">
-                                    <h6 class="fw-bold">Jane Smith</h6>
-                                    <p>⭐ ⭐ ⭐ ⭐ ⭐</p>
-                                    <p>"This course is amazing! The instructor explains everything clearly."</p>
-                                </div>
-                                <div class="border p-3 rounded mb-3">
-                                    <h6 class="fw-bold">Michael Brown</h6>
-                                    <p>⭐ ⭐ ⭐ ⭐ ⭐</p>
-                                    <p>"Highly recommended for anyone wanting to master Laravel!"</p>
-                                </div>
+
                             </section>
                         </div>
 

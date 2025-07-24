@@ -8,7 +8,8 @@
                     <h1 class="fw-bold">{{ $course->name }}</h1>
                     <p class="lead">{{ $course->short_description }}</p>
                     <div class="d-flex align-items-center gap-2">
-                        <span class="badge text-white">{{ $course->rating }} ⭐ (... Lượt đánh giá)</span>
+                        <span class="badge text-white">{{ $course->rating }} ⭐ ({{ $course->reviews->count() }} Lượt đánh
+                            giá)</span>
                         <span> • {{ $course->enrollments()->count() }} Học viên</span>
                     </div>
                 </div>
@@ -60,7 +61,7 @@
 
                                                             <div id="dialog-content" style="display:none;max-width:500px;">
                                                                 <h2>{{ $lecture->title }}</h2>
-                                                                <p>{{ $lecture->article->content }}</p>
+                                                                <p>{!! $lecture->article->content !!}</p>
                                                             </div>
                                                         @endif
                                                     @else
@@ -96,18 +97,7 @@
                 </section> --}}
 
                 <!-- Reviews -->
-                <section class="mt-4">
-                    <h2 class="fs-5 fw-bold">Đánh giá của học viên</h2>
-                    <div class="border p-3 rounded mb-3">
-                        <h6 class="fw-bold">Jane Smith</h6>
-                        <p>⭐ ⭐ ⭐ ⭐ ⭐</p>
-                        <p>"This course is amazing! The instructor explains everything clearly."</p>
-                    </div>
-                    <div class="border p-3 rounded mb-3">
-                        <h6 class="fw-bold">Michael Brown</h6>
-                        <p>⭐ ⭐ ⭐ ⭐ ⭐</p>
-                        <p>"Highly recommended for anyone wanting to master Laravel!"</p>
-                    </div>
+                <section name="course-reviews" class="mt-4">
                 </section>
             </div>
 
@@ -137,7 +127,7 @@
                             @endif
                         @else
                             @if ($course->original_price > 0)
-                                <form action="{{route('user.cart.buy-now',$course)}}" method="POST">
+                                <form action="{{ route('user.cart.buy-now', $course) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="btn btn-primary w-100 mb-2">Mua ngay</button>
                                 </form>
@@ -230,6 +220,8 @@
         </script>
         <script>
             $(document).ready(function() {
+                fetchCourseReview();
+
                 let addToWishlist = $('form[name="add-to-wishlist"]');
                 let removeFromWishlist = $('form[name="remove-from-wishlist"]');
                 let addToCart = $('form[name="add-to-cart"]');
@@ -339,6 +331,48 @@
                         }
                     });
                 });
+
+                function fetchCourseReview() {
+                    let fetchUrl = "{{ route('reviews.index', ['course_id' => $course->id]) }}";
+                    $.ajax({
+                        type: "GET",
+                        url: fetchUrl,
+                        success: function(response) {
+                            console.log(response);
+                            renderReviews(response.data);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr);
+                        }
+                    });
+                }
+
+                function renderReviews(reviews) {
+                    const reviewSection = $('section[name="course-reviews"]');
+                    let html = `<h2 class="fs-5 fw-bold">Đánh giá của học viên</h2>`;
+
+                    if (reviews && reviews.length > 0) {
+                        reviews.forEach(review => {
+                            html += `
+                                <div class="border p-3 rounded mb-3">
+                                    <h6 class="fw-bold">${review.user.name}</h6>
+                                    <p>${'⭐ '.repeat(parseInt(review.rating))}</p>
+                                    <p>${review.comment || ''}</p>
+                                    <p class="text-muted small">Đánh giá vào: <strong>${formatDate(review.updated_at)}</strong></p>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        html += `<p class="text-muted">Chưa có đánh giá nào cho khoá học này.</p>`;
+                    }
+
+                    reviewSection.html(html);
+                }
+
+                function formatDate(dateStr) {
+                    const date = new Date(dateStr);
+                    return date.toLocaleDateString('vi-VN') + ' ' + date.toLocaleTimeString('vi-VN');
+                }
             });
         </script>
     @endpush

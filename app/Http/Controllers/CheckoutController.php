@@ -160,7 +160,7 @@ class CheckoutController extends Controller
 
             return redirect()
                 ->route('user.cart')
-                ->with('success', 'Giao dịch thành công. Đến <a href="' . route('user.my-courses') . '">khóa học của tôi</a>.');
+                ->with('success', 'Giao dịch thành công.');
         } else {
             $order->status = OrderEnum::CANCELLED->value;
             $order->save();

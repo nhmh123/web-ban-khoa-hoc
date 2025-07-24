@@ -14,17 +14,20 @@ class ReviewController extends Controller
     public function index(Request $request)
     {
         try {
+            $reviews = Review::with('user')->orderBy('created_at','desc')->get();
+
             if ($request->has('course_id')) {
                 $courseId = (int) $request->query('course_id');
+                $reviews = Review::with('user')->where('course_id', $courseId)->orderBy('updated_at', 'desc')->get();
             }
-
-            $reviews = Review::with('user')->where('course_id', $courseId)->orderBy('updated_at','desc')->get();
 
             if ($request->ajax()) {
                 return ApiHelper::success(200, $reviews, 'Lấy dữ liệu review thành công');
             }
+
+            return view('admin.pages.reviews.index', compact('reviews'));
         } catch (\Throwable $th) {
-            return ApiHelper::error(500, 'Lỗi tải dữ liệu: ' . $th->getMessage());
+            return ApiHelper::error('Lỗi hệ thống', 500, 'Lỗi tải dữ liệu: ' . $th->getMessage());
         }
     }
     public function store(Request $request)

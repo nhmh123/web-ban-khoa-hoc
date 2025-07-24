@@ -86,13 +86,13 @@
                         <div class="mb-3">
                             <label class="form-label fw-bold">Phương thức thanh toán</label>
                             <div class="list-group">
-                                <label class="list-group-item d-flex align-items-center">
+                                {{-- <label class="list-group-item d-flex align-items-center">
                                     <input class="form-check-input me-2" type="radio" name="payment_method"
                                         value="vnpay">
                                     <img src="https://vinadesign.vn/uploads/images/2023/05/vnpay-logo-vinadesign-25-12-57-55.jpg"
                                         alt="VNPAY" width="50" class="me-2">
                                     VNPAY
-                                </label>
+                                </label> --}}
                                 <label class="list-group-item d-flex align-items-center">
                                     <input class="form-check-input me-2" type="radio" name="payment_method" value="momo"
                                         checked>

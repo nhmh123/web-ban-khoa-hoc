@@ -58,7 +58,6 @@
                         </div>
                     </div>
 
-
                     <!-- Form Video -->
                     <div id="video_form">
                         <div class="mb-3">
@@ -73,7 +72,7 @@
                     <div id="article_form">
                         <div class="mb-3">
                             <label for="article_content" class="form-label">Nội dung bài viết</label>
-                            <textarea name="article_content" class="form-control" rows="4">
+                            <textarea id="article-create" name="article_content" class="form-control" rows="4">
                                 {{ old('content') ?? ($lecture->article->content ?? '') }}
                             </textarea>
                         </div>
@@ -90,7 +89,7 @@
             $(document).ready(function() {
                 let type = $('input[type="radio"][name="type"]:checked').val();
                 if (type == "video") {
-                    $('#article_form').find('textarea').prop('disabled', true)
+                    $('#article_form').addClass('d-none');
                 } else if (type == "article") {
                     $('#video_form').find('input[name="video_url"]').prop('disabled', true)
                 } else {
@@ -100,10 +99,10 @@
                 $('input[type="radio"][name="type"]').change(function() {
                     if ($(this).val() == "video") {
                         $('#video_form').find('input[name="video_url"]').prop('disabled', false)
-                        $('#article_form').find('textarea').prop('disabled', true)
+                        $('#article_form').addClass('d-none')
                     } else if ($(this).val() == "article") {
                         $('#video_form').find('input[name="video_url"]').prop('disabled', true)
-                        $('#article_form').find('textarea').prop('disabled', false)
+                        $('#article_form').removeClass('d-none');
                     }
                 })
             })

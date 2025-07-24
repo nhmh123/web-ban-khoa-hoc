@@ -63,17 +63,17 @@
                 <li><a href="{{ route('orders.index') }}">Danh sách</a></li>
             </ul>
         </li>
-        <li class="nav-link">
-            <a href="">
+        <li class="nav-link {{ request()->routeIs('reviews.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.reviews.index') }}">
                 <div class="nav-link-icon d-inline-flex">
                     <i class="bi bi-chat-dots"></i>
                 </div>
                 Bình luận & đánh giá
             </a>
-            <i class="arrow fas {{ request()->routeIs('orders.*') ? 'fa-angle-down' : 'fa-angle-right' }} "></i>
+            <i class="arrow fas {{ request()->routeIs('reviews.*') ? 'fa-angle-down' : 'fa-angle-right' }} "></i>
 
             <ul class="sub-menu">
-                <li><a href="">Danh sách</a></li>
+                <li><a href="{{ route('admin.reviews.index') }}">Danh sách</a></li>
             </ul>
         </li>
 

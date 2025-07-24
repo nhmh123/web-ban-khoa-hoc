@@ -92,7 +92,16 @@ class LectureController extends Controller
         if (!$user->canAccessLecture($lecture)) {
             abort(403, 'Bạn chưa đăng ký khóa học này.');
         }
+        $videoUrlArray = [];
 
+        if ($lecture->type == LectureEnum::VIDEO->value) {
+            $videoUrlArray = explode('/', $lecture->video->video_url);
+            $embedUrl = $videoUrlArray[3];
+        }
+
+        if (isset($videoUrlArray[3]) && !empty($videoUrlArray[3])) {
+            $embedUrl = $videoUrlArray[3];
+        }
         return view('user.pages.course-video', compact('lecture', 'course'));
     }
 

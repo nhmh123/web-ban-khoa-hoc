@@ -228,15 +228,15 @@
                                                         {{ $section->lectures ? $section->lectures->count() : 0 }}
                                                         bài giảng
                                                     </span>
-                                                    <span class="text-end me-3">Thời lượng
-                                                        {{ $section->duration }}</span>
+                                                    {{-- <span class="text-end me-3">Thời lượng
+                                                        {{ $section->duration }}</span> --}}
                                                 </button>
 
                                                 <!-- Action Icons -->
-                                                <div class="ms-2 d-flex align-items-center">
+                                                <div class="d-flex align-content-center justify-content-center">
                                                     <!-- Edit icon -->
                                                     <!-- Edit icon trigger -->
-                                                    <button type="button" class="btn btn-link text-dark p-0 m-0"
+                                                    <button type="button" class="btn btn-dark text-dark not-last:p-0 m-0"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#editSectionModal{{ $section->sec_id }}">
                                                         <i class="bi bi-pencil"></i>
@@ -293,7 +293,7 @@
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit"
-                                                            class="btn btn-link text-dark not-last:p-0 m-0">
+                                                            class="btn btn-dark text-dark not-last:p-0 m-0">
                                                             <i class="bi bi-trash"></i>
                                                         </button>
                                                     </form>
@@ -326,7 +326,7 @@
                                                             <div class="">
                                                                 <!-- Edit lecture -->
                                                                 <a href="{{ route('lectures.edit', ['lecture' => $lecture->lec_id]) }}"
-                                                                    type="button" class="btn btn-link text-dark p-0 m-0">
+                                                                    type="button" class="btn btn-dark text-dark not-last:p-0 m-0">
                                                                     <i class="bi bi-pencil"></i>
                                                                 </a>
                                                                 <!-- Delete lecture -->
@@ -336,7 +336,7 @@
                                                                     @csrf
                                                                     @method('DELETE')
                                                                     <button type="submit"
-                                                                        class="btn btn-link text-dark not-last:p-0 m-0">
+                                                                        class="btn btn-dark text-dark not-last:p-0 m-0">
                                                                         <i class="bi bi-x-lg"></i>
                                                                     </button>
                                                                 </form>

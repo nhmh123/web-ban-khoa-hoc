@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 @section('admin.content')
     <div id="content" class="container-fluid">
-        
+
         @session('success')
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -38,7 +38,7 @@
                             <th>Đánh giá</th>
                             <th>Ngày tạo</th>
                             <th>Lần cuối cập nhật</th>
-                            <th>Giảng viên</th>
+                            {{-- <th>Giảng viên</th> --}}
                             <th>Trạng thái</th>
                             <th>Tác vụ</th>
                         </tr>
@@ -50,7 +50,11 @@
                                     <input type="checkbox" name="ids[]" value="{{ $course->id }}">
                                 </td>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $course->name }}</td>
+                                <td>
+                                    <a href="{{ route('courses.edit', $course->id) }}">
+                                        {{ $course->name }}
+                                    </a>
+                                </td>
                                 <td>
                                     <img src="{{ $course->thumbnail ?? asset('images/default-thumbnail.jpg') }}"
                                         alt="thumbnail" class="img-fluid" width="100">
@@ -60,10 +64,10 @@
                                 </td>
                                 <td>{{ $course->category->cc_name ?? 'Không rõ' }}</td>
                                 <td class="text-center">{{ $course->enrollments()->count() }}</td>
-                                <td>{{ number_format($course->rating, 1) }} ★</td>
+                                <td class="fw-bold">{{ number_format($course->rating, 1) }} ⭐</td>
                                 <td>{{ $course->created_at->format('d-m-Y H:i:s') }}</td>
                                 <td>{{ $course->updated_at?->format('d-m-Y H:i:s') }}</td>
-                                <td>{{ $course->user->name ?? 'Không rõ' }}</td>
+                                {{-- <td>{{ $course->user->name ?? 'Không rõ' }}</td> --}}
                                 <td>
                                     <span
                                         class="badge {{ $course->status == 'published' ? 'badge-success' : 'badge-dark' }}">
