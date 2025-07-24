@@ -7,9 +7,11 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\LectureController;
 use App\Http\Controllers\SectionController;
@@ -17,10 +19,10 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DasboardController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\CourseCategoryController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\ReviewController;
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
     \UniSharp\LaravelFilemanager\Lfm::routes();
@@ -152,6 +154,19 @@ Route::middleware([IsAdmin::class])->prefix('admin')->group(function () {
         Route::post('social', [SettingController::class, 'socialSettingUpdate'])->name('settings.social.update');
         Route::resource('sliders', SliderController::class);
     });
+
+    Route::get('permissions', [PermissionController::class, 'create'])->name('permissions.create');
+    Route::post('permissions', [PermissionController::class, 'store'])->name('permissions.store');
+    Route::get('permissions/{permission}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
+    Route::put('permissions/{permission}', [PermissionController::class, 'update'])->name('permissions.update');
+    Route::delete('permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
+
+    Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
+    Route::get('roles/create', [RoleController::class, 'create'])->name('roles.create');
+    Route::post('roles', [RoleController::class, 'store'])->name('roles.store');
+    Route::get('roles/{role}/edit', [RoleController::class, 'edit'])->name('roles.edit');
+    Route::put('roles/{role}', [RoleController::class, 'update'])->name('roles.update');
+    Route::delete('roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
 });
 
 Route::prefix('admin')->group(function () {

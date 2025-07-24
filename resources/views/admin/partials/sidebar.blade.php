@@ -119,5 +119,20 @@
                 <li><a href="{{ route('settings.contact.edit') }}">Thông tin liên hệ</a></li>
             </ul>
         </li>
+        <li class="nav-link active">
+            <a href="?view=permission">
+                <div class="nav-link-icon d-inline-flex">
+                    <i class="far fa-folder"></i>
+                </div>
+                Phân quyền
+            </a>
+            <i class="arrow fas fa-angle-down"></i>
+            <ul class="sub-menu">
+                <li><a href="{{ route('permissions.create') }}">Quyền</a></li>
+                <li><a href="{{ route('roles.create') }}">Thêm vai trò</a></li>
+                <li><a href="{{ route('roles.index') }}">Danh sách vai trò</a></li>
+            </ul>
+        </li>
+
     </ul>
 </div>
