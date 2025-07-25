@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\CourseCategory;
 use App\Models\DifficultyLevel;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\Course\CreateCourseRequest;
 use App\Http\Requests\Course\UpdateCourseRequest;
 

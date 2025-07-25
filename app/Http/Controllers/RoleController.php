@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ApiHelper;
 use App\Models\Role;
+use App\Helpers\ApiHelper;
 use App\Models\Permission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
     public function index()
     {
+        // dd(Auth::user()->hasPermission('role.add'));
+
         $roles = Role::all();
         return view('admin.pages.roles.index', compact('roles'));
     }
