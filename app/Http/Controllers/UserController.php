@@ -19,18 +19,18 @@ class UserController extends Controller
     {
         $users = User::orderBy('created_at', 'desc')->get();
         $roles = Role::all();
-        $roleQuery = request()->query('role');
-        if ($roleQuery && $roleQuery !== 'all') {
-            $users = User::whereHas('role', function ($query) use ($roleQuery) {
-                $query->where('name', $roleQuery);
-            })->orderBy('created_at', 'desc')->get();
-        }
+        // if ($roleQuery && $roleQuery !== 'all') {
+        //     $users = User::whereHas('role', function ($query) use ($roleQuery) {
+        //         $query->where('name', $roleQuery);
+        //     })->orderBy('created_at', 'desc')->get();
+        // }
         return view('admin.pages.users.index', compact('users', 'roles'));
     }
 
     public function create()
     {
-        return view('admin.pages.users.create');
+        $roles = Role::all();
+        return view('admin.pages.users.create', compact('roles'));
     }
 
     public function store(CreateUserRequest $request)
@@ -53,7 +53,8 @@ class UserController extends Controller
     public function edit(User $user, $isAdmin = true)
     {
         if ($isAdmin) {
-            return view('admin.pages.users.edit', compact('user'));
+            $roles = Role::all();
+            return view('admin.pages.users.edit', compact('user', 'roles'));
         }
 
         return view('user.pages.profile', compact('user'));
@@ -62,9 +63,9 @@ class UserController extends Controller
     {
         // dd($request->all());
         try {
-            if(!$isAdmin){
-                if($user->id != Auth::id()){
-                    abort(403,'Không có quyền thực hiện thao tác này'); 
+            if (!$isAdmin) {
+                if ($user->id != Auth::id()) {
+                    abort(403, 'Không có quyền thực hiện thao tác này');
                 }
             }
             // throw new \Exception('System error'); // Simulating an error for testing
@@ -76,6 +77,8 @@ class UserController extends Controller
                 $avatar = $request->file('avatar')->store('avatars', 'public');
                 $user->avatar = $avatar;
             }
+
+            $user->roles()->sync($request->input('role', []));
             $user->save();
 
             if ($isAdmin) {

@@ -57,16 +57,19 @@
                                 id="avatar-preview">
                         </div>
 
-                        {{-- <div class="form-group">
-                        <label for="">Nhóm quyền</label>
-                        <select class="form-control" id="">
-                            <option>Chọn quyền</option>
-                            <option>Danh mục 1</option>
-                            <option>Danh mục 2</option>
-                            <option>Danh mục 3</option>
-                            <option>Danh mục 4</option>
-                        </select>
-                    </div> --}}
+                        <div class="form-group">
+                            <label for="">Nhóm quyền</label>
+                            @php
+                                $selectedRoles = old('role', $user->roles->pluck('role_id')->toArray());
+                            @endphp
+                            <select class="form-control" id="roles" multiple name="role[]">
+                                @foreach ($roles as $role)
+                                    <option value="{{ $role->role_id }}"
+                                        {{ in_array($role->role_id, $selectedRoles) ? 'selected' : '' }}>{{ $role->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
                         <button type="submit" class="btn btn-primary">Cập nhật</button>
                 </form>

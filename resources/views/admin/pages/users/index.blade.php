@@ -33,6 +33,7 @@
                             <th>Tên</th>
                             <th>Ảnh đại diện</th>
                             <th>Email</th>
+                            <th>Vai trò</th>
                             <th>Ngày đăng ký</th>
                             <th>Tác vụ</th>
                         </tr>
@@ -49,6 +50,11 @@
                                     <img src="{{ $user->avatar }}" alt="" class="img-fluid" width="50">
                                 </td>
                                 <td>{{ $user->email }}</td>
+                                <td>
+                                    @foreach ($user->roles as $role)
+                                        <div class="badge badge-primary">{{ $role->name }}</div>
+                                    @endforeach
+                                </td>
                                 <td>{{ $user->created_at }}</td>
                                 <td class="text-nowrap">
                                     <div class="d-flex justify-content-center gap-2">

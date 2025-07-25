@@ -119,14 +119,15 @@
                 <li><a href="{{ route('settings.contact.edit') }}">Thông tin liên hệ</a></li>
             </ul>
         </li>
-        <li class="nav-link active">
-            <a href="?view=permission">
+        <li class="nav-link {{ request()->routeIs('permissions.*', 'roles.*') ? 'active' : '' }}">
+            <a href="{{ route('permissions.create') }}">
                 <div class="nav-link-icon d-inline-flex">
                     <i class="far fa-folder"></i>
                 </div>
                 Phân quyền
             </a>
-            <i class="arrow fas fa-angle-down"></i>
+            <i
+                class="arrow fas {{ request()->routeIs('permissions.*', 'roles.*') ? 'fa-angle-down' : 'fa-angle-right' }} "></i>
             <ul class="sub-menu">
                 <li><a href="{{ route('permissions.create') }}">Quyền</a></li>
                 <li><a href="{{ route('roles.create') }}">Thêm vai trò</a></li>
