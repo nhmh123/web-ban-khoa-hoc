@@ -19,7 +19,8 @@ class Lecture extends Model
         'sec_id',
     ];
 
-    public function getDurationAttribute($value){
+    public function getDurationAttribute($value)
+    {
         return \Carbon\CarbonInterval::seconds($value)->cascade()->forHumans();
     }
 
@@ -28,13 +29,20 @@ class Lecture extends Model
         return $this->belongsTo(Section::class, 'sec_id', 'sec_id');
     }
 
-    public function video(){
+    public function video()
+    {
         return $this->hasOne(Video::class, 'lec_id', 'lec_id');
     }
-    public function article(){
+    public function article()
+    {
         return $this->hasOne(Article::class, 'lec_id', 'lec_id');
     }
-    public function notes(){
-        return $this->hasMany(Note::class,'lec_id','lec_id');
+    public function notes()
+    {
+        return $this->hasMany(Note::class, 'lec_id', 'lec_id');
+    }
+    public function attachments()
+    {
+        return $this->hasMany(Attachment::class, 'lec_id');
     }
 }

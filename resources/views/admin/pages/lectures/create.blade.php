@@ -20,18 +20,19 @@
         @endif
 
         <div class="card">
-            <div class="card-header font-weight-bold">
+            <div class="card-header font-weight-bold fs-3">
                 Thêm bài giảng mới
             </div>
 
             <div class="card-body">
-                <form action="{{ route('lectures.store') }}" method="POST">
+                <form id="create-course-form" action="{{ route('lectures.store') }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="sec_id" value="{{ $sec_id }}">
                     <!-- Tên bài giảng -->
                     <div class="mb-3">
-                        <label for="title" class="form-label">Tiêu đề bài giảng</label>
-                        <input type="text" name="title" class="form-control" required value="{{ old('title') }}">
+                        <label for="title" class="form-label fw-bold">Tiêu đề bài giảng</label>
+                        <input type="text" name="title" class="form-control" value="{{ old('title') }}">
                     </div>
 
                     <!-- Là bài giới thiệu? -->
@@ -43,7 +44,7 @@
 
                     <!-- Loại bài giảng -->
                     <div class="mb-3">
-                        <label class="form-label">Loại bài giảng</label><br>
+                        <label class="form-label fw-bold">Loại bài giảng</label><br>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="type" id="type_video" value="video"
                                 {{ old('type') == 'video' ? 'checked' : '' }} checked>
@@ -56,26 +57,34 @@
                         </div>
                     </div>
 
-                    <!-- Form Video -->
-                    <div id="video_form">
+                    <div class="form-group">
                         <div class="mb-3">
-                            <label for="video_url" class="form-label">URL video</label>
-                            <input type="url" name="video_url" class="form-control" value="{{ old('video_url') }}"
-                                required>
+                            <label for="course-video" class="form-label fw-bold">Video bài giảng</label>
+                            <input type="file" name="course_video" id="course-video" class="form-control">
                         </div>
-
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-animate bg-primary" role="progressbar" aria-valuenow="0"
+                                aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                        </div>
                     </div>
 
                     <!-- Form Article -->
                     <div id="article_form">
                         <div class="mb-3">
                             <label for="article_content" class="form-label">Nội dung bài viết</label>
-                            <textarea name="article_content" class="form-control" rows="4" required>
-                                {{ old('content') }}
+                            <textarea id="article-create" name="article_content" class="form-control" rows="4">
+                                {{ old('content') ?? ($lecture->article->content ?? '') }}
                             </textarea>
                         </div>
                     </div>
 
+                    {{-- Attachment --}}
+                    <div class="form-group">
+                        <div class="mb-3">
+                            <label for="attachments" class="form-label fw-bold">Tài liệu bài giảng</label>
+                            <input type="file" name="attachments[]" id="attachments" class="form-control" multiple>
+                        </div>
+                    </div>
                     <button type="submit" class="btn btn-primary">Lưu bài giảng</button>
                 </form>
             </div>
@@ -103,6 +112,21 @@
                         $('#article_form').find('textarea').prop('disabled', false)
                     }
                 })
+
+                // $('#create-course-form').ajaxForm({
+                //     beforeSend: function() {
+                //         var percentage = '0';
+                //     },
+                //     uploadProgress: function(event, position, total, percentComplete) {
+                //         var percentage = percentComplete;
+                //         $('.progress .progress-bar').css('width', percentage + '%', function() {
+                //             return $(this).attr('aria-valuenow', percentage) + '%';
+                //         })
+                //     },
+                //     complete: function(xhr) {
+                //         console.log('file uploaded');
+                //     }
+                // });
             })
         </script>
     @endpush

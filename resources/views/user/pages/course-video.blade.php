@@ -25,9 +25,10 @@
                 <div class="mt-3">
                     @if ($lecture->type === App\Enums\LectureEnum::VIDEO->value)
                         <!-- Video Player -->
-                        {{-- <div class="ratio ratio-16x9">
-                            <video id="course-video" class="video-js vjs-big-play-centered" controls preload="auto">
-                                <source src="{{ $lecture->video->video_url }}" type="video/mp4">
+                        <div class="ratio ratio-16x9">
+                            <video id="course-video" class="video-js  vjs-tech vjs-big-play-centered" controls
+                                preload="auto" controlsList="nodownload" oncontextmenu="return false;">
+                                <source src="{{ $url }}" type="video/mp4">
                                 <p class="vjs-no-js">
                                     To view this video please enable JavaScript, and consider upgrading to a
                                     web browser that <a href="https://videojs.com/html5-video-support/"
@@ -57,24 +58,12 @@
                                     }
                                 });
                             });
-                        </script> --}}
-
-                        {{-- <div class="ratio ratio-16x9">
-                            <iframe width="560" height="315"
-                                src="https://www.youtube.com/embed/{{ $embedUrl ?? ' ' }}" title="YouTube video player"
-                                frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div> --}}
+                        </script>
                     @elseif ($lecture->type === App\Enums\LectureEnum::ARTICLE->value)
                         <!-- Article Content -->
                         <div class="border p-3 rounded" style="max-height: 400px; overflow-y: auto;">
                             {!! $lecture->article->content !!}
                         </div>
-
-                        {{-- <textarea name="lecture-article" class="article-content" cols="30" rows="10">
-                            {!! $lecture->article->content ?? '' !!}
-                        </textarea> --}}
                     @else
                         <!-- Placeholder for non-video lectures -->
                         <div class="alert alert-info" role="alert">
@@ -92,17 +81,16 @@
 
                     <div class="tab-content">
                         <div class="tab-pane show fade" id="course-attachments">
-                            <ul class="list-group mb-3">
-                                <li class="list-group-item">
-                                    <i class="bi bi-file-earmark-pdf"></i>
-                                    <a href="#">Lecture Notes - Introduction.pdf</a>
-                                </li>
-                                <li class="list-group-item">
-                                    <i class="bi bi-file-earmark-word"></i>
-                                    <a href="#">Course Outline.docx</a>
-                                </li>
-                            </ul>
-
+                            @if (!$attachments->isEmpty())
+                                <ul class="list-group mb-3">
+                                    @foreach ($attachments as $attachment)
+                                        <li class="list-group-item">
+                                            <a
+                                                href="{{ route('attachments.download', $attachment) }}">{{ $attachment->attachment_name }}</a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endif
                         </div>
                         <div class="tab-pane show fade" id="user-course-notes">
                             <div class="note-errors alert alert-danger d-none">

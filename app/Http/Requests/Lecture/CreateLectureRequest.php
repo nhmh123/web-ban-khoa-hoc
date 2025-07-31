@@ -27,6 +27,8 @@ class CreateLectureRequest extends FormRequest
             'title' => 'required|string|max:255',
             'type' => 'required|in:video,article',
             'sec_id' => 'required|exists:sections,sec_id',
+            'attachments'=>'nullable|array',
+            'attachments.*'=>'file|max:5120',
         ];
 
         switch ($this->type) {

@@ -48,8 +48,11 @@
                                                 <li class="d-block py-2">
                                                     @if ($lecture->is_intro || (Auth::check() && Auth::user()->enrolledCourses->contains($course->id)))
                                                         @if ($lecture->type === 'video')
-                                                            <a href="{{ $lecture->video->video_url }}" data-fancybox
-                                                                data-width="640" data-height="360">
+                                                            @php
+                                                                $videoService = app(App\Services\VideoService::class);
+                                                            @endphp
+                                                            <a href="{{ $videoService->getSignedUrl($lecture->video->video_url) }}"
+                                                                data-fancybox data-width="640" data-height="360">
                                                                 {{ $lecture->title }}
                                                                 <i class="bi bi-play-circle"></i>
                                                             </a>
@@ -215,7 +218,7 @@
     @push('scripts')
         <script>
             Fancybox.bind("[data-fancybox]", {
-                // Your custom options
+
             });
         </script>
         <script>

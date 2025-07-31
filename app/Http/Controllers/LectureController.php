@@ -2,20 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Video;
 use App\Models\Course;
 use App\Models\Article;
 use App\Models\Lecture;
 use App\Enums\LectureEnum;
+use App\Models\Attachment;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Services\VideoService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Container\Attributes\DB;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Lecture\CreateLectureRequest;
 use App\Http\Requests\Lecture\UpdateLectureRequest;
 
 class LectureController extends Controller
 {
+    protected $videoService;
+
+    public function __construct(VideoService $videoService)
+    {
+        $this->videoService = $videoService;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -49,9 +59,15 @@ class LectureController extends Controller
             ]);
 
             if ($request->type === LectureEnum::VIDEO->value) {
+                if ($request->hasFile('course_video')) {
+                    // $fileName = $request->file('course_video')->getClientOriginalName();
+                    $videoUrl = $this->videoService->uploadVideoToS3Bucket($request->file('course_video'), "lectures/$lecture->lec_id/video");
+                    // Storage::disk("s3")->put("course-videos/" . $fileName, file_get_contents($request->file('course_video')), "public");
+                }
+
                 Video::create([
                     'lec_id' => $lecture->lec_id,
-                    'video_url' => $request->video_url,
+                    'video_url' => $videoUrl ?? null,
                 ]);
             } else if ($request->type === LectureEnum::ARTICLE->value) {
                 Article::create([
@@ -60,6 +76,29 @@ class LectureController extends Controller
                 ]);
             } else {
                 return back()->withErrors(['type' => 'Loại bài giảng không hợp lệ.'])->withInput();
+            }
+
+            if ($request->hasFile('attachments')) {
+                $attachments = $request->file('attachments');
+                // dd($attachments);
+                DB::beginTransaction();
+                try {
+                    foreach ($attachments as $attachment) {
+                        $fileName = $attachment->getClientOriginalName();
+                        $path = "lectures/$lecture->lec_id/documents/";
+                        Storage::disk("s3")->put($path . $fileName, file_get_contents($attachment), 'private');
+
+                        Attachment::create([
+                            'attachment_url' => $path . $fileName,
+                            'lec_id' => $lecture->lec_id,
+                        ]);
+                    }
+
+                    DB::commit();
+                } catch (\Throwable $th) {
+                    DB::rollback();
+                    throw new Exception($th->getMessage());
+                }
             }
 
             $section = $lecture->section;
@@ -83,26 +122,17 @@ class LectureController extends Controller
             abort(403);
         }
 
-        // Kiểm tra xem bài giảng có thuộc về khóa học này không
         if ($lecture->section->course_id !== $course->id) {
             abort(403, 'Bài giảng không thuộc khóa học này.');
         }
 
-        // Kiểm tra quyền truy cập khóa học
         if (!$user->canAccessLecture($lecture)) {
             abort(403, 'Bạn chưa đăng ký khóa học này.');
         }
-        $videoUrlArray = [];
 
-        if ($lecture->type == LectureEnum::VIDEO->value) {
-            $videoUrlArray = explode('/', $lecture->video->video_url);
-            $embedUrl = $videoUrlArray[3];
-        }
-
-        if (isset($videoUrlArray[3]) && !empty($videoUrlArray[3])) {
-            $embedUrl = $videoUrlArray[3];
-        }
-        return view('user.pages.course-video', compact('lecture', 'course'));
+        $url = $this->videoService->getSignedUrl($lecture->video->video_url);
+        $attachments = $lecture->attachments ?? [];
+        return view('user.pages.course-video', compact('lecture', 'course', 'url', 'attachments'));
     }
 
 
