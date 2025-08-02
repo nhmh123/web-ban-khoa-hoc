@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AttachmentController;
 use App\Http\Middleware\IsAdmin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -15,11 +14,13 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\LectureController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DasboardController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\CourseCategoryController;
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -158,6 +159,10 @@ Route::middleware([IsAdmin::class])->prefix('admin')->group(function () {
         Route::post('contact', [SettingController::class, 'contactSettingUpdate'])->name('settings.contact.update');
         Route::get('social', [SettingController::class, 'socialSettingEdit'])->name('settings.social.edit');
         Route::post('social', [SettingController::class, 'socialSettingUpdate'])->name('settings.social.update');
+        Route::get('payments', [PaymentController::class, 'index'])->name('settings.payment.index');
+        Route::post('payments', [PaymentController::class, 'store'])->name('settings.payment.store');
+        Route::patch('payments/{payment}/set-default', [PaymentController::class, 'setDefault'])->name('settings.payment.set-default');
+        Route::delete('payments/{payment}', [PaymentController::class, 'destroy'])->name('settings.payment.destroy');
         Route::resource('sliders', SliderController::class);
     });
 

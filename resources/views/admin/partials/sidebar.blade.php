@@ -110,14 +110,15 @@
         @endcan
 
         @can('setting.view')
-            <li class="nav-link {{ request()->routeIs(patterns: 'settings.*') ? 'active' : '' }}">
+            <li class="nav-link {{ request()->routeIs('settings.*', 'sliders.*') ? 'active' : '' }}">
                 <a href="{{ route('settings.meta.edit') }}">
                     <div class="nav-link-icon d-inline-flex">
                         <i class="bi bi-gear"></i>
                     </div>
                     Cấu hình hệ thống
                 </a>
-                <i class="arrow fas {{ request()->routeIs('settings.*') ? 'fa-angle-down' : 'fa-angle-right' }}"></i>
+                <i
+                    class="arrow fas {{ request()->routeIs('settings.*', 'sliders.*') ? 'fa-angle-down' : 'fa-angle-right' }}"></i>
 
                 <ul class="sub-menu">
                     <li><a href="{{ route('settings.meta.edit') }}">Meta data</a></li>
@@ -129,7 +130,7 @@
                     <li><a href="{{ route('sliders.index') }}">Slider</a></li>
                 </ul>
                 <ul class="sub-menu">
-                    <li><a href="">Thanh toán</a></li>
+                    <li><a href="{{ route('settings.payment.index') }}">Thanh toán</a></li>
                 </ul>
                 <ul class="sub-menu">
                     <li><a href="{{ route('settings.social.edit') }}">Media</a></li>
@@ -144,7 +145,7 @@
             <li class="nav-link {{ request()->routeIs('permissions.*', 'roles.*') ? 'active' : '' }}">
                 <a href="{{ route('permissions.create') }}">
                     <div class="nav-link-icon d-inline-flex">
-                        <i class="far fa-folder"></i>
+                        <i class="bi bi-person-gear"></i>
                     </div>
                     Phân quyền
                 </a>
