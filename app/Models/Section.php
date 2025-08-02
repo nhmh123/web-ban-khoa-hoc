@@ -19,7 +19,18 @@ class Section extends Model
 
     public function getDurationAttribute($value)
     {
-        return \Carbon\CarbonInterval::seconds($value)->cascade()->forHumans();
+        // return \Carbon\CarbonInterval::seconds($value)->cascade()->forHumans(true);
+        $hours = floor($value / 3600);
+        $minutes = floor(($value % 3600) / 60);
+
+        $hoursString = ($hours) > 0 ? "{$hours} giờ" : "";
+        $minutesString = ($minutes > 0) ? "{$minutes} phút" : "";
+
+        return trim($hoursString . " " . $minutesString);
+    }
+    public function getDurationRawAttribute()
+    {
+        return $this->attributes['duration'];
     }
 
     public function course()

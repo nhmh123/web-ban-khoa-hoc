@@ -137,7 +137,7 @@
                                     <!-- Course Info (Right) -->
                                     <div class="col-md-8">
                                         <div class="card-body py-0 my-0 d-flex flex-column h-100">
-                                            <a href="{{ route('user.courses.show',$course->slug) }}"
+                                            <a href="{{ route('user.courses.show', $course->slug) }}"
                                                 class="card-title fs-5 fw-bold">{{ $course->name }}</a>
                                             <p class="card-text small mb-1">
                                                 {{ Str::limit($course->sort_description, 100) }}
@@ -147,9 +147,8 @@
                                             </p>
 
                                             <p>Lần cuối cập nhật: <strong>{{ $course->updated_at }}</strong></p>
-                                            {{-- <p class="fw-bold">{{ $course->duration }}</p> --}}
-
-                                            <div class="mt-auto d-flex justify-content-end">
+                                            <div class="mt-auto d-flex justify-content-between">
+                                                <p class="fs-5 fw-bold">{{ $course->duration }}</p>
                                                 <p class="mb-1 small fs-5 fw-bold">
                                                     {{ number_format($course->original_price) }}đ</p>
                                             </div>

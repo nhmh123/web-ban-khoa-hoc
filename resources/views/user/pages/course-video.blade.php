@@ -7,6 +7,17 @@
                     <i class="bi bi-play-circle"></i> CourseWeb
                 </a>
 
+                <div class="mx-auto text-center text-white d-none d-lg-block">
+                    <div class="small">
+                        <span class="fs-5">Đã học: {{ $totalCompleted }}/{{ $totalLectures }} bài</span> ·
+                        <span class="fs-5">Hoàn thành: {{ $completion }}%</span>
+                    </div>
+                    <div class="progress" style="height: 10px; width: 300px; margin: 0 auto;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ $completion }}%;"
+                            aria-valuenow="{{ $completion }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+
                 <div class="ms-auto">
                     <a href="{{ route('user.courses.show', ['course' => $course->slug]) }}" class="btn btn-danger">
                         <i class="bi bi-box-arrow-right"></i> Thoát
@@ -135,27 +146,40 @@
                             </div>
                         </div>
                         <div class="tab-pane show fade" id="course-ratings">
-                            <form id="review-form" method="POST" action="{{ route('reviews.store') }}"
-                                class="border p-4 rounded shadow-sm">
-                                @csrf
-                                <div class="mb-3 d-flex align-item-center">
-                                    <label class="form-label align-content-center m-0 fw-bold">Đánh giá của bạn:</label>
-                                    <select class="star-rating" name="rating" required>
-                                        <option value="5"></option>
-                                        <option value="4"></option>
-                                        <option value="3"></option>
-                                        <option value="2"></option>
-                                        <option value="1"></option>
-                                    </select>
+                            <div class="position-relative">
+                                <div id="review-overlay"
+                                    class="overlay d-flex justify-content-center align-items-center text-white bg-dark bg-opacity-75"
+                                    style="position: absolute; inset: 0; border-radius: .375rem; z-index: 2; {{ $completion >= 100 ? 'display: none;' : '' }}">
+                                    <span class="fw-bold">Bạn cần hoàn thành 100% tiến độ để đánh giá</span>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="comment" class="form-label fw-bold">Nhận xét của bạn:</label>
-                                    <textarea name="comment" class="form-control" rows="3" placeholder="Hãy chia sẻ cảm nhận..." required></textarea>
-                                </div>
+                                <form id="review-form" method="POST" action="{{ route('reviews.store') }}"
+                                    class="border p-4 rounded shadow-sm bg-white" style="position: relative; z-index: 1;">
+                                    @csrf
+                                    <div class="mb-3 d-flex align-item-center">
+                                        <label class="form-label align-content-center m-0 fw-bold">Đánh giá của
+                                            bạn:</label>
+                                        <select class="star-rating" name="rating" required
+                                            {{ $completion < 100 ? 'disabled' : '' }}>
+                                            <option value="5"></option>
+                                            <option value="4"></option>
+                                            <option value="3"></option>
+                                            <option value="2"></option>
+                                            <option value="1"></option>
+                                        </select>
+                                    </div>
 
-                                <button type="submit" class="btn btn-primary w-100">Gửi đánh giá</button>
-                            </form>
+                                    <div class="mb-3">
+                                        <label for="comment" class="form-label fw-bold">Nhận xét của bạn:</label>
+                                        <textarea name="comment" class="form-control" rows="3" placeholder="Hãy chia sẻ cảm nhận..." required
+                                            {{ $completion < 100 ? 'disabled' : '' }}></textarea>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary w-100"
+                                        {{ $completion < 100 ? 'disabled' : '' }}>Gửi đánh giá</button>
+                                </form>
+                            </div>
+
 
                             <section name="course-reviews" class="mt-4">
 
@@ -186,7 +210,11 @@
                                     data-bs-target="#section{{ $section->sec_id }}"
                                     aria-expanded="{{ $section->lectures->contains($lecture) ? 'true' : 'false' }}"
                                     aria-controls="section{{ $section->sec_id }}">
-                                    {{ $section->name }}
+                                    <div class="d-block w-100">
+                                        {{ $section->name }}
+                                    </div>
+                                    <div class="d-block w-50 text-nowrap text-muted fw-normal text-end pe-1">
+                                        {{ $section->duration }}</div>
                                 </button>
                             </h2>
                             <div id="section{{ $section->sec_id }}"
@@ -194,33 +222,57 @@
                                 {{ $section->lectures->contains($lecture) ? 'show' : '' }}"
                                 data-bs-parent="#courseAccordion">
                                 <div class="accordion-body">
-                                    <ul class="list-group">
+                                    <ul class="list-group list-group-flush">
                                         @foreach ($section->lectures as $lec)
                                             @php
                                                 $userProgress = $lec
                                                     ->user_progress()
                                                     ->where('user_id', Auth::id())
                                                     ->first();
+                                                $isCurrent = $lec->lec_id == $lecture->lec_id;
                                             @endphp
-                                            <li class="list-group-item">
-                                                @if ($lec->type === App\Enums\LectureEnum::VIDEO->value)
-                                                    @if ($userProgress)
-                                                        <div class="d-inline-block">
-                                                            <strong>{{ number_format((float) $userProgress->pivot->progress) }}%</strong>
-                                                        </div>
-                                                    @else
-                                                        <div class="d-inline-block">
-                                                            0%
-                                                        </div>
-                                                    @endif
-                                                @endif
-                                                <a href="{{ route('user.course-video.show', ['course' => $course->slug, 'lecture' => $lec]) }}"
-                                                    class="{{ $lec->lec_id == $lecture->lec_id ? 'text-primary' : 'text-dark text-opacity-75' }}">
-                                                    {{ $lec->title }}
-                                                    @if ($lec->lec_id == $lecture->lec_id)
-                                                        <i class="bi bi-play-circle-fill"></i>
-                                                    @endif
-                                                </a>
+                                            <li class="list-group-item px-2 py-3">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        @php
+                                                            $icons = [
+                                                                App\Enums\LectureEnum::VIDEO->value => $isCurrent
+                                                                    ? 'bi bi-play-circle-fill text-primary fs-5'
+                                                                    : 'bi bi-play-circle text-muted fs-5',
+                                                                App\Enums\LectureEnum::ARTICLE->value =>
+                                                                    'bi bi-file-earmark-text fs-5 text-secondary',
+                                                            ];
+
+                                                            $iconClass =
+                                                                $icons[$lec->type] ??
+                                                                'bi bi-question-circle text-muted fs-5';
+                                                        @endphp
+                                                        {{-- Play icon --}}
+                                                        <i class="{{ $iconClass }}"></i>
+
+                                                        {{-- Lecture title --}}
+                                                        <a href="{{ route('user.course-video.show', ['course' => $course->slug, 'lecture' => $lec]) }}"
+                                                            class="fw-medium {{ $isCurrent ? 'text-primary' : 'text-dark text-opacity-75' }}">
+                                                            {{ $lec->title }}
+                                                        </a>
+                                                    </div>
+
+                                                    <div class="text-end d-flex flex-column align-items-end">
+                                                        {{-- Duration --}}
+                                                        @if ($lecture->duration_raw > 0)
+                                                            <div class="fw-bold">
+                                                                {{ $lec->duration }}
+                                                            </div>
+                                                        @endif
+
+                                                        {{-- Progress --}}
+                                                        {{-- @if ($lec->type === App\Enums\LectureEnum::VIDEO->value) --}}
+                                                        <small class="text-success fw-semibold">
+                                                            {{ $userProgress ? number_format($userProgress->pivot->progress) : 0 }}%
+                                                        </small>
+                                                        {{-- @endif --}}
+                                                    </div>
+                                                </div>
                                             </li>
                                         @endforeach
                                     </ul>
@@ -397,7 +449,7 @@
                         error: function(xhr) {
                             displayErrorAlert(xhr.responseJSON.title, xhr.responseJSON.detail);
                             reviewForm[0].reset();
-                            // console.error(xhr.responseText);
+                            console.error(xhr.responseText);
                         }
                     });
                 })
@@ -511,9 +563,17 @@
                     return date.toLocaleDateString('vi-VN') + ' ' + date.toLocaleTimeString('vi-VN');
                 }
 
+
                 const videoElement = $('#course-video');
+                const isArticle = {{ $lecture->type === \App\Enums\LectureEnum::ARTICLE->value ? 'true' : 'false' }};
+
+                if (isArticle) {
+                    updateUserLectureProgress(100);
+                }
+
+                console.log("is article: " + isArticle);
                 videoElement.on('loadedmetadata', function() {
-                    // const duration = this.duration;
+                    const duration = this.duration;
                     // const completion = 0;
                     // const progress = Number(($('#course-video').get(0)
                     //         .currentTime * 100) /
@@ -565,5 +625,4 @@
             })
         </script>
     @endpush
-
 @endsection

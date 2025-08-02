@@ -81,6 +81,27 @@ class CheckoutController extends Controller
         // $user->cartItem()->whereIn('course_id', $checkoutCourses)->delete();
         // $user->enrolledCourses()->syncWithoutDetaching($checkoutCourses);
 
+        if ((int) $request->input('total_amount') === 0) {
+            $user->enrolledCourses()->syncWithoutDetaching($checkoutCourses);
+            $user->cartItem()->whereIn('course_id', $checkoutCourses)->delete();
+
+            // Có thể cập nhật trạng thái đơn nếu cần
+            Transaction::create([
+                'user_id' => $user->id,
+                'order_id' => $order->order_id,
+                'transaction_id' => $transactionData['transId'] ?? '',
+                'amount' => $transactionData['amount'] ?? 0,
+                'method' => 'momo',
+                'status' => 'success',
+                'message' => $transactionData['message'] ?? null,
+            ]);
+
+            $order->status = OrderEnum::COMPLETED->value;
+            $order->save();
+
+            return redirect()->back()->with('success', 'Đăng ký khóa học thành công!');
+        }
+
         $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
 
         $partnerCode = 'MOMOBKUN20180529';

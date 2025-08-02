@@ -61,7 +61,9 @@ class HomeController extends Controller
                 $coursesQuery->where(function ($query) use ($request) {
                     foreach ($request->duration as $value) {
                         [$min, $max] = explode('-', $value);
-                        $query->orWhereBetween('duration', [(int)$min, (int)$max]);
+                        $minSeconds = (int)$min * 3600;
+                        $maxSeconds = (int)$max * 3600;
+                        $query->orWhereBetween('duration', [$minSeconds, $maxSeconds]);
                     }
                 });
             }
@@ -115,7 +117,9 @@ class HomeController extends Controller
             $courseQuery->where(function ($query) use ($request) {
                 foreach ($request->duration as $value) {
                     [$min, $max] = explode('-', $value);
-                    $query->orWhereBetween('duration', [(int)$min, (int)$max]);
+                    $minSeconds = (int)$min * 3600;
+                    $maxSeconds = (int)$max * 3600;
+                    $query->orWhereBetween('duration', [$minSeconds, $maxSeconds]);
                 }
             });
         }

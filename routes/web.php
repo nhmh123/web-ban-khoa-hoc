@@ -126,7 +126,6 @@ Route::middleware('auth')->group(function () {
     Route::post('lectures/{lecture}/update-progress', [LectureController::class, 'updateProgress'])->name('lectures.progress');
 });
 
-
 /**
  * Admin routes
  */

@@ -13,9 +13,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\Course\CreateCourseRequest;
 use App\Http\Requests\Course\UpdateCourseRequest;
+use App\Services\CourseService;
 
 class CourseController extends Controller
 {
+    protected $courseService;
+    public function __construct(CourseService $courseService)
+    {
+        $this->courseService = $courseService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -112,8 +119,18 @@ class CourseController extends Controller
     public function enroll(Course $course)
     {
         $user = Auth::user();
+        // dd($course, $user);
         try {
+            if ($course->original_price === 0) {
+                Enrollment::create([
+                    'user_id' => $user->id,
+                    'course_id' => $course->id
+                ]);
+                return redirect()->back()->with('success', 'Đăng ký khóa học thành công!');
+            }
+
             $user->enrolledCourses()->syncWithoutDetaching([$course->id]);
+
 
             if ($user->cartItem()->where('course_id', $course->id)->exists()) {
                 $user->cartItem()->where('course_id', $course->id)->delete();
@@ -143,6 +160,13 @@ class CourseController extends Controller
         }
 
         $courses = $coursesQuery->paginate(8);
+
+        $courses->getCollection()->transform(function ($course) use ($user) {
+            $course->completion = $this->courseService->getCourseCompletion($user, $course);
+            return $course;
+        });
+
+        // dd($courses);
 
         $categories = Enrollment::where('user_id', $user->id)->with('course.category')->get()->pluck('course.category')->unique('cc_id');
         return view('user.pages.my-courses', compact('courses', 'categories'));

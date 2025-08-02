@@ -48,7 +48,7 @@ class LectureController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CreateLectureRequest $request)
+    public function store(Request $request)
     {
         try {
             $lecture = Lecture::create([
@@ -62,9 +62,27 @@ class LectureController extends Controller
 
             if ($request->type === LectureEnum::VIDEO->value) {
                 if ($request->hasFile('course_video')) {
+                    $tempPath = $request->file('course_video')->getRealPath();
+
+                    $getID3 = new \getID3();
+                    $fileInfo = $getID3->analyze($tempPath);
+                    $duration =  round($fileInfo['playtime_seconds']);
                     // $fileName = $request->file('course_video')->getClientOriginalName();
                     $videoUrl = $this->videoService->uploadVideoToS3Bucket($request->file('course_video'), "lectures/$lecture->lec_id/video");
                     // Storage::disk("s3")->put("course-videos/" . $fileName, file_get_contents($request->file('course_video')), "public");
+
+                    // Update duration
+                    $section = $lecture->section;
+                    $course = $section->course;
+
+                    $lecture->duration = $duration;
+                    $lecture->save();
+
+                    $section->duration = (int) $section->duration_raw + $duration;
+                    $section->save();
+
+                    $course->duration = (int) $course->duration_raw + $duration;
+                    $course->save();
                 }
 
                 Video::create([
@@ -82,7 +100,6 @@ class LectureController extends Controller
 
             if ($request->hasFile('attachments')) {
                 $attachments = $request->file('attachments');
-                // dd($attachments);
                 DB::beginTransaction();
                 try {
                     foreach ($attachments as $attachment) {
@@ -103,8 +120,6 @@ class LectureController extends Controller
                 }
             }
 
-            $section = $lecture->section;
-            $course = $section->course;
             // $section->update(['duration' => $section->duration + $request->duration]);
             // $course->update(['duration' => $course->duration + $request->duration]);
             return redirect()->route('courses.edit', $course->id)->with('success', 'Thêm bài giảng thành công');
@@ -133,9 +148,23 @@ class LectureController extends Controller
         }
 
         $url = ($lecture->type == LectureEnum::VIDEO->value) ? $this->videoService->getSignedUrl($lecture->video->video_url) : null;
-        
+
+        $totalLectures = 0;
+        $totalSection = $course->sections;
+        foreach ($totalSection as $section) {
+            $totalLectures += $section->lectures->count();
+        };
+        $user = Auth::user();
+
+        $courseLectures = $course->sections->flatMap(function ($section) {
+            return $section->lectures->pluck('lec_id');
+        });
+        $completedLectures = $user->lecture_progress()->where('progress', 100)->whereIn('lectures.lec_id', $courseLectures)->get();
+        $totalCompleted = $completedLectures->count();
+        $completion = $totalLectures > 0 ? round($completedLectures->count() / $totalLectures * 100) : 0;
+
         $attachments = $lecture->attachments ?? [];
-        return view('user.pages.course-video', compact('lecture', 'course', 'url', 'attachments'));
+        return view('user.pages.course-video', compact('lecture', 'course', 'url', 'attachments', 'totalLectures', 'totalCompleted', 'completion'));
     }
 
 
