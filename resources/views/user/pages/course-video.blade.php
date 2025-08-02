@@ -196,7 +196,24 @@
                                 <div class="accordion-body">
                                     <ul class="list-group">
                                         @foreach ($section->lectures as $lec)
+                                            @php
+                                                $userProgress = $lec
+                                                    ->user_progress()
+                                                    ->where('user_id', Auth::id())
+                                                    ->first();
+                                            @endphp
                                             <li class="list-group-item">
+                                                @if ($lec->type === App\Enums\LectureEnum::VIDEO->value)
+                                                    @if ($userProgress)
+                                                        <div class="d-inline-block">
+                                                            <strong>{{ number_format((float) $userProgress->pivot->progress) }}%</strong>
+                                                        </div>
+                                                    @else
+                                                        <div class="d-inline-block">
+                                                            0%
+                                                        </div>
+                                                    @endif
+                                                @endif
                                                 <a href="{{ route('user.course-video.show', ['course' => $course->slug, 'lecture' => $lec]) }}"
                                                     class="{{ $lec->lec_id == $lecture->lec_id ? 'text-primary' : 'text-dark text-opacity-75' }}">
                                                     {{ $lec->title }}
@@ -489,12 +506,62 @@
                     reviewSection.html(html);
                 }
 
-
                 function formatDate(dateStr) {
                     const date = new Date(dateStr);
                     return date.toLocaleDateString('vi-VN') + ' ' + date.toLocaleTimeString('vi-VN');
                 }
 
+                const videoElement = $('#course-video');
+                videoElement.on('loadedmetadata', function() {
+                    // const duration = this.duration;
+                    // const completion = 0;
+                    // const progress = Number(($('#course-video').get(0)
+                    //         .currentTime * 100) /
+                    //     duration).toFixed(2)
+
+                    // videoElement.on('timeupdate', function() {
+                    //     console.log("Current time: " + this.currentTime);
+                    //     console.log("current progress: " + Number((this.currentTime * 100) / duration)
+                    //         .toFixed(2) + "%")
+                    // })
+
+                    videoElement.on('ended', function() {
+                        const video = $('#course-video').get(0);
+                        const current = video.currentTime;
+                        const progress = Number((current * 100) / duration).toFixed(2);
+                        updateUserLectureProgress(progress);
+                    })
+
+                    $(window).on('beforeunload', function() {
+                        const video = $('#course-video').get(0);
+                        const current = $('#course-video').get(0).currentTime;
+                        const progress = Number((current * 100) / duration).toFixed(2);
+
+                        updateUserLectureProgress(progress);
+                    });
+                });
+
+                function updateUserLectureProgress(progress) {
+                    let csrf = $('meta[name="csrf-token"]').attr('content');
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('lectures.progress', $lecture) }}",
+                        headers: {
+                            // 'X-CSRF-TOKEN': csrf
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            "progress": progress,
+                            "lec_id": {{ $lecture->lec_id }}
+                        },
+                        success: function(response) {
+                            console.log(response)
+                        },
+                        error: function(xrh) {
+                            console.log(xhr);
+                        }
+                    });
+                }
             })
         </script>
     @endpush

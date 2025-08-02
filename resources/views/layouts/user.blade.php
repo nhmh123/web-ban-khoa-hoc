@@ -82,6 +82,8 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     {{-- star-rating.js --}}
     <script src="{{ asset('vendor/pryley-star-rating/star-rating.min.js') }}"></script>
+    {{-- progressbar --}}
+    <script src="{{ asset('/vendor/progressbar/progressbar.min.js') }}"></script>
     {{-- Custom --}}
     <script src="{{ asset('js/user/main.js') }}"></script>
 

@@ -108,4 +108,9 @@ class User extends Authenticatable
         }
         return false;
     }
+
+    public function lecture_progress()
+    {
+        return $this->belongsToMany(Lecture::class, 'user_lecture_progress', 'user_id', 'lec_id')->withPivot('progress');
+    }
 }

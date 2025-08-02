@@ -23,7 +23,6 @@ class Lecture extends Model
     {
         return \Carbon\CarbonInterval::seconds($value)->cascade()->forHumans();
     }
-
     public function section()
     {
         return $this->belongsTo(Section::class, 'sec_id', 'sec_id');
@@ -44,5 +43,9 @@ class Lecture extends Model
     public function attachments()
     {
         return $this->hasMany(Attachment::class, 'lec_id');
+    }
+    public function user_progress()
+    {
+        return $this->belongsToMany(User::class, 'user_lecture_progress', 'lec_id', 'user_id')->withPivot('progress');
     }
 }

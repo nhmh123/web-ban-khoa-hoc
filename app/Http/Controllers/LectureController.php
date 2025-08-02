@@ -8,11 +8,13 @@ use App\Models\Course;
 use App\Models\Article;
 use App\Models\Lecture;
 use App\Enums\LectureEnum;
+use App\Helpers\ApiHelper;
 use App\Models\Attachment;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Services\VideoService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Lecture\CreateLectureRequest;
@@ -130,7 +132,8 @@ class LectureController extends Controller
             abort(403, 'Bạn chưa đăng ký khóa học này.');
         }
 
-        $url = $this->videoService->getSignedUrl($lecture->video->video_url);
+        $url = ($lecture->type == LectureEnum::VIDEO->value) ? $this->videoService->getSignedUrl($lecture->video->video_url) : null;
+        
         $attachments = $lecture->attachments ?? [];
         return view('user.pages.course-video', compact('lecture', 'course', 'url', 'attachments'));
     }
@@ -212,6 +215,26 @@ class LectureController extends Controller
             return redirect()->route('courses.edit', $course->id)->with('success', 'Xóa bài giảng thành công');
         } catch (\Throwable $th) {
             return redirect()->back()->withErrors(['error' => 'Có lỗi xảy ra' . $th->getMessage()])->withInput();
+        }
+    }
+
+    public function updateProgress(Request $request, Lecture $lecture)
+    {
+        try {
+            $user = Auth::user();
+            $existingProgress = $user->lecture_progress->firstWhere('lec_id', $lecture->lec_id);
+            $progress = $existingProgress ? $existingProgress->pivot->progress : 0;
+
+            if ($request->input('progress') > $progress) {
+                $progress = $request->input('progress');
+            }
+            // $progress = $request->input('progress');
+
+            $user->lecture_progress()->syncWithoutDetaching([$lecture->lec_id => ['progress' => $progress]]);
+
+            return ApiHelper::success(200, null, 'Đã cập nhật tiến độ xem');
+        } catch (\Throwable $th) {
+            return ApiHelper::error('Lỗi hệ thống', 422, $th->getMessage());
         }
     }
 }

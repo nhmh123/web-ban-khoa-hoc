@@ -121,6 +121,9 @@ Route::middleware('auth')->group(function () {
 
     //attachments
     Route::get('attachments/{attachment}/download', [AttachmentController::class, 'download'])->name('attachments.download');
+
+    //lecture
+    Route::post('lectures/{lecture}/update-progress', [LectureController::class, 'updateProgress'])->name('lectures.progress');
 });
 
 
