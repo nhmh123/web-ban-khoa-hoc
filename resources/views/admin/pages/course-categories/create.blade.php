@@ -32,13 +32,6 @@
                             value="{{ old('cc_name') }}">
                     </div>
                     <div class="form-group">
-                        <label>Ảnh biểu tượng (icon)</label>
-                        <input type="file" name="icon_path" class="form-control">
-                        <div class="mt-2">
-                            <img src="" alt="" class="img-fluid" width="100" id="icon-preview">
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <label for="parent_id">Danh mục cha</label>
                         <select class="form-control" name="parent_id" id="parent_id">
                             <option value="">-- Không chọn --</option>

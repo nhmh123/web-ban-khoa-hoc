@@ -45,9 +45,9 @@
                                     <input type="checkbox" name="ids[]" value="{{ $user->id }}">
                                 </td>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $user->name }}</td>
+                                <td class="fw-bold">{{ $user->name }}</td>
                                 <td>
-                                    <img src="{{ $user->avatar }}" alt="" class="img-fluid" width="50">
+                                    <img src="{{ Storage::url($user->avatar) }}" alt="" class="img-fluid" width="50">
                                 </td>
                                 <td>{{ $user->email }}</td>
                                 <td>

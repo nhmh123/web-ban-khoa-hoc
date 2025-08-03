@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('admin.content')
-    <div class="container-fluid py-4">
+    <div class="container-fluid py-4 position-relative">
 
         @session('success')
             <div class="alert alert-success">
@@ -59,6 +59,13 @@
 
                     <!-- Form Video -->
                     <div id="video_form">
+                        <small class="text-muted">
+                            Cho phép: .mp4, .mov, .avi,.wmv, .mkv, .flv
+                        </small>
+                        <br>
+                        <small class="text-muted">
+                            Dung lượng tối đa: 500MB
+                        </small>
                         <div class="mb-3">
                             <label for="course-video" class="form-label fw-bold">Video bài giảng </label>
                             <label class="delete-preview-button btn btn-danger  mb-2 ">Xóa video</label>
@@ -96,6 +103,23 @@
                 </form>
             </div>
         </div>
+        <!-- Overlay loading chỉ trong container -->
+        <div id="form-overlay"
+            style="
+    display: none;
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 999;
+    justify-content: center;
+    align-items: center;
+">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
     </div>
 
     @push('scripts')
@@ -143,9 +167,14 @@
                 const videoPreview = $('#video-preview');
                 const deletePreviewButton = $('.delete-preview-button');
                 videoInput.on('change', function(e) {
-                    // debugger
                     const file = e.target.files[0];
+
                     if (file) {
+                        if (file.size > 500 * 1024 * 1024) {
+                            alert("File quá lớn. Vui lòng chọn file dưới 500MB.");
+                            videoInput.val() = "";
+                        }
+
                         const videoUrl = URL.createObjectURL(file);
                         console.log(videoUrl);
 
@@ -164,6 +193,13 @@
                     videoPreview.attr('src', '');
                     videoPreview.closest('.ratio').hide();
                 })
+
+                $('#create-course-form').on('submit', function() {
+                    $('#form-overlay').fadeIn();
+                    $('#form-overlay').css('display', 'flex');
+                    // $('#create-course-form').find('input, textarea, button, select').prop('disabled', true);
+                });
+
                 // console.log(videoInput, videoPreview)
             })
         </script>

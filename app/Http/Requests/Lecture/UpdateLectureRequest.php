@@ -25,12 +25,19 @@ class UpdateLectureRequest extends FormRequest
         $rule = [
             'title' => 'sometimes|required|string|max:255',
             'type' => 'sometimes|required|in:video,article',
+            'attachments' => 'sometimes|nullable|array',
+            'attachments.*' => 'sometimes|file|max:5120',
         ];
 
         switch ($this->type) {
             case LectureEnum::ARTICLE->value:
                 $rule = array_merge($rule, [
-                    'article_content' => 'required|string',
+                    'article_content' => 'sometimes|required|string',
+                ]);
+                break;
+            case LectureEnum::VIDEO->value:
+                $rule = array_merge($rule, [
+                    'course_video' => 'sometimes|nullable|file|mimes:mp4,mov,avi,wmv,mkv,flv|max:512000',
                 ]);
                 break;
             default:
@@ -43,7 +50,10 @@ class UpdateLectureRequest extends FormRequest
     public function messages()
     {
         return [
-            'article_content.required' => 'Nội dung bài giảng không được bỏ trống!'
+            'article_content.required' => 'Nội dung bài giảng không được bỏ trống!',
+            'course_video.required' => 'Video vài giảng không được để trống',
+            'course_video.mimes' => 'Sai định dạng video',
+            'course_video.max' => 'Kích thước video quá lớn'
         ];
     }
 }

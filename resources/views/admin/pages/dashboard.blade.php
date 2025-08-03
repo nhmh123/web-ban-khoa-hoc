@@ -57,9 +57,13 @@
                             </select>
                         </div>
 
+                        @php
+                            $selectedMonth = request('month') ?? now()->format('Y-m');
+                        @endphp
+
                         <div class="form-group mb-2" id="monthInput">
                             <label>Chọn tháng:</label>
-                            <input type="month" name="month" value="{{ request('month') }}" class="form-control">
+                            <input type="month" name="month" value="{{ $selectedMonth }}" class="form-control">
                         </div>
 
                         <div class="form-group mb-2" id="quarterInput" style="display: none;">
@@ -94,12 +98,16 @@
     @push('scripts')
         <script>
             function toggleInputFields() {
-                const timeType = document.getElementById('time_type').value;
-                document.getElementById('monthInput').style.display = (timeType === 'month') ? 'block' : 'none';
-                document.getElementById('quarterInput').style.display = (timeType === 'quarter') ? 'block' : 'none';
-                document.getElementById('yearInput').style.display = (timeType === 'year') ? 'block' : 'none';
+                const timeType = $('#time_type').val();
+                $('#monthInput').toggle(timeType === 'month');
+                $('#quarterInput').toggle(timeType === 'quarter');
+                $('#yearInput').toggle(timeType === 'year');
             }
-            window.addEventListener('DOMContentLoaded', toggleInputFields);
+
+            $(document).ready(function() {
+                toggleInputFields();
+                $('#time_type').on('change', toggleInputFields);
+            });
         </script>
     @endpush
 @endsection

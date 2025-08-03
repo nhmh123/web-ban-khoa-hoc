@@ -9,15 +9,17 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\CourseCategory;
 use App\Models\DifficultyLevel;
+use App\Services\CourseService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Course\CreateCourseRequest;
 use App\Http\Requests\Course\UpdateCourseRequest;
-use App\Services\CourseService;
 
 class CourseController extends Controller
 {
     protected $courseService;
+    private $defaultThumbnail = "courses/course-default.png";
     public function __construct(CourseService $courseService)
     {
         $this->courseService = $courseService;
@@ -51,9 +53,16 @@ class CourseController extends Controller
         try {
             $data = $request->validated();
             $data['slug'] = Str::slug($data['name']);
-            // Handle thumbnail upload if exists
             $data['user_id'] = Auth::id();
+            $data['thumbnail'] = $this->defaultThumbnail;
             $course = Course::create($data);
+            if ($request->hasFile('thumbnail')) {
+                $fileName = $course->id . "-" . $request->file('thumbnail')->getClientOriginalName();
+                $path = $request->file('thumbnail')->storeAs('courses', $fileName, 'public');
+                $course->thumbnail = $path;
+                $course->save();
+            }
+
             return redirect()->route('courses.index')->with('success', 'Thêm khóa học thành công!');
         } catch (\Throwable $th) {
             return back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $th->getMessage()])->withInput();
@@ -91,8 +100,18 @@ class CourseController extends Controller
         try {
             $data = $request->validated();
             $data['slug'] = Str::slug($data['name']);
-            // Handle thumbnail upload if exists
             $course->update($data);
+            if ($request->hasFile('thumbnail')) {
+                if (($course->thumbnail && $course->thumbnail !== $this->defaultThumbnail) && Storage::disk('public')->exists($course->thumbnail)) {
+                    Storage::disk('public')->delete($course->thumbnail);
+                }
+
+                $fileName = $course->id . "-" . $request->file('thumbnail')->getClientOriginalName();
+                $path = $request->file('thumbnail')->storeAs('courses', $fileName, 'public');
+                $course->thumbnail = $path;
+                $course->save();
+            }
+
             return redirect()->route('courses.index')->with('success', 'Cập nhật khóa học thành công!');
         } catch (\Throwable $th) {
             return back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $th->getMessage()])->withInput();

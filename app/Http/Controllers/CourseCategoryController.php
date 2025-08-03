@@ -18,7 +18,10 @@ class CourseCategoryController extends Controller
      */
     public function index()
     {
-        $categories = CourseCategory::orderByDesc('created_at')->get();
+        // $categories = CourseCategory::orderByDesc('created_at')->get();
+        $categories = CourseCategory::with('children')->whereNull('parent_id')->get();
+        // dd($categories);
+
         return view('admin.pages.course-categories.index', compact('categories'));
     }
 
@@ -82,6 +85,10 @@ class CourseCategoryController extends Controller
             $data['cc_slug'] = Str::slug($data['cc_name']);
             // Handle icon upload if exists
             $data['status'] = $request->has('status');
+
+            if ($ccategory->children->contains($data['parent_id'])) {
+                return back()->withErrors(['error' => 'Có lỗi xảy ra: Danh mục cha không thể là con của danh mục con!'])->withInput();
+            };
             $ccategory->update($data);
             return redirect()->route('ccategories.index')->with('success', 'Cập nhật danh mục thành công!');
         } catch (\Throwable $th) {

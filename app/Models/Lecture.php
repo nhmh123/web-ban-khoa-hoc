@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\LectureEnum;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Lecture extends Model
 {
@@ -18,6 +20,51 @@ class Lecture extends Model
         'order',
         'sec_id',
     ];
+
+    protected static function booted()
+    {
+        static::deleting(function ($lecture) {
+            // dd($lecture->duration_raw, $lecture->section['duration'], $lecture->section->course->duration_raw);
+            if ($lecture->type == LectureEnum::VIDEO->value) {
+                $video = $lecture->video;
+                if ($video->video_url) {
+                    Storage::disk('s3')->delete($video->video_url);
+                }
+
+                $duration = (int) $lecture->duration_raw;
+                if ($lecture->section) {
+                    $lecture->section->update([
+                        'duration' => $lecture->section->duration_raw - $duration
+                    ]);
+
+                    if ($lecture->section->course) {
+                        $lecture->section->course->update([
+                            'duration' => $lecture->section->course->duration_raw - $duration
+                        ]);
+                    }
+                }
+            };
+
+            if ($lecture->attachments) {
+                $lecture->attachments->each->delete();
+            }
+        });
+
+        // static::updated(function ($lecture) {
+        //     $duration = (int) $lecture->duration_raw;
+        //     if ($lecture->section) {
+        //         $lecture->section->update([
+        //             'duration' => $lecture->section->duration_raw - $duration
+        //         ]);
+
+        //         if ($lecture->section->course) {
+        //             $lecture->section->course->update([
+        //                 'duration' => $lecture->section->course->duration_raw - $duration
+        //             ]);
+        //         }
+        //     }
+        // });
+    }
 
     public function getDurationAttribute($value)
     {

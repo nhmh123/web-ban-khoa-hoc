@@ -86,13 +86,29 @@
                         <div class="mb-3">
                             <label class="form-label fw-bold">Phương thức thanh toán</label>
                             <div class="list-group">
-                                {{-- <label class="list-group-item d-flex align-items-center">
+                                <label class="list-group-item d-flex align-items-center">
                                     <input class="form-check-input me-2" type="radio" name="payment_method"
-                                        value="vnpay">
-                                    <img src="https://vinadesign.vn/uploads/images/2023/05/vnpay-logo-vinadesign-25-12-57-55.jpg"
-                                        alt="VNPAY" width="50" class="me-2">
-                                    VNPAY
-                                </label> --}}
+                                        value="bank_transfer_qr">
+                                    <img src="https://play-lh.googleusercontent.com/22cJzF0otG-EmmQgILMRTWFPnx0wTCSDY9aFaAmOhHs30oNHxi63KcGwUwmbR76Msko"
+                                        alt="VietQR" width="50" class="me-2">
+                                    Chuyển khoản ngân hàng (VietQR)
+                                </label>
+                                <div id="vietqr-wrapper"
+                                    class="d-none d-flex flex-column justify-content-center align-items-center"
+                                    style="max-width: 500px; height: 500px;">
+                                    <img id="qr-image" src="" class="img-fluid d-none">
+                                    <div id="qr-loading" class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+
+                                <label class="list-group-item d-flex align-items-center">
+                                    <input class="form-check-input me-2" type="radio" name="payment_method"
+                                        value="momo_qr">
+                                    <img src="https://developers.momo.vn/v3/vi/assets/images/static-qr-banner-4ccada6ade3eb8ce5236eab5cabc5894.png"
+                                        alt="MOMO QR" width="50" class="me-2">
+                                    MOMO QR
+                                </label>
                                 <label class="list-group-item d-flex align-items-center">
                                     <input class="form-check-input me-2" type="radio" name="payment_method" value="momo"
                                         checked>
@@ -119,8 +135,41 @@
                                 <form action="{{ route('user.checkout.momo') }}" method="POST" name="checkout-form">
                                     @csrf
                                     <input type="hidden" name="total_amount" value="{{ $cartTotal }}">
+                                    <input type="hidden" name="selected_payment_method">
                                     <button type="submit" class="btn btn-primary w-100">Tiến hành thanh
                                         toán</button>
+                                </form>
+
+                                <div class="modal fade" id="vietqr-modal" tabindex="-1"
+                                    aria-labelledby="vietqr-modal-label" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content p-3">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="vietqr-modal-label">Thông tin chuyển khoản
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Đóng"></button>
+                                            </div>
+                                            <div class="modal-body text-center">
+                                                <img id="vietqrImage"
+                                                    src="https://img.vietqr.io/image/VCB-0123456789-compact2.png?amount=500000&addInfo=NAPKHOAHOC123"
+                                                    alt="QR Code" class="img-fluid mb-3" style="max-width: 300px;">
+
+                                                <p><strong>Ngân hàng:</strong> Vietcombank</p>
+                                                <p><strong>Số tài khoản:</strong> 0123456789</p>
+                                                <p><strong>Chủ tài khoản:</strong> NGUYEN VAN A</p>
+                                                <p><strong>Nội dung chuyển khoản:</strong> <code>NAPKHOAHOC123</code></p>
+
+                                                <button class="btn btn-success mt-3" data-bs-dismiss="modal">Tôi đã thanh
+                                                    toán</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <form action="{{ route('user.checkout.qr.generate') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary">Test generate</button>
                                 </form>
                             </div>
                         </div>
@@ -174,6 +223,7 @@
                     $('.amount').text(Number(totalCartRaw).toLocaleString('vi-VN'));
                     $('form[name="checkout-form"]').find('input[type="hidden"][name="total_amount"]').val(
                         totalCartRaw);
+                    generateCheckoutQr(totalCartRaw);
                 });
 
                 let checkoutForm = $('form[name="checkout-form"]');
@@ -312,6 +362,58 @@
                     $('input[name="ids[]"]').trigger('change');
                 }
                 console.log(buyNowCourseId);
+
+                const paymentMethod = $('input[name="payment_method"]');
+                $('input[name="selected_payment_method"]').val($('input[name="payment_method"]:checked').val());
+                paymentMethod.on('change', function() {
+                    $('input[name="selected_payment_method"]').val($(this).val());
+                    if ($('input[name="selected_payment_method"]').val() == "bank_transfer_qr") {
+                        checkoutForm.attr('action', "");
+                        $('#vietqr-wrapper').removeClass('d-none');
+                        // checkoutForm.on('submit', function(e) {
+                        //     alert("OK")
+                        //     e.preventDefault();
+                        //     const vietqrModal = $('#vietqr-modal');
+                        //     vietqrModal.show();
+                        // })
+                        generateCheckoutQr(totalCartRaw);
+
+                    } else {
+                        $('#vietqr-wrapper').addClass('d-none');
+                    }
+                })
+
+                function generateCheckoutQr(totalCartRaw) {
+                    console.log("Send amount: " + totalCartRaw);
+                    let csrf = $('meta[name="csrf-token"]').attr('content');
+
+                    $('#vietqr-wrapper').removeClass('d-none');
+                    $('#qr-image').addClass('d-none');
+                    $('#qr-loading').removeClass('d-none');
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('user.checkout.qr.generate') }}",
+                        headers: {
+                            'X-CSRF-TOKEN': csrf
+                        },
+                        data: {
+                            amount: totalCartRaw
+                        },
+                        success: function(response) {
+                            let qrUrl = response.data.qrDataURL;
+                            const qrImg = $('#qr-image');
+                            qrImg.attr('src', qrUrl);
+                            qrImg.on('load', function() {
+                                $('#qr-loading').addClass('d-none');
+                                qrImg.removeClass('d-none');
+                            });
+                        },
+                        error: function(xrh) {
+                            console.log(xhr)
+                        }
+                    });
+                }
             })
         </script>
     @endpush

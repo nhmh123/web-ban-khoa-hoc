@@ -20,7 +20,7 @@
                 </ul>
             </div>
         @endif
-        
+
         <div class="card">
             <div class="card-header font-weight-bold">
                 Cập nhật khóa học
@@ -65,16 +65,16 @@
                                         <label for="thumbnail" class="form-label fw-bold">Ảnh đại diện</label>
                                         <input type="file" class="form-control" name="thumbnail" id="thumbnail">
                                         <div class="mt-2">
-                                            <img src="{{ $course->thumbnail ? asset($course->thumbnail) : '' }}"
-                                                alt="" class="img-fluid" width="300" id="thumbnail-preview">
+                                            <img src="{{ Storage::url($course->thumbnail) }}" alt=""
+                                                class="img-fluid" width="300" id="thumbnail-preview">
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label for="original_price" class="form-label fw-bold">Giá gốc</label>
                                         <div class="d-flex">
-                                            <input type="number" step="0.01" name="original_price" id="original_price"
+                                            <input type="number" name="original_price" id="original_price"
                                                 class="form-control"
-                                                value="{{ old('original_price', $course->original_price) }}">
+                                                value="{{ old('original_price', $course->original_price + 0) }}">
                                             <span>VNĐ</span>
                                         </div>
                                     </div>
@@ -144,7 +144,7 @@
                                         <select name="level_id" id="level_id" class="form-control">
                                             @foreach ($levels as $level)
                                                 <option value="{{ $level->level_id }}"
-                                                    {{ old('level_id') == $level->level_id ? 'selected' : '' }}>
+                                                    {{ old('level_id', $course->level_id) == $level->level_id ? 'selected' : '' }}>
                                                     {{ $level->name }}
                                                 </option>
                                             @endforeach
@@ -228,18 +228,19 @@
                                                         {{ $section->lectures ? $section->lectures->count() : 0 }}
                                                         bài giảng
                                                     </span>
-                                                    {{-- <span class="text-end me-3">Thời lượng
-                                                        {{ $section->duration }}</span> --}}
+                                                    <div
+                                                        class="d-block w-50 text-nowrap text-muted fw-normal text-end pe-1">
+                                                        Thời lượng: {{ $section->duration }}</div>
                                                 </button>
 
                                                 <!-- Action Icons -->
                                                 <div class="d-flex align-content-center justify-content-center">
                                                     <!-- Edit icon -->
                                                     <!-- Edit icon trigger -->
-                                                    <button type="button" class="btn btn-dark text-dark not-last:p-0 m-0"
+                                                    <button type="button" class="btn not-last:p-0 m-0"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#editSectionModal{{ $section->sec_id }}">
-                                                        <i class="bi bi-pencil"></i>
+                                                        <i class="bi bi-pencil text-dark"></i>
                                                     </button>
                                                     <!-- Edit Section Modal -->
                                                     <div class="modal fade" id="editSectionModal{{ $section->sec_id }}"
@@ -292,9 +293,8 @@
                                                         method="POST" class="d-inline" name="delete-form">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit"
-                                                            class="btn btn-dark text-dark not-last:p-0 m-0">
-                                                            <i class="bi bi-trash"></i>
+                                                        <button type="submit" class="btn not-last:p-0 m-0">
+                                                            <i class="bi bi-trash text-dark"></i>
                                                         </button>
                                                     </form>
                                                 </div>
@@ -307,26 +307,24 @@
                                                     @foreach ($section->lectures as $lecture)
                                                         <li
                                                             class="d-flex justify-content-between py-2 border-bottom border-dark">
-                                                            @if ($lecture->is_intro)
-                                                                {{-- <a
-                                                                    href="{{ route('user.course-video', ['course' => $course->slug, 'lecture' => $lecture->id]) }}">
-                                                                    <span>{{ $lecture->title }}</span>
-                                                                    <i class="bi bi-play-circle-fill ms-2"></i>
-                                                                </a> --}}
-                                                                <span>{{ $lecture->title }} </span>
-                                                            @else
-                                                                {{-- <a href="#"
-                                                                    class="text-decoration-none text-secondary opacity-75 pe-none">
-                                                                    <span>{{ $lecture->title }}</span>
-                                                                    <i class="bi bi-lock-fill"></i>
-                                                                </a> --}}
-                                                                <span>{{ $lecture->title }}</span>
+
+                                                            <span>{{ $lecture->title }}
+                                                                @if ($lecture->is_intro)
+                                                                    <span class="badge badge-success">Free</span>
+                                                                @endif
+                                                            </span>
+
+                                                            @if ($lecture->duration_raw > 0)
+                                                                <div
+                                                                    class="d-block w-50 text-nowrap text-muted fw-normal text-end pe-1">
+                                                                    Thời lượng: {{ $lecture->duration }}</div>
                                                             @endif
 
                                                             <div class="">
                                                                 <!-- Edit lecture -->
                                                                 <a href="{{ route('lectures.edit', ['lecture' => $lecture->lec_id]) }}"
-                                                                    type="button" class="btn btn-dark text-dark not-last:p-0 m-0">
+                                                                    type="button"
+                                                                    class="btn btn-dark text-dark not-last:p-0 m-0">
                                                                     <i class="bi bi-pencil"></i>
                                                                 </a>
                                                                 <!-- Delete lecture -->

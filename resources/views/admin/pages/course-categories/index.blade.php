@@ -29,9 +29,8 @@
                             <th>
                                 <input type="checkbox" id="checkAll">
                             </th>
-                            <th>#</th>
+                            {{-- <th>#</th> --}}
                             <th>Tên danh mục</th>
-                            <th>Icon</th>
                             <th>Danh mục cha</th>
                             <th>Số lượng khóa học</th>
                             <th>Ngày tạo</th>
@@ -42,7 +41,13 @@
                     </thead>
                     <tbody>
                         @foreach ($categories as $cat)
-                            <tr>
+                            @if (!$cat->parent)
+                                @include('admin.pages.course-categories.category-item', [
+                                    'cat' => $cat,
+                                    'level' => 0,
+                                ])
+                            @endif
+                            {{-- <tr>
                                 <td>
                                     <input type="checkbox" name="ids[]" value="{{ $cat->cc_id }}">
                                 </td>
@@ -74,7 +79,7 @@
                                         </button>
                                     </form>
                                 </td>
-                            </tr>
+                            </tr> --}}
                         @endforeach
                     </tbody>
                 </table>
@@ -90,9 +95,9 @@
                     orderable: false,
                     targets: 0,
                 }],
-                order: [
-                    [1, 'asc']
-                ],
+                // order: [
+                //     [1, 'asc']
+                // ],
                 language: {
                     lengthMenu: "Hiển thị _MENU_ dòng mỗi trang",
                     zeroRecords: "Không tìm thấy kết quả nào",

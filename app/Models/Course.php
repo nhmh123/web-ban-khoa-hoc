@@ -33,6 +33,13 @@ class Course extends Model
         'rating' => 'decimal:2',
     ];
 
+    protected static function booted()
+    {
+        static::deleting(function ($course) {
+            $course->sections->each->delete(); // sẽ gọi tiếp event deleting ở Section
+        });
+    }
+
     public function getOriginalPriceFormattedAttribute()
     {
         return number_format($this->attributes['original_price']);

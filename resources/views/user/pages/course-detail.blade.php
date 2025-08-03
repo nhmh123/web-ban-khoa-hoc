@@ -62,7 +62,7 @@
                                                                 <i class="bi bi-file-earmark-text"></i>
                                                             </a>
 
-                                                            <div id="dialog-content" style="display:none;max-width:500px;">
+                                                            <div id="dialog-content" style="display:none;min-width:600px;">
                                                                 <h2>{{ $lecture->title }}</h2>
                                                                 <p>{!! $lecture->article->content !!}</p>
                                                             </div>
@@ -145,19 +145,19 @@
                             <div class="d-flex justify-content-between gap-2">
                                 <div id="cart-action-wrapper" class="d-flex justify-content-between gap-2">
                                     {{-- @if ($course->original_price > 0) --}}
-                                        @if ($alreadyInCart)
-                                            <a href="{{ route('user.cart') }}" class="btn btn-success w-100">
-                                                <i class="bi bi-cart-check-fill me-1"></i> Đi tới giỏ hàng
-                                            </a>
-                                        @else
-                                            <form action="{{ route('user.cart.add', $course->id) }}" method="POST"
-                                                name="add-to-cart">
-                                                @csrf
-                                                <button type="submit" class="flex-fill btn btn-outline-primary w-100">
-                                                    <span>Thêm vào giỏ hàng</span>
-                                                </button>
-                                            </form>
-                                        @endif
+                                    @if ($alreadyInCart)
+                                        <a href="{{ route('user.cart') }}" class="btn btn-success w-100">
+                                            <i class="bi bi-cart-check-fill me-1"></i> Đi tới giỏ hàng
+                                        </a>
+                                    @else
+                                        <form action="{{ route('user.cart.add', $course->id) }}" method="POST"
+                                            name="add-to-cart">
+                                            @csrf
+                                            <button type="submit" class="flex-fill btn btn-outline-primary w-100">
+                                                <span>Thêm vào giỏ hàng</span>
+                                            </button>
+                                        </form>
+                                    @endif
                                     {{-- @endif --}}
                                 </div>
 

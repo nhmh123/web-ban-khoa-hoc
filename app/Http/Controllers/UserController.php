@@ -9,12 +9,13 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller
 {
-    protected $defaultAvatar = "https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png";
+    protected $defaultAvatar = "avatars/avatar-default-icon.png";
     public function index()
     {
         $users = User::orderBy('created_at', 'desc')->get();
@@ -35,18 +36,23 @@ class UserController extends Controller
 
     public function store(CreateUserRequest $request)
     {
-        // $slug = Str::slug($request->name);
-        if ($request->has('avatar')) {
-            echo $request->file('avatar')->getClientOriginalName();
-        }
         $avatar = $this->defaultAvatar;
         $user = User::create([
             'name' => $request->name,
-            // 'slug' => $slug,
             'email' => $request->email,
             'avatar' => $avatar,
             'password' => bcrypt($request->password),
         ]);
+
+        if ($request->has('avatar')) {
+            $fileName = $request->file('avatar')->getClientOriginalName();
+            $path = $request->file('avatar')->storeAs('avatars', $user->id . "-" . $fileName, 'public');
+            $user->avatar = $path;
+            $user->save();
+        }
+
+        $user->roles()->sync($request->input('role', []));
+        $user->save();
 
         return redirect()->route('users.index')->with('success', 'Thêm người dùng thành công.');
     }
@@ -61,7 +67,6 @@ class UserController extends Controller
     }
     public function update(UpdateUserRequest $request, User $user, $isAdmin = true)
     {
-        // dd($request->all());
         try {
             if (!$isAdmin) {
                 if ($user->id != Auth::id()) {
@@ -74,8 +79,14 @@ class UserController extends Controller
                 $user->password = Hash::make($request->password);
             }
             if ($request->hasFile('avatar')) {
-                $avatar = $request->file('avatar')->store('avatars', 'public');
-                $user->avatar = $avatar;
+                if (($user->avatar && $user->thubmnail !== $this->defaultAvatar) && Storage::disk('public')->exists($user->avatar)) {
+                    Storage::disk('public')->delete($user->avatar);
+                }
+
+                $fileName = $request->file('avatar')->getClientOriginalName();
+                $path = $request->file('avatar')->storeAs('avatars', $user->id . "-" . $fileName, 'public');
+                $user->avatar = $path;
+                $user->save();
             }
 
             $user->roles()->sync($request->input('role', []));

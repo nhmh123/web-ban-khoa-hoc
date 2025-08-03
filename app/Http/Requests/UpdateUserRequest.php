@@ -25,7 +25,7 @@ class UpdateUserRequest extends FormRequest
         return [
             'name' => 'sometimes|required|string|max:255',
             'password' => 'sometimes|nullable|string|min:8|confirmed',
-            'avatar' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096'
         ];
     }
 }

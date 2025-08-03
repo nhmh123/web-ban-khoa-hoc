@@ -53,7 +53,7 @@
                         <label>Ảnh đại diện</label>
                         <input type="file" name="avatar" class="form-control">
                         <div class="mt-2">
-                            <img src="{{ $user->avatar }}" alt="" class="img-fluid" width="100"
+                            <img src="{{ Storage::url($user->avatar) }}" alt="" class="img-fluid" width="100"
                                 id="avatar-preview">
                         </div>
 

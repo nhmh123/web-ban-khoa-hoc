@@ -17,6 +17,15 @@ class Section extends Model
 
     protected $primaryKey = 'sec_id';
 
+    protected static function booted()
+    {
+        static::deleting(function ($section) {
+            if ($section->lectures) {
+                $section->lectures->each->delete();
+            }
+        });
+    }
+
     public function getDurationAttribute($value)
     {
         // return \Carbon\CarbonInterval::seconds($value)->cascade()->forHumans(true);

@@ -24,8 +24,8 @@ class UpdateCourseRequest extends FormRequest
         return [
             'name' => 'sometimes|required|string|max:255',
             'slug' => 'sometimes|nullable|string|max:255',
-            'thumbnail' => 'sometimes|nullable|file|image|mimes:jpeg,png,gif|max:2048',
-            'original_price' => 'sometimes|nullable|required|numeric|min:0',
+            'thumbnail' => 'sometimes|nullable|file|image|mimes:jpeg,png,gif|max:4096',
+            'original_price' => 'required|numeric|min:0|max:9999999',
             'short_description' => 'sometimes|nullable|string',
             'enroll_requirements' => 'sometimes|nullable|string',
             'audience' => 'sometimes|nullable|string',
@@ -45,7 +45,8 @@ class UpdateCourseRequest extends FormRequest
             'name.max' => 'Tên khóa học không được vượt quá 255 ký tự.',
             'original_price.required' => 'Giá gốc là bắt buộc.',
             'original_price.numeric' => 'Giá gốc phải là số.',
-            'original_price.min' => 'Giá gốc phải lớn hơn hoặc bằng 0.',
+            'original_price.min' => 'Giá gốc tối thiểu là 0đ.',
+            'original_price.max' => 'Giá gốc tối đa là 9,999,999đ.',
             'status.required' => 'Trạng thái là bắt buộc.',
             'status.in' => 'Trạng thái không hợp lệ.',
             'cat_id.required' => 'Danh mục là bắt buộc.',
@@ -53,7 +54,7 @@ class UpdateCourseRequest extends FormRequest
             'language_id.required' => 'Ngôn ngữ là bắt buộc.',
             'language_id.exists' => 'Ngôn ngữ không tồn tại.',
             'level_id.required' => 'Trình độ là bắt buộc.',
-            'level_id.exists' => 'Trình độ không tồn tại.'
+            'level_id.exists' => 'Trình độ không tồn tại.',
         ];
     }
 }

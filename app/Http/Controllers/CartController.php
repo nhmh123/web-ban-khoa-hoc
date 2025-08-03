@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Course;
+use App\Models\Payment;
 use App\Helpers\ApiHelper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -15,6 +16,7 @@ class CartController extends Controller
     {
         $user = Auth::user();
         $cartItems = $user->cartItem()->with('course')->get();
+        $payment = Payment::where('is_default',true)->first();
 
         if ($request->has('buy_now')) {
             $buyNowCourseId = $request->get('buy_now_course_id');

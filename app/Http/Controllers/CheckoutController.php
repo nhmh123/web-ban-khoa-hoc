@@ -5,19 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Course;
+use App\Models\Payment;
 use App\Enums\OrderEnum;
+use App\Helpers\ApiHelper;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Services\EmailService;
 use App\Services\OrderService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
 class CheckoutController extends Controller
 {
     protected $orderService;
     protected $emailService;
+    private $vietQrClientId = "5ca388f0-aca6-4a8b-be35-d0d12ed88657";
+    private $vietQrAPIKey = "fd4e7288-c2d0-4395-ac05-99795a568943";
 
     public function __construct(OrderService $orderService, EmailService $emailService)
     {
@@ -75,6 +80,7 @@ class CheckoutController extends Controller
     }
     public function momoPayment(Request $request)
     {
+        // dd($request->selected_payment_method);
         $user = Auth::user();
         $checkoutCourses = json_decode($request->input('checkout_course'));
         $order = $this->orderService->createOrderFormList($user, $checkoutCourses);
@@ -121,7 +127,8 @@ class CheckoutController extends Controller
 
 
         $requestId = time() . "";
-        $requestType = "payWithATM";
+        // $requestType = "payWithATM";
+        $requestType = ($request->input('selected_payment_method') == "momo") ? "payWithATM" : "captureWallet";
 
         $rawHash = "accessKey=" . $accessKey . "&amount=" . $amount . "&extraData=" . $extraData . "&ipnUrl=" . $ipnUrl . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&partnerCode=" . $partnerCode . "&redirectUrl=" . $redirectUrl . "&requestId=" . $requestId . "&requestType=" . $requestType;
         $signature = hash_hmac("sha256", $rawHash, $secretKey);
@@ -189,6 +196,33 @@ class CheckoutController extends Controller
             return redirect()
                 ->route('user.cart')
                 ->with('error', $transactionData['message'] ?? 'Giao dịch thất bại. Vui lòng thử lại.');
+        }
+    }
+
+    public function generateCheckoutQr(Request $request)
+    {
+        $paymentInfo = Payment::where('is_default', true)->first();
+        $payload = [
+            'accountNo' => $paymentInfo->account_number,
+            'accountName' => $paymentInfo->account_name,
+            'acqId' => $paymentInfo->bank_bin,
+            'amount' => $request->input('amount'),
+            'addInfo' => "Tien mua khoa hoc",
+            'format' => 'text',
+            'template' => 'print',
+        ];
+
+        $response = Http::withHeaders([
+            'x-client-id' => $this->vietQrClientId,
+            'x-api-key' => $this->vietQrAPIKey,
+            'Content-Type' => 'application/json',
+        ])->post("https://api.vietqr.io/v2/generate", $payload);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            return ApiHelper::success(200, $data['data'], 'Tạo qr thành công');
+        } else {
+            return ApiHelper::error('Lỗi!', $response->status(), $response->body());
         }
     }
 }

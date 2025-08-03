@@ -16,4 +16,14 @@ class AttachmentController extends Controller
         // dd($downloadUrl);
         // return Storage::download($downloadUrl);
     }
+    public function destroy(Attachment $attachment)
+    {
+        try {
+            $attachment->delete();
+
+            return redirect()->back()->with('success', 'Xóa tài liệu thành công!');
+        } catch (\Throwable $th) {
+            return back()->withErrors(['error' => 'Lỗi hệ thống, vui lòng thử lại sau ' . $th->getMessage()])->withInputs();
+        }
+    }
 }

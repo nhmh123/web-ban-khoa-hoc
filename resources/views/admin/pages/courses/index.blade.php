@@ -56,8 +56,8 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <img src="{{ $course->thumbnail ?? asset('images/default-thumbnail.jpg') }}"
-                                        alt="thumbnail" class="img-fluid" width="100">
+                                    <img src="{{ Storage::url($course->thumbnail) }}" alt="thumbnail" class="img-fluid"
+                                        width="100">
                                 </td>
                                 <td>
                                     <span class="text-danger fw-bold">{{ number_format($course->original_price) }}đ</span>
@@ -80,8 +80,7 @@
                                             <i class="bi bi-pencil-square text-dark fs-5"></i>
                                         </a>
                                         <form action="{{ route('courses.destroy', $course->id) }}" method="POST"
-                                            class="d-inline" name="delete-form"
-                                            onsubmit="return confirm('Xoá khóa học này?')">
+                                            class="d-inline" name="delete-form">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm p-0">

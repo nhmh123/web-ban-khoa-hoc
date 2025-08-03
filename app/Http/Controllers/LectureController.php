@@ -48,7 +48,7 @@ class LectureController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateLectureRequest $request)
     {
         try {
             $lecture = Lecture::create([
@@ -122,7 +122,7 @@ class LectureController extends Controller
 
             // $section->update(['duration' => $section->duration + $request->duration]);
             // $course->update(['duration' => $course->duration + $request->duration]);
-            return redirect()->route('courses.edit', $course->id)->with('success', 'Thêm bài giảng thành công');
+            return redirect()->route('courses.edit', $lecture->section->course->id)->with('success', 'Thêm bài giảng thành công');
         } catch (\Throwable $th) {
             return back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $th->getMessage()])->withInput();
         }
@@ -173,7 +173,17 @@ class LectureController extends Controller
      */
     public function edit(Lecture $lecture)
     {
-        return view('admin.pages.lectures.edit', compact('lecture'));
+        $signedUrl = "";
+        if ($lecture->type === LectureEnum::VIDEO->value) {
+            $signedUrl = $this->videoService->getSignedUrl($lecture->video->video_url);
+        }
+
+        $attachments = [];
+        if ($lecture->attachments) {
+            $attachments = $lecture->attachments;
+        }
+
+        return view('admin.pages.lectures.edit', compact('lecture', 'signedUrl', 'attachments'));
     }
 
     /**
@@ -182,51 +192,103 @@ class LectureController extends Controller
     public function update(UpdateLectureRequest $request, Lecture $lecture)
     {
         try {
-            $newType = $request->type;
-            $newTypeArray = [];
-            switch ($newType) {
-                case LectureEnum::ARTICLE->value:
-                    $newTypeArray = [
+            DB::beginTransaction();
+
+            $oldType = $lecture->type;
+            $oldDuration = $lecture->duration_raw;
+
+            $lecture->title = $request->title;
+            $lecture->slug = Str::slug($request->title);
+            $lecture->is_intro = $request->has('is_intro');
+            $lecture->type = $request->type;
+            $lecture->save();
+
+            if ($request->type === LectureEnum::VIDEO->value) {
+                $duration = $oldDuration;
+
+                if ($request->hasFile('course_video')) {
+                    $tempPath = $request->file('course_video')->getRealPath();
+
+                    $getID3 = new \getID3();
+                    $fileInfo = $getID3->analyze($tempPath);
+                    $duration = round($fileInfo['playtime_seconds']);
+
+                    $videoUrl = $this->videoService->uploadVideoToS3Bucket($request->file('course_video'), "lectures/$lecture->lec_id/video");
+
+                    if ($lecture->video && $lecture->video->video_url) {
+                        Storage::disk('s3')->delete($lecture->video->video_url);
+                        $lecture->video->delete();
+                    }
+
+                    Video::create([
+                        'lec_id' => $lecture->lec_id,
+                        'video_url' => $videoUrl,
+                    ]);
+                }
+
+                $lecture->duration = $duration;
+                $lecture->save();
+
+                if ($oldType === LectureEnum::ARTICLE->value && $lecture->article) {
+                    $lecture->article->delete();
+                }
+            } elseif ($request->type === LectureEnum::ARTICLE->value) {
+                if ($lecture->article) {
+                    $lecture->article->update([
+                        'content' => $request->article_content,
+                    ]);
+                } else {
+                    Article::create([
                         'lec_id' => $lecture->lec_id,
                         'content' => $request->article_content,
-                    ];
-                    break;
-                case LectureEnum::VIDEO->value:
-                    $newTypeArray = [
-                        'lec_id' => $lecture->lec_id,
-                        'video_url' => $request->video_url,
-                    ];
-                    break;
-                default:
-                    break;
+                    ]);
+                }
+
+                if ($oldType === LectureEnum::VIDEO->value && $lecture->video) {
+                    if ($lecture->video->video_url) {
+                        Storage::disk('s3')->delete($lecture->video->video_url);
+                    }
+                    $lecture->video->delete();
+                    $lecture->duration = 0;
+                    $lecture->save();
+                }
             }
 
-            $typeModelClass = '\\App\\Models\\' . ucfirst($newType);
-            $typeRelation = $newType;
-            $typeModel = $lecture->$typeRelation();
-            if ($lecture->type != $newType) {
-                $lecture->$newType()->delete();
-                $typeModelClass::create($newTypeArray);
-            } else {
-                $typeModel->update($newTypeArray);
+            if ($lecture->section) {
+                $section = $lecture->section;
+                $course = $section->course;
+
+                if ($oldType === LectureEnum::VIDEO->value) {
+                    $section->update([
+                        'duration' => $section->duration_raw - $oldDuration
+                    ]);
+
+                    $course->update([
+                        'duration' => $course->duration_raw - $oldDuration
+                    ]);
+                }
+
+                if ($request->type === LectureEnum::VIDEO->value) {
+                    $section->update([
+                        'duration' => $section->duration_raw + $duration
+                    ]);
+
+                    $course->update([
+                        'duration' => $course->duration_raw + $duration
+                    ]);
+                }
             }
 
-            $updateArray = [
-                'title' => $request->title,
-                'slug' => Str::slug($request->title),
-                'is_intro' => $request->has('is_intro'),
-                'type' => $newType,
-                'order' => 0,
-            ];
-            $lecture->update($updateArray);
+            DB::commit();
 
-            $section = $lecture->section;
-            $course = $section->course;
-            return redirect()->route('courses.edit', $course->id)->with('success', 'Cập nhật bài giảng thành công');
+            return redirect()->route('courses.edit', $lecture->section->course->id)
+                ->with('success', 'Cập nhật bài giảng thành công');
         } catch (\Throwable $th) {
+            DB::rollback();
             return back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $th->getMessage()])->withInput();
         }
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -236,11 +298,9 @@ class LectureController extends Controller
         try {
             $section = $lecture->section;
             $course = $section->course;
-            // $lectureDuration = $lecture->duration;
             $lecture->delete();
 
-            // $section->duration -= $lectureDuration;
-            // $section->save();
+
             return redirect()->route('courses.edit', $course->id)->with('success', 'Xóa bài giảng thành công');
         } catch (\Throwable $th) {
             return redirect()->back()->withErrors(['error' => 'Có lỗi xảy ra' . $th->getMessage()])->withInput();

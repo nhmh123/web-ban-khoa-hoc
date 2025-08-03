@@ -99,7 +99,7 @@ Route::middleware('auth')->group(function () {
     Route::post('checkout/submit', [CheckoutController::class, 'checkoutSubmit'])->name('user.checkout.submit');
     Route::post('checkout/momo', [CheckoutController::class, 'momoPayment'])->name('user.checkout.momo');
     Route::get('checkout/momo/return', [CheckoutController::class, 'momoReturn'])->name('user.checkout.momo.return');
-
+    Route::post('checkout/generateQr', [CheckoutController::class, 'generateCheckoutQr'])->name('user.checkout.qr.generate');
     //enroll course
     Route::post('course/enroll/{course}', [CourseController::class, 'enroll'])->name('user.course.enroll');
 
@@ -149,6 +149,7 @@ Route::middleware([IsAdmin::class])->prefix('admin')->group(function () {
     Route::resource('orders', OrderController::class);
     Route::resource('pages', PageController::class)->except(['show']);
     Route::get('reviews', [ReviewController::class, 'index'])->name('admin.reviews.index');
+    Route::get('attachments/{attachment}/delete', [AttachmentController::class, 'destroy'])->name('admin.attachments.destroy');
 
     Route::prefix('settings')->group(function () {
         Route::get('meta-data', [SettingController::class, 'edit'])->name('settings.meta.edit');
