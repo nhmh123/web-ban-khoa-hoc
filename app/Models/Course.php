@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Course extends Model
 {
@@ -64,6 +66,24 @@ class Course extends Model
     public function getDurationRawAttribute()
     {
         return $this->attributes['duration'];
+    }
+
+    public function getThumbnailAttribute()
+    {
+        $thumbnail = $this->attributes['thumbnail'];
+
+        // Nếu là link online thì trả về nguyên vẹn
+        if (Str::startsWith($thumbnail, ['http://', 'https://'])) {
+            return $thumbnail;
+        }
+
+        // Nếu là file trong storage/app/public/courses/
+        if (Storage::disk('public')->exists($thumbnail)) {
+            return Storage::disk('public')->url($thumbnail);
+        }
+
+        // Nếu không tồn tại thì trả về tên file gốc (hoặc ảnh mặc định nếu muốn)
+        return $thumbnail;
     }
     public function category()
     {

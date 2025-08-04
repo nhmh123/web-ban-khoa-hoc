@@ -32,6 +32,7 @@
                             <th>#</th>
                             <th>Tên khóa học</th>
                             <th>Thumbnail</th>
+                            <th>Thời lượng</th>
                             <th>Giá</th>
                             <th>Danh mục</th>
                             <th>Số lượng học viên</th>
@@ -56,8 +57,10 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <img src="{{ Storage::url($course->thumbnail) }}" alt="thumbnail" class="img-fluid"
-                                        width="100">
+                                    <img src="{{ $course->thumbnail }}" alt="thumbnail" class="img-fluid" width="100">
+                                </td>
+                                <td>
+                                    {{ $course->duration }}
                                 </td>
                                 <td>
                                     <span class="text-danger fw-bold">{{ number_format($course->original_price) }}đ</span>

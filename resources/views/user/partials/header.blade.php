@@ -63,8 +63,8 @@
                 @auth
                     <div class="dropdown justify-content-center align-item-center">
                         <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{{ auth()->user()->avatar }}" alt="" class="rounded-circle" width="50px"
-                                height="50px">
+                            <img src="{{ Storage::url(auth()->user()->avatar) }}" alt="" class="rounded-circle"
+                                width="50px" height="50px">
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <strong class="text-center px-2">{{ auth()->user()->name }}</strong>

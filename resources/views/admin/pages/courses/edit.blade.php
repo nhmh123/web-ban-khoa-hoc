@@ -65,8 +65,8 @@
                                         <label for="thumbnail" class="form-label fw-bold">Ảnh đại diện</label>
                                         <input type="file" class="form-control" name="thumbnail" id="thumbnail">
                                         <div class="mt-2">
-                                            <img src="{{ Storage::url($course->thumbnail) }}" alt=""
-                                                class="img-fluid" width="300" id="thumbnail-preview">
+                                            <img src="{{ $course->thumbnail }}" alt="" class="img-fluid"
+                                                width="300" id="thumbnail-preview">
                                         </div>
                                     </div>
                                     <div class="mb-3">
