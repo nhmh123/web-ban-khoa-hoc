@@ -147,11 +147,11 @@
                         </div>
                         <div class="tab-pane show fade" id="course-ratings">
                             <div class="position-relative">
-                                <div id="review-overlay"
+                                {{-- <div id="review-overlay"
                                     class="overlay d-flex justify-content-center align-items-center text-white bg-dark bg-opacity-75"
                                     style="position: absolute; inset: 0; border-radius: .375rem; z-index: 2; {{ $completion >= 100 ? 'display: none;' : '' }}">
                                     <span class="fw-bold">Bạn cần hoàn thành 100% tiến độ để đánh giá</span>
-                                </div>
+                                </div> --}}
 
                                 <form id="review-form" method="POST" action="{{ route('reviews.store') }}"
                                     class="border p-4 rounded shadow-sm bg-white" style="position: relative; z-index: 1;">

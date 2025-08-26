@@ -166,11 +166,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <form action="{{ route('user.checkout.qr.generate') }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn btn-primary">Test generate</button>
-                                </form>
                             </div>
                         </div>
                     </div>
