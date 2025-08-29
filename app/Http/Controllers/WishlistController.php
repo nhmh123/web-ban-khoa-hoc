@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ApiHelper;
 use App\Models\User;
 use App\Models\Course;
 use Illuminate\Http\Request;
@@ -18,42 +19,38 @@ class WishlistController extends Controller
         return view('user.pages.wishlist', compact('user', 'wishlistCourses', 'cartCourseIds'));
     }
 
-    public function addToWishlist(Course $course)
+    public function addToWishlist(Course $course, Request $request)
     {
         if (!Auth::check()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Bạn cần đăng nhập để thêm khóa học vào danh sách yêu thích!'
-            ], 401);
+            return ApiHelper::error('Chưa đăng nhập!', 401, 'Bạn cần đăng nhập để thêm khóa học vào danh sách yêu thích!');
         }
         $user = auth()->user();
         if (!$user->wishlist()->where('course_id', $course->id)->exists()) {
             $user->wishlist()->attach($course->id);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Thêm khóa học vào danh sách yêu thích thành công!'
-            ]);
+            if ($request->ajax()) {
+                return ApiHelper::success(200, null, 'Thêm khóa học vào danh sách yêu thích thành công!');
+            }
 
-            // return redirect()->back()->with('success', 'Thêm khóa học vào danh sách yêu thích thành công!');
+            return redirect()->back()->with('success', 'Thêm khóa học vào danh sách yêu thích thành công!');
         }
     }
 
-    public function removeFromWishlist(Course $course)
+    public function removeFromWishlist(Course $course, Request $request)
     {
         $user = auth()->user();
         if ($user->wishlist->contains($course->id)) {
-            $user->wishlist()->detach($course->id);
+            try {
+                $user->wishlist()->detach($course->id);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Xóa khóa học khỏi danh sách yêu thích thành công!'
-            ]);
+                if ($request->ajax()) {
+                    return ApiHelper::success(200, null, 'Xóa khóa học khỏi danh sách yêu thích thành công!');
+                }
+            } catch (\Throwable $th) {
+                return ApiHelper::error('Lỗi!', 500, $th->getMessage());
+            }
         } else {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Khóa học không có trong danh sách yêu thích!'
-            ]);
+            return ApiHelper::error('Lỗi!', 422, 'Khóa học không có trong danh sách yêu thích!');
         }
     }
 }

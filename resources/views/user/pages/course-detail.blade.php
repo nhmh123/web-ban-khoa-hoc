@@ -161,26 +161,26 @@
                                     {{-- @endif --}}
                                 </div>
 
-                                @if ($alreadyInWishlist)
-                                    <form action="{{ route('user.wishlist.remove', $course->id) }}" method="POST"
-                                        name="remove-from-wishlist">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="flex-fill btn btn-danger w-100">
-                                            <i class="bi bi-heartbreak"></i>
-                                            <span>Xóa khỏi yêu thích</span>
-                                        </button>
-                                    </form>
-                                @else
-                                    <form action="{{ route('user.wishlist.add', $course->id) }}" method="POST"
-                                        name="add-to-wishlist">
-                                        @csrf
-                                        <button type="submit" class="flex-fill btn btn-danger w-100">
-                                            <i class="bi bi-heart"></i>
-                                            <span>Thêm vào yêu thích</span>
-                                        </button>
-                                    </form>
-                                @endif
+                                <div class="wishlist-action-wrapper">
+                                    @if ($alreadyInWishlist)
+                                        <form action="{{ route('user.wishlist.remove', $course->id) }}" method="POST"
+                                            name="remove-from-wishlist">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="flex-fill btn btn-danger w-100">
+                                                <span>Xóa khỏi yêu thích</span>
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('user.wishlist.add', $course->id) }}" method="POST"
+                                            name="add-to-wishlist">
+                                            @csrf
+                                            <button type="submit" class="flex-fill btn btn-outline-danger w-100">
+                                                <span>Thêm vào yêu thích</span>
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
                             </div>
                         @endif
                     </div>
@@ -234,7 +234,7 @@
 
                 console.log({{ $alreadyInCart }});
 
-                addToWishlist.on('submit', function(e) {
+                $(document).on('submit', 'form[name="add-to-wishlist"]', function(e) {
                     e.preventDefault();
                     let form = $(this);
                     let url = form.attr('action');
@@ -247,26 +247,25 @@
                             'X-Requested-With': 'XMLHttpRequest'
                         },
                         success: function(response) {
-                            console.log('Success:', response);
-                            alert(response.message ||
-                                'Khóa học đã được thêm vào danh sách yêu thích.');
-                            location.reload();
-                            // form.hide();
-                            // removeFromWishlist.show();
+                            displaySuccessToast(response.message);
+                            $('.wishlist-action-wrapper').html(`
+                                <form action="{{ route('user.wishlist.remove', $course->id) }}" method="POST"
+                                    name="remove-from-wishlist">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="flex-fill btn btn-danger w-100">
+                                        <span>Xóa khỏi yêu thích</span>
+                                    </button>
+                                </form>
+                            `)
                         },
                         error: function(xhr, status, error) {
-                            console.error('Error:', error, status, xhr);
-                            if (xhr.status === 401) {
-                                alert('Bạn cần đăng nhập để thực hiện hành động này.');
-                                return;
-                            }
-                            alert(error.JSON.message ||
-                                'Đã xảy ra lỗi khi thêm khóa học vào danh sách yêu thích.');
+                            displayErrorAlert(xhr.responseJSON.title, xhr.responseJSON.detail);
                         }
                     });
                 });
 
-                removeFromWishlist.on('submit', function(e) {
+                $(document).on('submit', 'form[name="remove-from-wishlist"]', function(e) {
                     e.preventDefault();
                     let form = $(this);
                     let url = form.attr('action');
@@ -276,16 +275,19 @@
                         url: url,
                         data: form.serialize(),
                         success: function(response) {
-                            console.log('Success:', response);
-                            alert(response.message ||
-                                'Khóa học đã được xóa khỏi danh sách yêu thích.');
-                            location.reload();
-                            // form.hide();
-                            // addToWishlist.show();
+                            displaySuccessToast(response.message);
+                            $('.wishlist-action-wrapper').html(`
+                                <form action="{{ route('user.wishlist.add', $course->id) }}" method="POST"
+                                    name="add-to-wishlist">
+                                    @csrf
+                                    <button type="submit" class="flex-fill btn btn-outline-danger w-100">
+                                        <span>Thêm vào yêu thích</span>
+                                    </button>
+                                </form>
+                            `)
                         },
                         error: function(xhr, status, error) {
-                            console.error('Error:', error, status, xhr);
-                            alert('Đã xảy ra lỗi khi xóa khóa học khỏi danh sách yêu thích.');
+                            displayErrorAlert(xhr.responseJSON.title, xhr.responseJSON.detail);
                         }
                     })
                 });
@@ -310,7 +312,11 @@
                                 updateCartTotal(
                                     '{{ route('user.cart.get-total') }}');
                             } else {
-                                alert(response.message || 'Đã xảy ra lỗi!');
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Oops...",
+                                    text: "Something went wrong!",
+                                });
                             }
                         },
                         error: function(xhr, status, error) {

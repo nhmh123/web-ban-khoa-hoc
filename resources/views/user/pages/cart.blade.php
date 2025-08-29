@@ -194,20 +194,6 @@
                     $(this).text(Number(price).toLocaleString('vi-VN'));
                 });
 
-                // $('input[name="ids[]"]').on('change', function() {
-                //     let amountText = $(this).closest('.card').find('.course-price').text();
-                //     amountText = amountText.split('.').join('');
-                //     let amount = parseInt(amountText);
-
-                //     if ($(this).is(':checked')) {
-                //         totalCartRaw += amount;
-                //         $('.amount').text(Number(totalCartRaw).toLocaleString('vi-VN'));
-                //     } else {
-                //         totalCartRaw -= amount;
-                //         $('.amount').text(Number(totalCartRaw).toLocaleString('vi-VN'));
-                //     }
-                // });
-
                 $('input[name="ids[]"]').on('change', function() {
                     totalCartRaw = 0;
                     $('input[name="ids[]"]:checked').each(function() {
