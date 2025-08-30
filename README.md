@@ -73,47 +73,47 @@ php artisan serve
 
 ### 🔧 Management Features (Admin)
 
-User management: Create, view, update users
+- User management: Create, view, update users
 
-Course management: CRUD courses, sections, and lectures (video/article)
+- Course management: CRUD courses, sections, and lectures (video/article)
 
-Course categories management: CRUD categories
+- Course categories management: CRUD categories
 
-Order management: View users’ orders
+- Order management: View users’ orders
 
-Course reviews: View feedback submitted by learners
+- Course reviews: View feedback submitted by learners
 
-Static pages: CRUD About Us, Policies, etc.
+- Static pages: CRUD About Us, Policies, etc.
 
-Web settings:
+- Web settings:
 
-Metadata (app name, meta title, description)
+    - Metadata (app name, meta title, description)
 
-Email configuration (sending emails to users)
+    - Email configuration (sending emails to users)
 
-Homepage sliders (CRUD)
+    - Homepage sliders (CRUD)
 
-Social media links
+    - Social media links
 
-Contact information (email, phone, address)
+    - Contact information (email, phone, address)
 
-Payment settings: Manage bank accounts for QR payment (manual entry only)
+    - Payment settings: Manage bank accounts for QR payment (manual entry only)
 
-###👤 User Features
+### 👤 User Features
 
-Browse, search, filter, and sort courses
+- Browse, search, filter, and sort courses
 
-View course details and lectures (video/article)
+- View course details and lectures (video/article)
 
-Take notes on lectures (CRUD)
+- Take notes on lectures (CRUD)
 
-Review completed courses
+- Review completed courses
 
-Manage wishlist (add/remove courses)
+- Manage wishlist (add/remove courses)
 
-Shopping cart & checkout
+- Shopping cart & checkout
 
-Payment integration with MoMo
+- Payment integration with MoMo
 
 ### 🛡️ Authorization Matrix
 
@@ -125,6 +125,5 @@ Payment integration with MoMo
 | Editor        |      |                 |        |       |      x      |         |               |
 | Instructor    |      |        x        |        |       |             |         |               |
 
-📌 Notes
-This project is built for educational and demonstration purposes.
+📌 Notes: *This project is built for educational and demonstration purposes.*
 
