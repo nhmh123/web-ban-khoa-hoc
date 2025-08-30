@@ -28,45 +28,56 @@ It helps users improve their skills for academic success and career growth.
 ```bash
 # Clone the repository
 git clone https://github.com/nhmh123/web-ban-khoa-hoc.git
+```
 
 # Enter the project folder
+```bash
 cd web-ban-khoa-hoc
+```
 
 # Copy environment file
+```bash
 cp .env.example .env
+```
 
 # Install dependencies
+```bash
 composer install
 npm install
+```
 
 # Generate application key
+```bash
 php artisan key:generate
+```
 
 # Start Apache & MySQL using XAMPP
 
 # Run migrations
+```bash
 php artisan migrate
+```
 
 # Start the development server
+```bash
 php artisan serve
+```
 
-🔑 Demo Credentials
-Role	Email	Password
-Super Admin	dh52105753@student.stu.edu.vn
-	12345678
-Accounting	dh52105753@gmail.com
-	password
-Editor	l.m@example.net
-	password
-Instructor	tuyen.kha@example.org
-	Password
-User	dmau@example.com
-	password
+## 🔑 Demo Credentials
 
-⚠️ These credentials are for demonstration only.
+| Role        | Email                             | Password  |
+|-------------|-----------------------------------|-----------|
+| Super Admin | dh52105753@student.stu.edu.vn     | 12345678  |
+| Accounting  | dh52105753@gmail.com              | password  |
+| Editor      | l.m@example.net                   | password  |
+| Instructor  | tuyen.kha@example.org             | Password  |
+| User        | dmau@example.com                  | password  |
 
-📂 Features
-🔧 Management Features (Admin)
+⚠️*These credentials are for demonstration only.*
+
+## 📂 Features
+
+###🔧 Management Features (Admin)
 
 User management: Create, view, update users
 
@@ -94,7 +105,7 @@ Contact information (email, phone, address)
 
 Payment settings: Manage bank accounts for QR payment (manual entry only)
 
-👤 User Features
+###👤 User Features
 
 Browse, search, filter, and sort courses
 
@@ -110,14 +121,16 @@ Shopping cart & checkout
 
 Payment integration with MoMo
 
-🛡️ Authorization Matrix
-Module	User	Course Category	Course	Order	Static Page	Setting	Authorization
-Super Admin	x	x	x	x	x	x	x
-Accounting				x			
-Editor					x		
-Instructor			x				
-📌 Notes
+### 🛡️ Authorization Matrix
 
+| Module        | User | Course Category | Course | Order | Static Page | Setting | Authorization |
+|---------------|------|-----------------|--------|-------|-------------|---------|---------------|
+| **Role**      |      |                 |        |       |             |         |               |
+| Super Admin   |  x   |        x        |   x    |   x   |      x      |    x    |       x       |
+| Accounting    |      |                 |        |   x   |             |         |               |
+| Editor        |      |                 |        |       |      x      |         |               |
+| Instructor    |      |        x        |        |       |             |         |               |
+
+📌 Notes
 This project is built for educational and demonstration purposes.
 
-Can be extended with API integration for payment verification and advanced analytics.
