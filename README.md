@@ -28,35 +28,29 @@ It helps users improve their skills for academic success and career growth.
 ```bash
 # Clone the repository
 git clone https://github.com/nhmh123/web-ban-khoa-hoc.git
-```
 
 # Enter the project folder
 ```bash
 cd web-ban-khoa-hoc
-```
 
 # Copy environment file
 ```bash
 cp .env.example .env
-```
 
 # Install dependencies
 ```bash
 composer install
 npm install
-```
 
 # Generate application key
 ```bash
 php artisan key:generate
-```
 
 # Start Apache & MySQL using XAMPP
 
 # Run migrations
 ```bash
 php artisan migrate
-```
 
 # Start the development server
 ```bash
@@ -77,7 +71,7 @@ php artisan serve
 
 ## 📂 Features
 
-###🔧 Management Features (Admin)
+### 🔧 Management Features (Admin)
 
 User management: Create, view, update users
 
