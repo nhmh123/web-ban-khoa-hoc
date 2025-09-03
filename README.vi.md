@@ -4,6 +4,9 @@
 CourseWeb là một web bán hàng trực tuyến, nơi người học có thể mua và truy cập vào nhiều tài nguyên học tập đa dạng.
 Dự án hỗ trợ người dùng nâng cao kỹ năng, phục vụ cho việc học tập cũng như phát triển nghề nghiệp.
 
+## 📂 Tài liệu
+Ảnh chụp màn hình, ERD, dữ liệu mẫu: https://drive.google.com/drive/folders/1iB3lNwzdB7nMUdFw0M_MDxaL4pFXCew5?usp=drive_link
+
 ## 🛠️ Công nghệ sử dụng
 - **Frontend**: HTML, CSS (Bootstrap), JavaScript (jQuery)
 - **Backend**: PHP (Laravel)
@@ -120,3 +123,4 @@ php artisan serve
 | Instructor    |      |        x   |          |          |            |         |            |
 
 📌 *Dự án được xây dựng phục vụ mục đích học tập và demo.*
+
