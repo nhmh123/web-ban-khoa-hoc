@@ -4,6 +4,9 @@
 CourseWeb is an online marketplace where learners can purchase and access diverse learning resources.  
 It helps users improve their skills for academic success and career growth.
 
+## 📂 Documentation
+Website Screenshots, ERD & sample data: [View on Google Drive](https://drive.google.com/drive/folders/1iB3lNwzdB7nMUdFw0M_MDxaL4pFXCew5?usp=sharing)
+
 ## 🛠️ Technologies
 - **Frontend**: HTML, CSS (Bootstrap), JavaScript (jQuery)
 - **Backend**: PHP (Laravel)
