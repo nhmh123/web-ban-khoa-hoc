@@ -87,6 +87,9 @@
                     </a>
                 @endguest
 
+                <a href="{{ url('admin') }}" class="btn btn-outline-primary align-content-center ms-2">
+                    Admin
+                </a>
             </ul>
         </div>
 
