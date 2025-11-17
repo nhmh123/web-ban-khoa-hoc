@@ -1,13 +1,16 @@
 # CourseWeb – Online Learning Marketplace
+*(English Version)*
 
-## 📖 Description
+**Xem phiên bản tiếng Việt:** [README_VI.md](README_VI.md)
+
+## Description
 CourseWeb is an online marketplace where learners can purchase and access diverse learning resources.  
 It helps users improve their skills for academic success and career growth.
 
-## 📂 Documentation
+## Documentation
 Website Screenshots, ERD & sample data: [View on Google Drive](https://drive.google.com/drive/folders/1iB3lNwzdB7nMUdFw0M_MDxaL4pFXCew5?usp=sharing)
 
-## 🛠️ Technologies
+## Technologies
 - **Frontend**: HTML, CSS (Bootstrap), JavaScript (jQuery)
 - **Backend**: PHP (Laravel)
 - **Database**: MySQL
@@ -15,7 +18,7 @@ Website Screenshots, ERD & sample data: [View on Google Drive](https://drive.goo
 
 ---
 
-## ⚙️ Environment Requirements
+## Environment Requirements
 - [Composer](https://getcomposer.org/download/) **2.8.3+**
 - [Node.js](https://nodejs.org/en/download) **v20.17.0+**
 - npm **11.3.0+** (`npm install -g npm`)
@@ -23,11 +26,11 @@ Website Screenshots, ERD & sample data: [View on Google Drive](https://drive.goo
 - **Apache 2.4+**
 - **MySQL 5.2.1+**
 
-👉 You can use [XAMPP](https://www.apachefriends.org/download.html) for a convenient setup of Apache & MySQL.
+You can use [XAMPP](https://www.apachefriends.org/download.html) for a convenient setup of Apache & MySQL.
 
 ---
 
-## 🚀 Installation & Setup
+## Installation & Setup
 ```bash
 # Clone the repository
 git clone https://github.com/nhmh123/web-ban-khoa-hoc.git
@@ -54,7 +57,7 @@ php artisan migrate
 php artisan serve
 ```
 
-## 🔑 Demo Credentials
+## Demo Credentials
 
 | Role        | Email                             | Password  |
 |-------------|-----------------------------------|-----------|
@@ -66,9 +69,9 @@ php artisan serve
 
 ⚠️*These credentials are for demonstration only.*
 
-## 📂 Features
+## Features
 
-### 🔧 Management Features (Admin)
+### Management Features (Admin)
 
 - User management: Create, view, update users
 
@@ -96,7 +99,7 @@ php artisan serve
 
     - Payment settings: Manage bank accounts for QR payment (manual entry only)
 
-### 👤 User Features
+### User Features
 
 - Browse, search, filter, and sort courses
 
@@ -112,7 +115,7 @@ php artisan serve
 
 - Payment integration with MoMo
 
-### 🛡️ Authorization Matrix
+### Authorization Matrix
 
 | Module        | User | Course Category | Course | Order | Static Page | Setting | Authorization |
 |---------------|------|-----------------|--------|-------|-------------|---------|---------------|
