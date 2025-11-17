@@ -1,7 +1,7 @@
 # CourseWeb – Online Learning Marketplace
 *(English Version)*
 
-**Xem phiên bản tiếng Việt:** [README_VI.md](README.vi.md)
+**Vietnamese version available here:** [README_VI.md](README.vi.md)
 
 ## Description
 CourseWeb is an online marketplace where learners can purchase and access diverse learning resources.  
