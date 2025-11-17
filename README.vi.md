@@ -1,13 +1,13 @@
 # CourseWeb – Web cung cấp khóa học trực tuyến
 
-## 📖 Mô tả
+## Mô tả
 CourseWeb là một web bán hàng trực tuyến, nơi người học có thể mua và truy cập vào nhiều tài nguyên học tập đa dạng.
 Dự án hỗ trợ người dùng nâng cao kỹ năng, phục vụ cho việc học tập cũng như phát triển nghề nghiệp.
 
-## 📂 Tài liệu
+## Tài liệu
 Ảnh chụp màn hình, ERD, dữ liệu mẫu: [Xem trên Google Drive](https://drive.google.com/drive/folders/1iB3lNwzdB7nMUdFw0M_MDxaL4pFXCew5?usp=drive_link)
 
-## 🛠️ Công nghệ sử dụng
+## Công nghệ sử dụng
 - **Frontend**: HTML, CSS (Bootstrap), JavaScript (jQuery)
 - **Backend**: PHP (Laravel)
 - **Database**: MySQL
@@ -15,7 +15,7 @@ Dự án hỗ trợ người dùng nâng cao kỹ năng, phục vụ cho việc 
 
 ---
 
-## ⚙️ Yêu cầu môi trường
+## Yêu cầu môi trường
 - [Composer](https://getcomposer.org/download/) **2.8.3+**
 - [Node.js](https://nodejs.org/en/download) **v20.17.0+**
 - npm **11.3.0+** (`npm install -g npm`)
@@ -23,11 +23,11 @@ Dự án hỗ trợ người dùng nâng cao kỹ năng, phục vụ cho việc 
 - **Apache 2.4+**
 - **MySQL 5.2.1+**
 
-👉 Có thể sử dụng [XAMPP](https://www.apachefriends.org/download.html) để cài đặt Apache & MySQL nhanh chóng.
+Có thể sử dụng [XAMPP](https://www.apachefriends.org/download.html) để cài đặt Apache & MySQL nhanh chóng.
 
 ---
 
-## 🚀 Cài đặt & Chạy dự án
+## Cài đặt & Chạy dự án
 ```bash
 # Clone source code
 git clone https://github.com/nhmh123/web-ban-khoa-hoc.git
@@ -54,7 +54,7 @@ php artisan migrate
 php artisan serve
 ```
 
-## 🔑 Tài khoản demo
+## Tài khoản demo
 
 | Vai trò     | Email                             | Mật khẩu  |
 |-------------|-----------------------------------|-----------|
@@ -66,9 +66,9 @@ php artisan serve
 
 ⚠️*Các tài khoản trên chỉ dùng cho mục đích demo.*
 
-## 📂 Tính năng
+## Tính năng
 
-### 🔧 Quản trị viên (Admin)
+### Quản trị viên (Admin)
 
 - Quản lý người dùng: Tạo, xem, cập nhật thông tin
 
@@ -96,7 +96,7 @@ php artisan serve
     
     - Cấu hình thanh toán: Quản lý tài khoản ngân hàng để tạo mã QR thanh toán (nhập thủ công, chưa tích hợp API)
 
-### 👤 Người dùng
+### Người dùng
 
 - Xem, tìm kiếm, lọc và sắp xếp khóa học
 
@@ -112,7 +112,7 @@ php artisan serve
 
 - Thanh toán qua ví MoMo
 
-### 🛡️ Phân quyền
+### Phân quyền
 
 | Module        | User | Danh mục   | Khóa học | Đơn hàng | Trang tĩnh | Cài đặt | Phân quyền |
 |---------------|------|------------|----------|----------|------------|---------|------------|
@@ -122,7 +122,8 @@ php artisan serve
 | Editor        |      |            |          |          |      x     |         |            |
 | Instructor    |      |        x   |          |          |            |         |            |
 
-📌 *Dự án được xây dựng phục vụ mục đích học tập và demo.*
+*Dự án được xây dựng phục vụ mục đích học tập và demo.*
+
 
 
 
